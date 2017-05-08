@@ -22,7 +22,7 @@ Or with wget:
 
 ## Installation
 
-Magedev is a command line tool. Download latest version with download script or grap it from the `releases` folder.
+Magedev is a command line tool. Download latest version with download script or grab it from the `releases` folder.
 
     curl -sSL https://raw.githubusercontent.com/teamneusta/php-cli-magedev/master/download-latest.sh | sh
 

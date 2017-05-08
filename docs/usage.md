@@ -1,6 +1,6 @@
 # Switching projects
 
-To start a different project, make sure your current project is stopped. Otherwise, your portmapping may fail, see [port mapping](port-mapping) for more information.
+To start a different project, make sure your current project is stopped. Otherwise, your portmapping may fail, see [port mapping](port-mapping.md) for more information.
 
     magedev docker:stop
 

@@ -19,7 +19,7 @@ Sometimes, all project files for magento are in a subdirectory of the repository
 
 # Dump files
 
-The command `init:project` is able to import a given database dump and a media archive for assets like product images. You may specify these as follows. Find out more about [bootstrap projects](bootstrap-projects).
+The command `init:project` is able to import a given database dump and a media archive for assets like product images. You may specify these as follows. Find out more about [bootstrap projects](bootstrap-projects.md).
 
     {
       "magento_version": "2",
