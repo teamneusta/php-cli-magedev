@@ -30,7 +30,7 @@ LOGO;
      */
     public function __construct()
     {
-        parent::__construct('magedev', '1.0.0');
+        parent::__construct('magedev', '@package_version@');
 
         $this->add(new \Stecman\Component\Symfony\Console\BashCompletion\CompletionCommand());
 
@@ -83,6 +83,8 @@ LOGO;
         // Tests
         $this->add(new \TeamNeusta\Magedev\Commands\Tests\DebugCommand);
         $this->add(new \TeamNeusta\Magedev\Commands\Tests\RunCommand);
+
+        $this->add(new \TeamNeusta\Magedev\Commands\UpdateCommand);
     }
 
     /**

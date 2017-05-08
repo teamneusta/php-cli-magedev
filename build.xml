@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!--
+  ~ This file is part of the teamneusta/php-cli-magedev package.
+  ~ Copyright (c) 2017 neusta GmbH | Ein team neusta Unternehmen
+  ~ For the full copyright and license information, please view the LICENSE file that was distributed with this source code.
+  ~ @license http://www.opensource.org/licenses/mit-license.html  MIT License
+  ~
+  -->
+
+<!--
+Phing build file to create a executable phar file by defined src.
+@see http://www.phing.info/
+Build phar with (default Task is dist for building):
+    phing
+-->
+<project name="magedev" default="dist" basedir=".">
+    <taskdef name="update-manifest" classname="build.phar.tasks.UpdateManifest" />
+    <property name="phar" value="${phing.project.name}.phar"/>
+    <fileset dir="." id="root_folder">
+        <include name="LICENSE" />
+    </fileset>
+    <fileset dir="src"  id="src_folder">
+        <include name="**/**" />
+    </fileset>
+    <fileset dir="vendor" id="vendor_folder">
+        <include name="**/**" />
+        <!-- VCS -->
+        <exclude name=".git/**" />
+        <exclude name=".svn/**" />
+        <!-- Docs -->
+        <exclude name="**/doc/**" />
+        <exclude name="**/docs/**" />
+        <!-- Tests -->
+        <exclude name="**/Tests/**" />
+        <exclude name="**/tests/**" />
+        <exclude name="**/test/**" />
+        <exclude name="twig/twig/ext/**" />
+        <!-- Test utils -->
+        <exclude name="phpunit/**" />
+        <exclude name="sebastian/**" />
+        <exclude name="mikey179/**" />
+    </fileset>
+    <target name="dist">
+        <exec command="composer install --no-dev --ignore-platform-reqs --optimize-autoloader" dir="${project.basedir}" passthru="true"
+              checkreturn="true"/>
+        <exec command="box build -vvv" dir="${project.basedir}" passthru="true"/>
+        <update-manifest baseDir="./" manifestPath="./manifest.json" downloadPath="./releases"/>
+        <exec command="composer install --optimize-autoloader" dir="${project.basedir}" passthru="true" checkreturn="true"/>
+    </target>
+</project>

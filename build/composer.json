@@ -1,0 +1,11 @@
+{
+  "name": "teamneusta/magedev-build",
+  "require-dev": {
+    "phing/phing": "~2.10.0",
+    "phpunit/phpunit": "^5.7"
+  },
+  "minimum-stability": "stable",
+  "require": {
+    "seld/phar-utils": "1.0.1"
+  }
+}

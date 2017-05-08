@@ -1,0 +1,21 @@
+{
+    "chmod": "0755",
+    "directories": [
+        "src",
+        "var"
+    ],
+    "files": [
+        "bin/magedev",
+        "vendor/herrera-io/phar-update/res/schema.json"
+    ],
+    "finder": [
+        {
+            "name": "*.php",
+            "in": "vendor"
+        }
+    ],
+    "git-version": "package_version",
+    "main": "bin/magedev",
+    "output": "magedev.phar",
+    "stub": true
+}
