@@ -42,8 +42,8 @@ Here is an example `magedev.json` file with sql dump and media archive placed in
       "magento_version": "2",
       "source_folder": "Source/",
       "domain": "some-project.local",
-      "dump_file": "~/smb/share/Projekte/Web-Projekte/magedev/project/dump.sql",
-      "media_archive": "~/smb/share/Projekte/Web-Projekte/magedev/project/media.zip"
+      "dump_file": "~/smb/share/Projekte/Web-Projekte/magedev/some-project/dump.sql",
+      "media_archive": "~/smb/share/Projekte/Web-Projekte/magedev/some-project/media.zip"
     }
 
 For bootstrapping the existing project, use the `init:project` command:
