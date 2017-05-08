@@ -14,13 +14,17 @@ Magedev is a shell tool for local Magento development. It helps you to get a pro
 
 Magedev uses Docker to orchestrate required services in containers. Make sure you have Docker installed on your system. You may use the official install script:
 
+    curl -sSL https://get.docker.com/ | sh
+
+Or with wget:
+
     wget -qO- https://get.docker.com/ | sh
 
 ## Installation
 
-Magedev is a command line tool. Download latest version with:
+Magedev is a command line tool. Download latest version with download script or grap it from the `releases` folder.
 
-    curl -o magedev https://raw.githubusercontent.com/teamneusta/php-cli-magedev/master/releases/magedev-latest.phar && chmod +x magedev
+    curl -sSL https://raw.githubusercontent.com/teamneusta/php-cli-magedev/master/download-latest.sh | sh
 
 Make sure magedev lies in your `PATH`, move it somewhere e.g. `~/bin`:
 

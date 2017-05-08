@@ -2,9 +2,9 @@
 
 ## Download as phar
 
-Magedev is a command line tool. Download latest version with:
+Magedev is a command line tool. Download latest version with download script or grap it from the `releases` folder.
 
-    curl -o magedev https://raw.githubusercontent.com/teamneusta/php-cli-magedev/master/releases/magedev-latest.phar && chmod +x magedev
+    curl -sSL https://raw.githubusercontent.com/teamneusta/php-cli-magedev/master/download-latest.sh | sh
 
 Make sure magedev lies in your `PATH`, move it somewhere e.g. `~/bin`:
 
