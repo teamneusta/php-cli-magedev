@@ -2,7 +2,7 @@
 
 Clone this repo and create a symlink of `magedev` into your local bin folder. From now on, you can use `magedev` in your terminal.
 
-    git clone https://github.com/teamneusta/magedev.git && cd magedev
+    git clone https://github.com/teamneusta/php-cli-magedev.git && cd magedev
     ln -s $(pwd)/bin/magedev ~/bin/magedev
     magedev
 

@@ -12,7 +12,7 @@ Magedev is a shell tool for local Magento development. It helps you to get a pro
 * PHP 5.6 or above
 * docker 1.10 or above
 
-Magedev uses Docker to orchestrate required services in containers. Make sure you have Docker installed on your system. You may use the officual install script:
+Magedev uses Docker to orchestrate required services in containers. Make sure you have Docker installed on your system. You may use the official install script:
 
     wget -qO- https://get.docker.com/ | sh
 
@@ -20,7 +20,7 @@ Magedev uses Docker to orchestrate required services in containers. Make sure yo
 
 Clone this repo and create a symlink of `magedev` into your local bin folder. From now on, you can use `magedev` in your terminal.
 
-    git clone https://github.com/teamneusta/magedev.git && cd magedev
+    git clone https://github.com/teamneusta/php-cli-magedev.git && cd magedev
     ln -s $(pwd)/bin/magedev ~/bin/magedev
     magedev
 
