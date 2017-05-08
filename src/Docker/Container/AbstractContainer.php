@@ -85,11 +85,13 @@ abstract class AbstractContainer extends DockerContainer
         $config = new ContainerConfig();
         $this->endpointSettings->setLinks($this->links);
 
-        $networkId = $this->getNetworkId("docker_default");
+        // TODO: make this configurable?
+        $networkName = "bridge";
+        $networkId = $this->getNetworkId($networkName);
         $this->endpointSettings->setNetworkID($networkId);
 
         $networkingConfig = new NetworkingConfig();
-        $networkingConfig->setEndpointsConfig(new \ArrayObject(['docker_default' => $this->endpointSettings]));
+        $networkingConfig->setEndpointsConfig(new \ArrayObject([$networkName => $this->endpointSettings]));
 
         $config->setNetworkingConfig($networkingConfig);
         $this->hostConfig->setPortBindings($this->mapPorts);
