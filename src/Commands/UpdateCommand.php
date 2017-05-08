@@ -24,7 +24,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class UpdateCommand extends Command
 {
-    const MANIFEST_FILE = 'http://teamneusta.github.io/php-cli-magedev/manifest.json';
+    const MANIFEST_FILE = 'https://teamneusta.github.io/php-cli-magedev/manifest.json';
 
     /**
      * configure

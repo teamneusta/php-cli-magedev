@@ -18,21 +18,19 @@ Magedev uses Docker to orchestrate required services in containers. Make sure yo
 
 ## Installation
 
-Clone this repo and create a symlink of `magedev` into your local bin folder. From now on, you can use `magedev` in your terminal.
+Magedev is a command line tool. Download latest version with:
 
-    git clone https://github.com/teamneusta/php-cli-magedev.git && cd magedev
-    ln -s $(pwd)/bin/magedev ~/bin/magedev
-    magedev
+    curl -o magedev https://raw.githubusercontent.com/teamneusta/php-cli-magedev/master/releases/magedev-latest.phar && chmod +x magedev
+
+Make sure magedev lies in your `PATH`, move it somewhere e.g. `~/bin`:
+
+    mv magedev ~/bin
 
 ## Updating magedev
 
-This one is easy. Just switch to your installation folder. If you don't know anymore, where the folder is, type this one and get a hint:
+To update your copy of magedev, you may use the `self-update` command like this:
 
-    ls -la $(which magedev)
-
-Switch to this directory and simply update the repository with:
-
-    git pull
+    magedev self-update
 
 ## Usage
 
