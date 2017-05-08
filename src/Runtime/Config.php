@@ -68,6 +68,7 @@ class Config
         if (file_exists($projectConfigFile)) {
             $projectConfig = $this->loadConfigFile($projectConfigFile);
             $defaultConfig = $this->loadConfigFile($defaultConfigFile);
+            $homeConfig = [];
 
             $homeConfigFile = $this->fileHelper->expandPath("~") . "/.magedev.json";
             if (file_exists($homeConfigFile)) {
