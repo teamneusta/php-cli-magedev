@@ -1,0 +1,44 @@
+{
+  "magento_version": "2",
+  "source_folder": "./",
+  "users": {
+    "admin": {
+      "user": "admin",
+      "email": "admin@localhost.de",
+      "password": "admin123",
+      "firstname": "admin",
+      "lastname": "admin"
+     },
+     "customer": {
+        "email": "test@example.com",
+        "password": "test3@example.com",
+        "firstname": "Test",
+        "lastname": "Test"
+     }
+  },
+  "xdebug": {
+    "idekey": "vim",
+    "remote_host": "172.17.0.1"
+  },
+  "docker": {
+    "links": {
+      "main": ["mysql", "redis", "elasticsearch"]
+    },
+    "ports": {
+      "main": {
+        "80": "80"
+      },
+      "mysql": {
+        "3306": "3306"
+      },
+      "elasticsearch": {
+        "9200": "9200",
+        "9300": "9300"
+      },
+      "mailcatcher": {
+        "1080": "1080",
+        "1025": "1025"
+      }
+    }
+  }
+}

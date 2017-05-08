@@ -1,0 +1,29 @@
+{
+    "name": "teamneusta/php-cli-magedev",
+    "description": "local magento development made easy",
+    "liecense": "MIT",
+    "type": "tool",
+    "authors": [
+        {
+            "name": "Bernhard Leers",
+            "email": "b.leers@neusta.de"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "5.5"
+    },
+    "require": {
+        "symfony/console": "^2.3.0|^3",
+        "stecman/symfony-console-completion": "^0.7.0",
+        "herrera-io/phar-update": "^2.0",
+        "docker-php/docker-php": "^1.24",
+        "symfony/event-dispatcher": "^3.2"
+    },
+    "autoload": {
+        "psr-4" : {
+            "TeamNeusta\\Magedev\\" : "src/",
+            "TeamNeusta\\Magedev\\Test\\" : "tests/"
+        }
+    },
+    "bin": ["bin/magedev"]
+}

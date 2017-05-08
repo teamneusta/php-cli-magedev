@@ -1,0 +1,7 @@
+design/head/default_title: "Installed by Magedev"
+admin/security/password_lifetime: 9999999
+admin/security/password_is_forced: 0
+catalog/search/elasticsearch/servers: elasticsearch:9200
+admin/url/custom_path: admin
+dev/template/allow_symlink: 1
+web/secure/enable_upgrade_insecure: 0

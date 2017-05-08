@@ -1,0 +1,70 @@
+.TH mini_sendmail 8 "12 July 2001"
+.SH NAME
+mini_sendmail - accept email on behalf of real sendmail
+.SH SYNOPSIS
+.B mini_sendmail
+.RB [ -f<name> ]
+.RB [ -t ]
+.RB [ -s<server> ]
+.RB [ -p<port> ]
+.RB [ -T<timeout> ]
+.RB [ -v ]
+.I address ...
+.SH DESCRIPTION
+.PP
+With no flags,
+.I mini_sendmail
+reads its standard input up to an end-of-file
+and sends a copy of the message
+found there to all of the addresses listed.
+.PP
+The message is sent by connecting to a local SMTP server.
+This means
+.I mini_sendmail
+can be used to send email from inside a chroot(2) area.
+.TP
+.B -f
+Sets the name of the "from" person (i.e. the sender of the mail).
+.TP
+.B -t
+Read message for recipients.
+To:, Cc:, and Bcc: lines will be scanned for recipient addresses.
+The Bcc: line will be deleted before transmission.
+.TP
+.B -s
+Specifies the SMTP server to use.
+Without this it uses localhost.
+.TP
+.B -p
+Specifies the port to use.
+Without this it uses 25, the standard SMTP port.
+.TP
+.B -T
+Specifies timeout - defaults to one minute.
+.TP
+.B -v
+Verbose mode - shows the conversation with the SMTP server.
+.SH "SEE ALSO"
+sendmail(8)
+.SH AUTHOR
+Copyright © 1999 by Jef Poskanzer <jef@mail.acme.com>. All rights reserved.
+.\" Redistribution and use in source and binary forms, with or without
+.\" modification, are permitted provided that the following conditions
+.\" are met:
+.\" 1. Redistributions of source code must retain the above copyright
+.\"    notice, this list of conditions and the following disclaimer.
+.\" 2. Redistributions in binary form must reproduce the above copyright
+.\"    notice, this list of conditions and the following disclaimer in the
+.\"    documentation and/or other materials provided with the distribution.
+.\" 
+.\" THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+.\" ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+.\" IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+.\" ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+.\" FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+.\" DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+.\" OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+.\" HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+.\" LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+.\" OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+.\" SUCH DAMAGE.
