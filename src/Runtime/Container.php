@@ -42,19 +42,24 @@ $c['commands'] = function($c) {
         /* $this->add(new \Stecman\Component\Symfony\Console\BashCompletion\CompletionCommand()); */
 
         // Db
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Db\ImportCommand); */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Db\DumpCommand); */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Db\CleanupCommand); */
+        new \TeamNeusta\Magedev\Commands\Db\CleanupCommand(
+            $c['runtime.config'],
+            $c['runtime.helper.filehelper'],
+            $c['services.shell'],
+            $c['services.docker']
+        ),
+        new \TeamNeusta\Magedev\Commands\Db\DumpCommand($c['services.docker']),
+        new \TeamNeusta\Magedev\Commands\Db\ImportCommand(
+            $c['runtime.config'],
+            $c['services.shell'],
+            $c['services.docker']
+        ),
 
         /* // Media */
         /* $this->add(new \TeamNeusta\Magedev\Commands\Media\ImportCommand); */
 
         /* // Config */
         /* $this->add(new \TeamNeusta\Magedev\Commands\Config\ResetCommand); */
-
-        /* // Docker */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Docker\BuildCommand); */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Docker\MysqlCommand); */
 
         new \TeamNeusta\Magedev\Commands\Docker\BuildCommand($c['services.docker']),
         new \TeamNeusta\Magedev\Commands\Docker\DestroyCommand($c['services.docker']),
@@ -64,14 +69,6 @@ $c['commands'] = function($c) {
         new \TeamNeusta\Magedev\Commands\Docker\SshCommand($c['services.docker']),
         new \TeamNeusta\Magedev\Commands\Docker\StartCommand($c['services.docker']),
         new \TeamNeusta\Magedev\Commands\Docker\StopCommand($c['services.docker']),
-
-        /* $c['command.docker.ssh'] */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Docker\SshCommand); */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Docker\StartCommand); */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Docker\StopCommand); */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Docker\RestartCommand); */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Docker\DestroyCommand); */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Docker\ReinitCommand); */
 
         /* // Grunt */
         /* $this->add(new \TeamNeusta\Magedev\Commands\Grunt\RefreshCommand); */
