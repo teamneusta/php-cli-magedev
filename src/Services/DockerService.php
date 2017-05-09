@@ -9,35 +9,35 @@
  * @license https://opensource.org/licenses/mit-license BSD-3-Clause License
  */
 
-namespace TeamNeusta\Magedev\Runtime\System;
+namespace TeamNeusta\Magedev\Services;
 
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use TeamNeusta\Magedev\Runtime\Config;
 use TeamNeusta\Magedev\Runtime\Helper\FileHelper;
+use TeamNeusta\Magedev\Services\ShellService;
 
 /**
- * Class Docker
+ * Class DockerService
  */
-class Docker
+class DockerService
 {
-    /**
-     * @var \TeamNeusta\Magedev\Runtime\Config
-     */
-    protected $config;
-
     /**
      * @var \Symfony\Component\Console\Output\OutputInterface
      */
     protected $output;
 
     /**
-     * @var Shell
+     * @var \TeamNeusta\Magedev\Runtime\Config
+     */
+    protected $config;
+
+    /**
+     * @var \TeamNeusta\Magedev\Services\ShellService
      */
     protected $shell;
 
     /**
-     * @var TeamNeusta\Magedev\Runtime\Helper\FileHelper
+     * @var \TeamNeusta\Magedev\Runtime\Helper\FileHelper
      */
     protected $fileHelper;
 
@@ -51,18 +51,14 @@ class Docker
      */
     public function __construct(
         Config $config,
-        ConsoleOutput $output,
-        Shell $shell,
+        OutputInterface $output,
+        ShellService $shell,
         FileHelper $fileHelper
     ) {
         $this->config = $config;
         $this->output = $output;
         $this->shell = $shell;
         $this->fileHelper = $fileHelper;
-
-        if ($config == null) {
-            throw new \Exception("Config cannot be null");
-        }
     }
 
     /**

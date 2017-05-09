@@ -1,0 +1,115 @@
+<?php
+
+$c = new \Pimple\Container();
+
+$c['console.input'] = function ($c) {
+    return new \Symfony\Component\Console\Input\ArgvInput();
+};
+
+$c['console.output'] = function ($c) {
+    return new \Symfony\Component\Console\Output\ConsoleOutput();
+};
+
+$c['runtime.helper.filehelper'] = function ($c) {
+    return new TeamNeusta\Magedev\Runtime\Helper\FileHelper();
+};
+
+$c['runtime.config'] = function ($c) {
+    return new \TeamNeusta\Magedev\Runtime\Config(
+        $c['console.input'],
+        $c['runtime.helper.filehelper']
+    );
+};
+
+$c['services.docker'] = function ($c) {
+    return new \TeamNeusta\Magedev\Services\DockerService(
+        $c['runtime.config'],
+        $c['console.output'],
+        $c['services.shell'],
+        $c['runtime.helper.filehelper']
+    );
+};
+
+$c['services.shell'] = function ($c) {
+    return new \TeamNeusta\Magedev\Services\ShellService(
+        $c['console.output']
+    );
+};
+
+
+$c['commands'] = function($c) {
+    return [
+        /* $this->add(new \Stecman\Component\Symfony\Console\BashCompletion\CompletionCommand()); */
+
+        // Db
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Db\ImportCommand); */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Db\DumpCommand); */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Db\CleanupCommand); */
+
+        /* // Media */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Media\ImportCommand); */
+
+        /* // Config */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Config\ResetCommand); */
+
+        /* // Docker */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Docker\BuildCommand); */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Docker\MysqlCommand); */
+
+        new \TeamNeusta\Magedev\Commands\Docker\BuildCommand($c['services.docker']),
+        new \TeamNeusta\Magedev\Commands\Docker\DestroyCommand($c['services.docker']),
+        new \TeamNeusta\Magedev\Commands\Docker\MysqlCommand($c['services.docker']),
+        new \TeamNeusta\Magedev\Commands\Docker\ReinitCommand(),
+        new \TeamNeusta\Magedev\Commands\Docker\RestartCommand(),
+        new \TeamNeusta\Magedev\Commands\Docker\SshCommand($c['services.docker']),
+        new \TeamNeusta\Magedev\Commands\Docker\StartCommand($c['services.docker']),
+        new \TeamNeusta\Magedev\Commands\Docker\StopCommand($c['services.docker']),
+
+        /* $c['command.docker.ssh'] */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Docker\SshCommand); */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Docker\StartCommand); */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Docker\StopCommand); */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Docker\RestartCommand); */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Docker\DestroyCommand); */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Docker\ReinitCommand); */
+
+        /* // Grunt */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Grunt\RefreshCommand); */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Grunt\WatchCommand); */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Grunt\KillCommand); */
+
+        /* // Init */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Init\ComposerCommand); */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Init\NpmCommand); */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Init\PermissionsCommand); */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Init\ProjectCommand); */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Init\AddHostEntryCommand); */
+
+        /* // Magento */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Magento\CacheCleanCommand); */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Magento\CommandCommand); */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Magento\RefreshCommand); */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Magento\ReindexCommand); */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Magento\SetBaseUrlCommand); */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Magento\AlignConfigCommand); */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Magento\UpgradeCommand); */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Magento\InstallCommand); */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Magento\InstallMagerunCommand); */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Magento\DefaultAdminUserCommand); */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Magento\DefaultCustomerCommand); */
+
+        /* // Tests */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Tests\DebugCommand); */
+        /* $this->add(new \TeamNeusta\Magedev\Commands\Tests\RunCommand); */
+
+        /* $this->add(new \TeamNeusta\Magedev\Commands\UpdateCommand); */
+    ];
+};
+
+$c['application'] = function($c) {
+    $application = new \TeamNeusta\Magedev\Runtime\Application();
+    $application->addCommands($c['commands']);
+    return $application;
+};
+
+return $c;

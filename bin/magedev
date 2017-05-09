@@ -10,6 +10,7 @@
  * @license https://opensource.org/licenses/mit-license MIT License
  */
 require __DIR__ . '/../vendor/autoload.php';
+$container = require(__DIR__ . '/../src/Runtime/Container.php');
 
-$app = new \TeamNeusta\Magedev\Runtime\Application();
-$app->run();
+$application = $container['application'];
+$application->run($container['console.input'], $container['console.output']);

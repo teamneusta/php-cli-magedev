@@ -6,17 +6,17 @@
  *
  * For the full copyright and license information, please view the LICENSE file that was distributed with this source code.
  *
- * @license https://opensource.org/licenses/mit-license MIT License
+ * @license https://opensource.org/licenses/mit-license BSD-3-Clause License
  */
 
-namespace TeamNeusta\Magedev\Runtime\System;
+namespace TeamNeusta\Magedev\Services;
 
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class Shell
+ * Class ShellService
  */
-class Shell
+class ShellService
 {
     /**
      * @var \Symfony\Component\Console\Output\OutputInterface

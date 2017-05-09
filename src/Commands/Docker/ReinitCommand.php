@@ -11,6 +11,8 @@
 
 namespace TeamNeusta\Magedev\Commands\Docker;
 
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use TeamNeusta\Magedev\Commands\AbstractCommand;
 
 /**
@@ -27,11 +29,18 @@ class ReinitCommand extends AbstractCommand
     {
         $this->setName("docker:reinit");
         $this->setDescription("stops, rebuild and restarts containers");
+    }
 
-        $this->onExecute(function ($runtime) {
-            (new StopCommand())->executeCommand();
-            (new BuildCommand())->executeCommand();
-            (new StartCommand())->executeCommand();
-        });
+    /**
+     * execute
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    public function execute(InputInterface $input, OutputInterface $output)
+    {
+        $this->getApplication()->find('docker:stop')->execute($input, $output);
+        $this->getApplication()->find('docker:build')->execute($input, $output);
+        $this->getApplication()->find('docker:start')->execute($input, $output);
     }
 }

@@ -11,15 +11,15 @@
 
 namespace TeamNeusta\Magedev\Commands\Docker;
 
-use Symfony\Component\Console\Question\ConfirmationQuestion;
-use TeamNeusta\Magedev\Commands\AbstractCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class: StartCommand
  *
  * @see AbstractCommand
  */
-class StartCommand extends AbstractCommand
+class StartCommand extends Base
 {
     /**
      * configure
@@ -28,12 +28,17 @@ class StartCommand extends AbstractCommand
     {
         $this->setName("docker:start");
         $this->setDescription("start docker container");
-
-        $this->onExecute(function ($runtime) {
-            $runtime
-                ->getDocker()
-                ->getManager()
-                ->startContainers();
-        });
     }
+
+    /**
+     * execute
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    public function execute(InputInterface $input, OutputInterface $output)
+    {
+        $this->dockerService->getManager()->startContainers();
+        parent::execute($input, $output);
+     }
 }

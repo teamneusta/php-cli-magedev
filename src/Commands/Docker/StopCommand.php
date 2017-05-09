@@ -11,14 +11,15 @@
 
 namespace TeamNeusta\Magedev\Commands\Docker;
 
-use TeamNeusta\Magedev\Commands\AbstractCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class: StopCommand
  *
  * @see AbstractCommand
  */
-class StopCommand extends AbstractCommand
+class StopCommand extends Base
 {
     /**
      * configure
@@ -27,12 +28,17 @@ class StopCommand extends AbstractCommand
     {
         $this->setName("docker:stop");
         $this->setDescription("stop docker container");
+    }
 
-        $this->onExecute(function ($runtime) {
-            $runtime
-                ->getDocker()
-                ->getManager()
-                ->stopContainers();
-        });
+    /**
+     * execute
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    public function execute(InputInterface $input, OutputInterface $output)
+    {
+        $this->dockerService->getManager()->stopContainers();
+        parent::execute($input, $output);
     }
 }

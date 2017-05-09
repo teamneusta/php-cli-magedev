@@ -12,6 +12,7 @@
 namespace TeamNeusta\Magedev\Runtime;
 
 use Symfony\Component\Console\Input\InputInterface;
+use TeamNeusta\Magedev\Runtime\Helper\FileHelper;
 
 /**
  * Class Config
@@ -29,22 +30,28 @@ class Config
     protected $fileHelper;
 
     /**
-     * configData
-     *
-     * @var mixed
+     * @var Array
      */
     protected $configData;
+
+    /**
+     * isLoaded
+     *
+     * @var bool
+     */
+    protected $isLoaded;
 
     /**
      * __construct
      *
      * @param Runtime $runtime
      */
-    public function __construct(Runtime $runtime)
-    {
-        $this->input = $runtime->getInput();
-        $this->fileHelper = $runtime->getHelper('FileHelper');
-        $this->load();
+    public function __construct(
+        InputInterface $input,
+        FileHelper $fileHelper
+    ) {
+        $this->input = $input;
+        $this->fileHelper = $fileHelper;
     }
 
     /**
@@ -108,6 +115,10 @@ class Config
      */
     public function get($key)
     {
+        if (!$this->isLoaded) {
+            $this->load();
+        }
+
         $value = null;
 
         if ($this->input) {

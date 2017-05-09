@@ -12,9 +12,9 @@
 namespace TeamNeusta\Magedev\Runtime\Helper;
 
 /**
- * Class MagerunHelper
+ * Class FileHelper
  */
-class FileHelper extends AbstractHelper
+class FileHelper
 {
     /**
      * findPath

@@ -88,29 +88,6 @@ class Runtime
     }
 
     /**
-     * getShell
-     * @return \TeamNeusta\Magedev\Runtime\System\Shell
-     */
-    public function getShell()
-    {
-        return new \TeamNeusta\Magedev\Runtime\System\Shell($this->getOutput());
-    }
-
-    /**
-     * getDocker
-     * @return \TeamNeusta\Magedev\Runtime\System\Docker
-     */
-    public function getDocker()
-    {
-        return new \TeamNeusta\Magedev\Runtime\System\Docker(
-            $this->getConfig(),
-            $this->getOutput(),
-            $this->getShell(),
-            $this->getHelper('FileHelper')
-        );
-    }
-
-    /**
      * getConfig
      * @return \TeamNeusta\Magedev\Runtime\Config
      */

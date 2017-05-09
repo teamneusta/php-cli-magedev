@@ -14,32 +14,28 @@ namespace TeamNeusta\Magedev\Commands\Docker;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use TeamNeusta\Magedev\Commands\AbstractCommand;
+use TeamNeusta\Magedev\Services\DockerService;
 
 /**
- * Class: RestartCommand
+ * Class: Base
  *
  * @see AbstractCommand
  */
-class RestartCommand extends AbstractCommand
+class Base extends AbstractCommand
 {
     /**
-     * configure
+     * @var \TeamNeusta\Magedev\Services\DockerService
      */
-    protected function configure()
-    {
-        $this->setName("docker:restart");
-        $this->setDescription("restart docker container");
-    }
+    protected $dockerService;
 
     /**
-     * execute
+     * __construct
      *
-     * @param InputInterface $input
-     * @param OutputInterface $output
+     * @param DockerService $dockerService
      */
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function __construct(DockerService $dockerService)
     {
-        $this->getApplication()->find('docker:stop')->execute($input, $output);
-        $this->getApplication()->find('docker:start')->execute($input, $output);
+        parent::__construct();
+        $this->dockerService = $dockerService;
     }
 }
