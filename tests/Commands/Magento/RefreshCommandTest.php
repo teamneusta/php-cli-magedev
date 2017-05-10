@@ -11,7 +11,7 @@
 
 namespace TeamNeusta\Magedev\Test\Commands\Magento;
 
-use TeamNeusta\Magedev\Test\TestHelper\CommandMockHelper;
+use \Mockery as m;
 use TeamNeusta\Magedev\Commands\Magento\RefreshCommand;
 
 /**
@@ -23,21 +23,25 @@ class RefreshCommandTest extends \PHPUnit_Framework_TestCase
 {
     public function testExecute()
     {
-        $helper = new CommandMockHelper();
-        $command = $helper->getCommand(RefreshCommand::class);
-        $projectName = basename(getcwd());
-        $helper->getShell()
-             ->expects(self::exactly(7))
-             ->method('nativeExecute')
-             ->withConsecutive(
-                 ["docker exec --user=www-data -it magedev-".$projectName."-main bash -c \"cd Source/ && rm -rf var/generation/*\""],
-                 ["docker exec --user=www-data -it magedev-".$projectName."-main bash -c \"cd Source/ && rm -rf var/di/*\""],
-                 ["docker exec --user=www-data -it magedev-".$projectName."-main bash -c \"cd Source/ && rm -rf var/cache/*\""],
-                 ["docker exec --user=www-data -it magedev-".$projectName."-main bash -c \"cd Source/ && rm -rf var/view_preprocessed/*\""],
-                 ["docker exec --user=www-data -it magedev-".$projectName."-main bash -c \"cd Source/ && rm -rf pub/static/_requirejs\""],
-                 ["docker exec --user=www-data -it magedev-".$projectName."-main bash -c \"cd Source/ && rm -rf pub/static/adminhtml\""],
-                 ["docker exec --user=www-data -it magedev-".$projectName."-main bash -c \"cd Source/ && rm -rf pub/static/frontend\""]
-             );
-        $helper->executeCommand($command);
+        $input = m::mock('\Symfony\Component\Console\Input\InputInterface');
+        $output = m::mock('\Symfony\Component\Console\Output\ConsoleOutput[]', ['writeln']);
+
+        $config = m::mock('\TeamNeusta\Magedev\Runtime\Config', [
+            'getMagentoVersion' => 2
+        ]);
+
+        $dockerManager = m::mock('\TeamNeusta\Magedev\Docker\Manager');
+        $dockerManager->shouldReceive('stopContainers')->times(1);
+        $dockerService = m::mock('\TeamNeusta\Magedev\Services\DockerService');
+        $dockerService->shouldReceive('execute')->with("rm -rf var/generation/*");
+        $dockerService->shouldReceive('execute')->with("rm -rf var/di/*");
+        $dockerService->shouldReceive('execute')->with("rm -rf var/cache/*");
+        $dockerService->shouldReceive('execute')->with("rm -rf var/view_preprocessed/*");
+        $dockerService->shouldReceive('execute')->with("rm -rf pub/static/_requirejs");
+        $dockerService->shouldReceive('execute')->with("rm -rf pub/static/adminhtml");
+        $dockerService->shouldReceive('execute')->with("rm -rf pub/static/frontend");
+
+        $command = new RefreshCommand($config, $dockerService);
+        $command->execute($input, $output);
     }
 }

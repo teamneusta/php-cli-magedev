@@ -12,29 +12,34 @@
 namespace TeamNeusta\Magedev\Test\Commands\Docker;
 
 use \Mockery as m;
-use TeamNeusta\Magedev\Commands\Docker\StopCommand;
+use TeamNeusta\Magedev\Commands\Docker\ReinitCommand;
 
 /**
- * Class: StopCommandTest
+ * Class: ReinitCommandTest
  *
  * @see \PHPUnit_Framework_TestCase
  */
-class StopCommandTest extends \PHPUnit_Framework_TestCase
+class ReinitCommandTest extends \TeamNeusta\Magedev\Test\TestCase
 {
     public function testExecute()
     {
         $input = m::mock('\Symfony\Component\Console\Input\InputInterface');
         $output = m::mock('\Symfony\Component\Console\Output\ConsoleOutput[]', ['writeln']);
 
-        $dockerManager = m::mock('\TeamNeusta\Magedev\Docker\Manager');
-        $dockerManager->shouldReceive('stopContainers')->times(1);
-        $dockerService = m::mock(
-            '\TeamNeusta\Magedev\Services\DockerService',
+        $command = m::mock('\Symfony\Component\Console\Command\Command')->shouldAllowMockingProtectedMethods();
+        $command->shouldReceive('execute')->times(3);
+
+        $application = m::mock('\Symfony\Component\Console\Application');
+        $application->shouldReceive('find')->with('docker:stop')->andReturn($command);
+        $application->shouldReceive('find')->with('docker:build')->andReturn($command);
+        $application->shouldReceive('find')->with('docker:start')->andReturn($command);
+
+        $command = m::mock(
+            ReinitCommand::class,
             [
-                'getManager' => $dockerManager
+                'getApplication' => $application
             ]
         );
-        $command = new StopCommand($dockerService);
         $command->execute($input, $output);
     }
 }

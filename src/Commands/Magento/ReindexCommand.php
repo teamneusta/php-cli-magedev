@@ -89,7 +89,7 @@ class ReindexCommand extends AbstractCommand
             // command may fail e.g.:
             // index is locked by another reindex process. Skipping.
             // do not die here
-            $output($e->getMessage());
+            /* $output->writeln($e->getMessage()); */
         }
     }
 }

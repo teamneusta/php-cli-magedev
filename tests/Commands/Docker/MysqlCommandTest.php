@@ -12,29 +12,23 @@
 namespace TeamNeusta\Magedev\Test\Commands\Docker;
 
 use \Mockery as m;
-use TeamNeusta\Magedev\Commands\Docker\StopCommand;
+use TeamNeusta\Magedev\Commands\Docker\MysqlCommand;
 
 /**
- * Class: StopCommandTest
+ * Class: MysqlCommandTest
  *
  * @see \PHPUnit_Framework_TestCase
  */
-class StopCommandTest extends \PHPUnit_Framework_TestCase
+class MysqlCommandTest extends \TeamNeusta\Magedev\Test\TestCase
 {
     public function testExecute()
     {
         $input = m::mock('\Symfony\Component\Console\Input\InputInterface');
         $output = m::mock('\Symfony\Component\Console\Output\ConsoleOutput[]', ['writeln']);
 
-        $dockerManager = m::mock('\TeamNeusta\Magedev\Docker\Manager');
-        $dockerManager->shouldReceive('stopContainers')->times(1);
-        $dockerService = m::mock(
-            '\TeamNeusta\Magedev\Services\DockerService',
-            [
-                'getManager' => $dockerManager
-            ]
-        );
-        $command = new StopCommand($dockerService);
+        $dockerService = m::mock('\TeamNeusta\Magedev\Services\DockerService');
+        $dockerService->shouldReceive("execute")->with("mysql");
+        $command = new MysqlCommand($dockerService);
         $command->execute($input, $output);
     }
 }

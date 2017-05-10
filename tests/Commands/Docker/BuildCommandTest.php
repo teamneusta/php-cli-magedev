@@ -12,14 +12,14 @@
 namespace TeamNeusta\Magedev\Test\Commands\Docker;
 
 use \Mockery as m;
-use TeamNeusta\Magedev\Commands\Docker\StopCommand;
+use TeamNeusta\Magedev\Commands\Docker\BuildCommand;
 
 /**
- * Class: StopCommandTest
+ * Class: BuildCommandTest
  *
  * @see \PHPUnit_Framework_TestCase
  */
-class StopCommandTest extends \PHPUnit_Framework_TestCase
+class BuildCommandTest extends \TeamNeusta\Magedev\Test\TestCase
 {
     public function testExecute()
     {
@@ -27,14 +27,14 @@ class StopCommandTest extends \PHPUnit_Framework_TestCase
         $output = m::mock('\Symfony\Component\Console\Output\ConsoleOutput[]', ['writeln']);
 
         $dockerManager = m::mock('\TeamNeusta\Magedev\Docker\Manager');
-        $dockerManager->shouldReceive('stopContainers')->times(1);
+        $dockerManager->shouldReceive('rebuildContainers')->times(1);
         $dockerService = m::mock(
             '\TeamNeusta\Magedev\Services\DockerService',
             [
                 'getManager' => $dockerManager
             ]
         );
-        $command = new StopCommand($dockerService);
+        $command = new BuildCommand($dockerService);
         $command->execute($input, $output);
     }
 }

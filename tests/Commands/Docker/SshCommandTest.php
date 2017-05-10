@@ -12,29 +12,23 @@
 namespace TeamNeusta\Magedev\Test\Commands\Docker;
 
 use \Mockery as m;
-use TeamNeusta\Magedev\Commands\Docker\StopCommand;
+use TeamNeusta\Magedev\Commands\Docker\SshCommand;
 
 /**
- * Class: StopCommandTest
+ * Class: SshCommandTest
  *
  * @see \PHPUnit_Framework_TestCase
  */
-class StopCommandTest extends \PHPUnit_Framework_TestCase
+class SshCommandTest extends \TeamNeusta\Magedev\Test\TestCase
 {
     public function testExecute()
     {
         $input = m::mock('\Symfony\Component\Console\Input\InputInterface');
         $output = m::mock('\Symfony\Component\Console\Output\ConsoleOutput[]', ['writeln']);
 
-        $dockerManager = m::mock('\TeamNeusta\Magedev\Docker\Manager');
-        $dockerManager->shouldReceive('stopContainers')->times(1);
-        $dockerService = m::mock(
-            '\TeamNeusta\Magedev\Services\DockerService',
-            [
-                'getManager' => $dockerManager
-            ]
-        );
-        $command = new StopCommand($dockerService);
+        $dockerService = m::mock('\TeamNeusta\Magedev\Services\DockerService');
+        $dockerService->shouldReceive("execute")->with("bash");
+        $command = new SshCommand($dockerService);
         $command->execute($input, $output);
     }
 }
