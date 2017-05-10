@@ -29,8 +29,8 @@ class Mysql extends AbstractImage
         $uid = getmyuid();
         $this->run("usermod -u " . $uid . " mysql");
 
-        $this->addFile("var/Docker/conf/mysql.cnf", "/etc/mysql/conf.d/z99-docker.cnf");
-        $this->addFile("var/Docker/conf/my.cnf","/root/.my.cnf");
-        $this->addFile("var/Docker/conf/my.cnf","/var/www/.my.cnf");
+        $this->addFile("var/Docker/mysql/mysql.cnf", "/etc/mysql/conf.d/z99-docker.cnf");
+        $this->addFile("var/Docker/mysql/my.cnf","/root/.my.cnf");
+        $this->addFile("var/Docker/mysql/my.cnf","/var/www/.my.cnf");
     }
 }

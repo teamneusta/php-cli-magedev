@@ -57,6 +57,19 @@ Whenever you make changes to your configuration, you need to rebuild the contain
 Additionally to the `magedev.json` in your project, you may also place a global configuration file in your home folder
 `~/.magedev.json`. This is useful to configure global settings like `proxy`. These files will be merged at runtime, where your project config has precedence.
 
+# Change php.ini settings
+
+Magedev will also collect configuration files from your project folder. These are placed inside `.magedev`. For example exchanging the default `php.ini` can be achieved
+by placing a file into your project folder under this directory:
+
+    .magedev/var/Docker/main/php.ini
+
+This file corresponds to `var/Docker/main/php.ini`, other service configuration files can be exchanged in the same manner.
+
+Containers need to be rebuild to apply changes:
+
+    magedev docker:reinit
+
 # Full example of all available options
 
     {
