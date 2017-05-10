@@ -88,9 +88,7 @@ class ImportCommand extends AbstractCommand
                 $this->shellService->execute("cp ".$dumpFile." .");
             }
 
-            $runtime
-                ->getDocker()
-                ->execute("mysql < ".basename($dumpFile));
+            $this->dockerService->execute("mysql < ".basename($dumpFile));
 
             unlink(basename($dumpFile));
         }

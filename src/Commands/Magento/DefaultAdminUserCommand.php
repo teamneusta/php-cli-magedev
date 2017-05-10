@@ -100,7 +100,7 @@ class DefaultAdminUserCommand extends AbstractCommand
     public function userExists($username)
     {
         $result = $this->dockerService->execute(
-            "bash -c \"mysql --execute \\\"select * from admin_user where username = '".$username."';\\\"\"",
+            "mysql --execute \"select * from admin_user where username = '".$username."';\"",
             [
                 'interactive' => false
             ]

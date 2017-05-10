@@ -81,7 +81,7 @@ class AddHostEntryCommand extends AbstractCommand
             }
         } else {
             $domain = $this->config->get("domain");
-            $this->addHostEntryIfRequired($runtime, $domain);
+            $this->addHostEntryIfRequired($domain);
         }
     }
 
@@ -89,7 +89,6 @@ class AddHostEntryCommand extends AbstractCommand
     /**
      * addHostEntryIfRequired
      *
-     * @param Runtime $runtime
      * @param string $domain
      */
     public function addHostEntryIfRequired($domain)

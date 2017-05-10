@@ -75,7 +75,7 @@ class ResetCommand extends AbstractCommand
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $magentoVersion = $this->config;
+        $magentoVersion = $this->config->getMagentoVersion();
 
         if ($magentoVersion == "1") {
             $configDefault = $this->fileHelper->findPath("var/data/magento1/config.yml");
@@ -88,7 +88,7 @@ class ResetCommand extends AbstractCommand
             $data = Yaml::parse($this->fileHelper->read($configDefault));
 
             foreach ($data as $key => $value) {
-                $this->updateConfigValue($key, $value, $runtime);
+                $this->updateConfigValue($key, $value);
             }
         }
     }
@@ -98,17 +98,16 @@ class ResetCommand extends AbstractCommand
      *
      * @param string $key
      * @param string $value
-     * @param Runtime $runtime
      */
-    public function updateConfigValue($key, $value, $runtime)
+    public function updateConfigValue($key, $value)
     {
-        if (!$this->configExists($key, $runtime)) {
+        if (!$this->configExists($key)) {
             $sql = "INSERT core_config_data (scope, scope_id, path, value) VALUES ('default', 0, '".$key."', ".$value.");";
         } else {
             $sql = "UPDATE core_config_data SET value='".$value."' WHERE path='".$key."'";
         }
-        $this->dockeService->execute(
-            "bash -c \"mysql --execute \\\"".$sql."\\\"\"",
+        $this->dockerService->execute(
+            "mysql --execute \"".$sql."\"",
             [
                 'interactive' => false
             ]
@@ -119,12 +118,11 @@ class ResetCommand extends AbstractCommand
      * configExists
      *
      * @param string $path
-     * @param Runtime $runtime
      */
-    public function configExists($path, $runtime)
+    public function configExists($path)
     {
         $result = $this->dockerService->execute(
-            "bash -c \"mysql --execute \\\"select * from core_config_data where path = '".$path."';\\\"\"",
+            "mysql --execute \"select * from core_config_data where path = '".$path."';\"",
             [
                 'interactive' => false
             ]

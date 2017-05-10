@@ -76,7 +76,7 @@ class DebugCommand extends AbstractCommand
             $remoteHost = $xdebugSettings["remote_host"];
             $ideKey = $xdebugSettings["idekey"];
             if ($ideKey && $remoteHost) {
-                $cmd  = "XDEBUG_CONFIG=\"idekey=" . $idekey . "\"";
+                $cmd  = "XDEBUG_CONFIG=\"idekey=" . $ideKey . "\"";
                 $cmd .= " php -dxdebug.remote_host=" . $remoteHost;
                 $cmd .= " -dxdebug.remote_enable=on vendor/bin/phpunit";
                 $cmd .= " -c ".$phpunitConfig;

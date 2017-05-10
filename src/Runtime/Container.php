@@ -90,7 +90,7 @@ $c['commands'] = function($c) {
         /* // Init */
         new \TeamNeusta\Magedev\Commands\Init\AddHostEntryCommand($c['runtime.config'], $c['console.output'], $c['services.shell']),
         new \TeamNeusta\Magedev\Commands\Init\ComposerCommand($c['runtime.config'], $c['services.docker']),
-        new \TeamNeusta\Magedev\Commands\Init\NpmCommand($c['runtime.config'], $c['services.docker']),
+        new \TeamNeusta\Magedev\Commands\Init\NpmCommand($c['runtime.config'], $c['services.docker'], $c['services.shell']),
         new \TeamNeusta\Magedev\Commands\Init\PermissionsCommand($c['runtime.config'], $c['services.docker']),
         new \TeamNeusta\Magedev\Commands\Init\ProjectCommand($c['runtime.config'], $c['console.output']),
 

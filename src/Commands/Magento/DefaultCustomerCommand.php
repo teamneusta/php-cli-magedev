@@ -100,7 +100,7 @@ class DefaultCustomerCommand extends AbstractCommand
     public function customerExists($email)
     {
         $result = $this->dockerService->execute(
-            "bash -c \"mysql --execute \\\"select * from customer_entity where email = '".$email."';\\\"\"",
+            "mysql --execute \"select * from customer_entity where email = '".$email."';\"",
             [
                 'interactive' => false
             ]

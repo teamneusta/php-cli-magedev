@@ -96,18 +96,17 @@ class NpmCommand extends AbstractCommand
             if (!file_exists($sourceFolder . "/package.json") && file_exists($sourceFolder . "package.json.sample")) {
                 $this->shellService->bash("cp ".$sourceFolder."/package.json.sample ".$sourceFolder."/package.json");
             }
-            $this->execNpmCommand($runtime, "npm install -g grunt-cli");
-            $this->execNpmCommand($runtime, "npm install");
+            $this->execNpmCommand("npm install -g grunt-cli");
+            $this->execNpmCommand("npm install");
         }
     }
 
     /**
      * execNpmCommand
      *
-     * @param Runtime $runtime
      * @param string $cmd
      */
-    public function execNpmCommand($runtime, $cmd) {
+    public function execNpmCommand($cmd) {
         $useProxy = $this->config->optionExists("proxy");
         if ($useProxy) {
             $proxy = $this->config->get("proxy");
