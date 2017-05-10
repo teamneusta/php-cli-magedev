@@ -14,7 +14,7 @@ namespace TeamNeusta\Magedev\Runtime\Helper;
 /**
  * Class ProcessHelper
  */
-class ProcessHelper extends AbstractHelper
+class ProcessHelper
 {
     /**
      * isProcessRunning

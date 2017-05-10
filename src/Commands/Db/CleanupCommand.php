@@ -66,6 +66,7 @@ class CleanupCommand extends AbstractCommand
         $this->dockerService = $dockerService;
         parent::__construct();
     }
+
     /**
      * configure
      */

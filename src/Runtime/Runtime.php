@@ -78,25 +78,6 @@ class Runtime
     }
 
     /**
-     * getOutput
-     *
-     * @return \Symfony\Component\Console\Output\OutputInterface
-     */
-    public function getOutput()
-    {
-        return $this->output;
-    }
-
-    /**
-     * getConfig
-     * @return \TeamNeusta\Magedev\Runtime\Config
-     */
-    public function getConfig()
-    {
-        return new \TeamNeusta\Magedev\Runtime\Config($this);
-    }
-
-    /**
      * getHelper
      *
      * @param string $name

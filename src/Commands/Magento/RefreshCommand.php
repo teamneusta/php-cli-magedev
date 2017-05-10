@@ -11,7 +11,11 @@
 
 namespace TeamNeusta\Magedev\Commands\Magento;
 
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use TeamNeusta\Magedev\Commands\AbstractCommand;
+use TeamNeusta\Magedev\Runtime\Config;
+use TeamNeusta\Magedev\Services\DockerService;
 
 /**
  * Class: RefreshCommand
@@ -21,28 +25,61 @@ use TeamNeusta\Magedev\Commands\AbstractCommand;
 class RefreshCommand extends AbstractCommand
 {
     /**
+     * @var \TeamNeusta\Magedev\Runtime\Config
+     */
+    protected $config;
+
+    /**
+     * @var \TeamNeusta\Magedev\Services\DockerService
+     */
+    protected $dockerService;
+
+    /**
+     * __construct
+     *
+     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
+     */
+    public function __construct(
+        \TeamNeusta\Magedev\Runtime\Config $config,
+        \TeamNeusta\Magedev\Services\DockerService $dockerService
+    ) {
+        $this->config = $config;
+        $this->dockerService = $dockerService;
+        parent::__construct();
+    }
+
+    /**
      * configure
      */
     protected function configure()
     {
         $this->setName("magento:refresh");
         $this->setDescription("deletes generated files var/generation, var/di ... only Magento2");
-        $this->onExecute(function ($runtime) {
-            $magentoVersion = $runtime->getConfig()->getMagentoVersion();
-            // only required for magento2
-            if ($magentoVersion == "2") {
-                foreach ([
-                    "rm -rf var/generation/*",
-                    "rm -rf var/di/*",
-                    "rm -rf var/cache/*",
-                    "rm -rf var/view_preprocessed/*",
-                    "rm -rf pub/static/_requirejs",
-                    "rm -rf pub/static/adminhtml",
-                    "rm -rf pub/static/frontend"
-                ] as $cmd) {
-                    $runtime->getDocker()->execute($cmd);
-                }
+    }
+
+    /**
+     * execute
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    public function execute(InputInterface $input, OutputInterface $output)
+    {
+        $magentoVersion = $this->config->getMagentoVersion();
+        // only required for magento2
+        if ($magentoVersion == "2") {
+            foreach ([
+                "rm -rf var/generation/*",
+                "rm -rf var/di/*",
+                "rm -rf var/cache/*",
+                "rm -rf var/view_preprocessed/*",
+                "rm -rf pub/static/_requirejs",
+                "rm -rf pub/static/adminhtml",
+                "rm -rf pub/static/frontend"
+            ] as $cmd) {
+                $this->dockerService->execute($cmd);
             }
-        });
+        }
     }
 }

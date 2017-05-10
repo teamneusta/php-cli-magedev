@@ -11,7 +11,11 @@
 
 namespace TeamNeusta\Magedev\Commands\Media;
 
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use TeamNeusta\Magedev\Commands\AbstractCommand;
+use TeamNeusta\Magedev\Runtime\Config;
+use TeamNeusta\Magedev\Services\ShellService;
 
 /**
  * Class: ImportCommand
@@ -21,57 +25,86 @@ use TeamNeusta\Magedev\Commands\AbstractCommand;
 class ImportCommand extends AbstractCommand
 {
     /**
+     * @var \TeamNeusta\Magedev\Runtime\Config
+     */
+    protected $config;
+
+    /**
+     * @var \TeamNeusta\Magedev\Services\ShellService
+     */
+    protected $shellService;
+
+    /**
+     * __construct
+     *
+     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Services\ShellService $shellService
+     */
+    public function __construct(
+        \TeamNeusta\Magedev\Runtime\Config $config,
+        \TeamNeusta\Magedev\Services\ShellService $shellService
+    ) {
+        $this->config = $config;
+        $this->shellService = $shellService;
+        parent::__construct();
+    }
+
+    /**
      * configure
      */
     protected function configure()
     {
         $this->setName('media:import');
         $this->setDescription('imports media tar archive');
+    }
 
-        $this->onExecute(function ($runtime) {
-            $config = $runtime->getConfig();
-            $fileHelper = $runtime->getHelper('FileHelper');
-            $magentoVersion = $config->getMagentoVersion();
+    /**
+     * execute
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    public function execute(InputInterface $input, OutputInterface $output)
+    {
+        $magentoVersion = $this->config->getMagentoVersion();
 
-            if ($config->optionExists('media_archive')) {
-                $mediaArchive = $config->get("media_archive");
+        if ($this->config->optionExists('media_archive')) {
+            $mediaArchive = $this->config->get("media_archive");
 
-                $possibleExtensions = ["tar", "tar.gz", "zip"];
+            $possibleExtensions = ["tar", "tar.gz", "zip"];
 
-                $extension = $this->fileExtension($mediaArchive, $possibleExtensions);
+            $extension = $this->fileExtension($mediaArchive, $possibleExtensions);
 
-                $destinationPath = ".";
+            $destinationPath = ".";
 
-                if ($magentoVersion == "2") {
-                    $destinationPath = "pub";
-                }
-
-                // escape whitespaces for command
-                $mediaArchive = str_replace(" ", "\\ ", $mediaArchive);
-
-                // TODO: remove v argument if output is not verbose
-                if ($extension == "tar") {
-                    $cmd = "tar -xvf ".$mediaArchive." -C ".$destinationPath;
-                }
-
-                if ($extension == "tar.gz") {
-                    $cmd = "tar -xvzf ".$mediaArchive." -C ".$destinationPath;
-                }
-
-                if ($extension == "zip") {
-                    $cmd = "unzip ".$mediaArchive." -d ".$destinationPath;
-                }
-
-                if (empty($cmd)) {
-                    throw new \Exception("unkown archive extension for ".$mediaArchive);
-                }
-
-                $runtime
-                    ->getShell()
-                    ->wd($config->get("source_folder"))
-                    ->bash($cmd);
+            if ($magentoVersion == "2") {
+                $destinationPath = "pub";
             }
-        });
+
+            // escape whitespaces for command
+            $mediaArchive = str_replace(" ", "\\ ", $mediaArchive);
+
+            // TODO: remove v argument if output is not verbose
+            if ($extension == "tar") {
+                $cmd = "tar -xvf ".$mediaArchive." -C ".$destinationPath;
+            }
+
+            if ($extension == "tar.gz") {
+                $cmd = "tar -xvzf ".$mediaArchive." -C ".$destinationPath;
+            }
+
+            if ($extension == "zip") {
+                $cmd = "unzip ".$mediaArchive." -d ".$destinationPath;
+            }
+
+            if (empty($cmd)) {
+                throw new \Exception("unkown archive extension for ".$mediaArchive);
+            }
+
+            $this->shellService
+                ->wd($config->get("source_folder"))
+                ->bash($cmd);
+        }
     }
 
     /**

@@ -14,6 +14,14 @@ $c['runtime.helper.filehelper'] = function ($c) {
     return new TeamNeusta\Magedev\Runtime\Helper\FileHelper();
 };
 
+$c['runtime.helper.magerunhelper'] = function ($c) {
+    return new TeamNeusta\Magedev\Runtime\Helper\MagerunHelper(
+        $c['runtime.config'],
+        $c['runtime.helper.filehelper'],
+        $c['services.docker']
+    );
+};
+
 $c['runtime.config'] = function ($c) {
     return new \TeamNeusta\Magedev\Runtime\Config(
         $c['console.input'],
@@ -39,7 +47,7 @@ $c['services.shell'] = function ($c) {
 
 $c['commands'] = function($c) {
     return [
-        /* $this->add(new \Stecman\Component\Symfony\Console\BashCompletion\CompletionCommand()); */
+        new \Stecman\Component\Symfony\Console\BashCompletion\CompletionCommand(),
 
         // Db
         new \TeamNeusta\Magedev\Commands\Db\CleanupCommand(
@@ -56,10 +64,14 @@ $c['commands'] = function($c) {
         ),
 
         /* // Media */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Media\ImportCommand); */
+        new \TeamNeusta\Magedev\Commands\Media\ImportCommand($c['runtime.config'], $c['services.shell']),
 
         /* // Config */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Config\ResetCommand); */
+        new \TeamNeusta\Magedev\Commands\Config\ResetCommand(
+            $c['runtime.config'],
+            $c['runtime.helper.filehelper'],
+            $c['services.docker']
+        ),
 
         new \TeamNeusta\Magedev\Commands\Docker\BuildCommand($c['services.docker']),
         new \TeamNeusta\Magedev\Commands\Docker\DestroyCommand($c['services.docker']),
@@ -71,35 +83,35 @@ $c['commands'] = function($c) {
         new \TeamNeusta\Magedev\Commands\Docker\StopCommand($c['services.docker']),
 
         /* // Grunt */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Grunt\RefreshCommand); */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Grunt\WatchCommand); */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Grunt\KillCommand); */
+        new \TeamNeusta\Magedev\Commands\Grunt\RefreshCommand($c['runtime.config'], $c['services.docker']),
+        new \TeamNeusta\Magedev\Commands\Grunt\WatchCommand($c['runtime.config'], $c['services.docker']),
+        new \TeamNeusta\Magedev\Commands\Grunt\KillCommand($c['runtime.config'], $c['services.docker']),
 
         /* // Init */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Init\ComposerCommand); */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Init\NpmCommand); */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Init\PermissionsCommand); */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Init\ProjectCommand); */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Init\AddHostEntryCommand); */
+        new \TeamNeusta\Magedev\Commands\Init\AddHostEntryCommand($c['runtime.config'], $c['console.output'], $c['services.shell']),
+        new \TeamNeusta\Magedev\Commands\Init\ComposerCommand($c['runtime.config'], $c['services.docker']),
+        new \TeamNeusta\Magedev\Commands\Init\NpmCommand($c['runtime.config'], $c['services.docker']),
+        new \TeamNeusta\Magedev\Commands\Init\PermissionsCommand($c['runtime.config'], $c['services.docker']),
+        new \TeamNeusta\Magedev\Commands\Init\ProjectCommand($c['runtime.config'], $c['console.output']),
 
         /* // Magento */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Magento\CacheCleanCommand); */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Magento\CommandCommand); */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Magento\RefreshCommand); */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Magento\ReindexCommand); */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Magento\SetBaseUrlCommand); */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Magento\AlignConfigCommand); */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Magento\UpgradeCommand); */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Magento\InstallCommand); */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Magento\InstallMagerunCommand); */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Magento\DefaultAdminUserCommand); */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Magento\DefaultCustomerCommand); */
+        new \TeamNeusta\Magedev\Commands\Magento\AlignConfigCommand($c['runtime.config']),
+        new \TeamNeusta\Magedev\Commands\Magento\CacheCleanCommand($c['runtime.config'], $c['runtime.helper.magerunhelper'], $c['services.docker']),
+        new \TeamNeusta\Magedev\Commands\Magento\CommandCommand($c['runtime.config'], $c['services.docker']),
+        new \TeamNeusta\Magedev\Commands\Magento\DefaultAdminUserCommand($c['runtime.config'], $c['runtime.helper.magerunhelper'], $c['services.docker']),
+        new \TeamNeusta\Magedev\Commands\Magento\DefaultCustomerCommand($c['runtime.config'], $c['runtime.helper.magerunhelper'], $c['services.docker']),
+        new \TeamNeusta\Magedev\Commands\Magento\InstallCommand($c['runtime.config'], $c['services.docker']),
+        new \TeamNeusta\Magedev\Commands\Magento\InstallMagerunCommand($c['runtime.config'], $c['services.shell']),
+        new \TeamNeusta\Magedev\Commands\Magento\RefreshCommand($c['runtime.config'], $c['services.docker']),
+        new \TeamNeusta\Magedev\Commands\Magento\ReindexCommand($c['runtime.config'], $c['runtime.helper.magerunhelper'], $c['services.docker']),
+        new \TeamNeusta\Magedev\Commands\Magento\SetBaseUrlCommand($c['runtime.config'], $c['services.docker']),
+        new \TeamNeusta\Magedev\Commands\Magento\UpgradeCommand($c['runtime.config'], $c['runtime.helper.magerunhelper'], $c['services.docker']),
 
         /* // Tests */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Tests\DebugCommand); */
-        /* $this->add(new \TeamNeusta\Magedev\Commands\Tests\RunCommand); */
+        new \TeamNeusta\Magedev\Commands\Tests\DebugCommand($c['runtime.config'], $c['services.docker']),
+        new \TeamNeusta\Magedev\Commands\Tests\RunCommand($c['runtime.config'], $c['services.docker']),
 
-        /* $this->add(new \TeamNeusta\Magedev\Commands\UpdateCommand); */
+        new \TeamNeusta\Magedev\Commands\UpdateCommand()
     ];
 };
 
