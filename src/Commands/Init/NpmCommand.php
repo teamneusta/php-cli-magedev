@@ -16,6 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use TeamNeusta\Magedev\Commands\AbstractCommand;
 use TeamNeusta\Magedev\Runtime\Config;
 use TeamNeusta\Magedev\Services\DockerService;
+use TeamNeusta\Magedev\Services\ShellService;
 
 /**
  * Class: NpmCommand
@@ -35,17 +36,25 @@ class NpmCommand extends AbstractCommand
     protected $dockerService;
 
     /**
+     * @var \TeamNeusta\Magedev\Services\ShellService
+     */
+    protected $shellService;
+
+    /**
      * __construct
      *
      * @param \TeamNeusta\Magedev\Runtime\Config $config
      * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
+     * @param \TeamNeusta\Magedev\Services\ShellService $shellService
      */
     public function __construct(
         \TeamNeusta\Magedev\Runtime\Config $config,
-        \TeamNeusta\Magedev\Services\DockerService $dockerService
+        \TeamNeusta\Magedev\Services\DockerService $dockerService,
+        \TeamNeusta\Magedev\Services\ShellService $shellService
     ) {
         $this->config = $config;
         $this->dockerService = $dockerService;
+        $this->shellService = $shellService;
         parent::__construct();
     }
 
