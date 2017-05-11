@@ -45,6 +45,8 @@ class Main extends AbstractImage
         $this->add("/etc/apache2/sites-enabled/000-default.conf", $vhostConfig);
 
         $this->addFile("var/Docker/main/php.ini", "/usr/local/etc/php/php.ini");
+        $this->run("chmod 775 /usr/local/etc/php/php.ini"); // for www-data to read it
+
         $this->addFile("var/Docker/mysql/my.cnf","/root/.my.cnf");
         $this->addFile("var/Docker/mysql/my.cnf","/var/www/.my.cnf");
         $this->run("chown www-data:www-data /var/www/.my.cnf");
