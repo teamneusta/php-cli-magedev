@@ -84,4 +84,16 @@ class FileHelper
     {
         return file_exists($path);
     }
+
+    /**
+     * deleteFile
+     *
+     * @param string $path
+     */
+    public function deleteFile($path)
+    {
+        if (file_exists($path) && !is_dir($path)) {
+            unlink($path);
+        }
+    }
 }

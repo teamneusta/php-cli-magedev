@@ -95,8 +95,7 @@ class CleanupCommand extends AbstractCommand
 
         $this->shellService->execute("cp ".$scriptPath." .");
         $this->dockerService->execute("mysql -f < ".basename($script));
-
-        unlink($script);
+        $this->fileHelper->deleteFile($script);
 
         parent::execute($input, $output);
     }

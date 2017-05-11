@@ -56,7 +56,7 @@ class DumpCommand extends AbstractCommand
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $dumpFile = "dump.sql";
+        $dumpFile = "dump.sql"; //TODO: make this configurable
         $dbName = "magento";
 
         $this->dockerService->execute("mysqldump ".$dbName." > ".$dumpFile);
