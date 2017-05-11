@@ -67,7 +67,7 @@ class Network
     {
         $config = new NetworkCreateConfig();
         $config->setName($name);
-        $this->context->getNetworkManager()->create($config);
+        $this->networkManager->create($config);
     }
 
     /**

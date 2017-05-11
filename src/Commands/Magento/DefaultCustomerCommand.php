@@ -95,7 +95,6 @@ class DefaultCustomerCommand extends AbstractCommand
      * check if a given customer exists
      *
      * @param string $email
-     * @param Runtime $runtime
      */
     public function customerExists($email)
     {

@@ -34,11 +34,6 @@ class ShellService
     protected $wd = null;
 
     /**
-     * @var boolean
-     */
-    protected $isAllowedToFail = false;
-
-    /**
      * __construct
      *
      * @param Context $context
@@ -48,18 +43,6 @@ class ShellService
         OutputInterface $output
     ) {
         $this->output = $output;
-    }
-
-    /**
-     * Enables failure-tolerance on command execution
-     *
-     * @param bool $flag FLAG: Is failing allowed?
-     */
-    public function isAllowedToFail($flag = true)
-    {
-        $this->isAllowedToFail = $flag;
-
-        return $this;
     }
 
     /**
@@ -110,7 +93,7 @@ class ShellService
         if ($interactive) {
             $returnVar = 0;
             passthru($cmd, $returnVar);
-            if ($returnVar != 0 && !$this->isAllowedToFail) {
+            if ($returnVar != 0) {
                 throw new \Exception("last command ".$cmd." failed. cannot proceed");
             }
         } else {

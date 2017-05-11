@@ -28,22 +28,14 @@ class ProjectCommand extends AbstractCommand
     protected $output;
 
     /**
-     * @var \TeamNeusta\Magedev\Runtime\Config
-     */
-    protected $config;
-
-    /**
      * __construct
      *
      * @param \TeamNeusta\Magedev\Runtime\Config $config
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
      */
     public function __construct(
-        \TeamNeusta\Magedev\Runtime\Config $config,
-        \Symfony\Component\Console\Output\OutputInterface $output
+        \TeamNeusta\Magedev\Runtime\Config $config
     ) {
         $this->config = $config;
-        $this->output = $output;
         parent::__construct();
     }
 
@@ -82,11 +74,11 @@ class ProjectCommand extends AbstractCommand
         $this->getApplication()->find('magento:reindex')->execute($input, $output);
         $this->getApplication()->find('init:add-host-entry')->execute($input, $output);
 
-        $this->output->writeln("project installed");
+        $output->writeln("project installed");
 
         if ($this->config->optionExists("domain")) {
             $domain = $this->config->get("domain");
-            $this->output->writeln("visit: http://".$domain);
+            $output->writeln("visit: http://".$domain);
         }
     }
 }

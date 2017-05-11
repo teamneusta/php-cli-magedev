@@ -98,7 +98,6 @@ class SetBaseUrlCommand extends AbstractCommand
     /**
      * updateBaseUrl
      *
-     * @param Runtime $runtime
      * @param string $baseUrl
      * @param int $scopeId
      */

@@ -14,6 +14,7 @@ namespace TeamNeusta\Magedev\Commands\Init;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use TeamNeusta\Magedev\Commands\AbstractCommand;
+use TeamNeusta\Magedev\Runtime\Helper\FileHelper;
 use TeamNeusta\Magedev\Runtime\Config;
 use TeamNeusta\Magedev\Services\DockerService;
 use TeamNeusta\Magedev\Services\ShellService;
@@ -41,20 +42,28 @@ class NpmCommand extends AbstractCommand
     protected $shellService;
 
     /**
+     * @var \TeamNeusta\Magedev\Runtime\Helper\FileHelper
+     */
+    protected $fileHelper;
+
+    /**
      * __construct
      *
      * @param \TeamNeusta\Magedev\Runtime\Config $config
      * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
      * @param \TeamNeusta\Magedev\Services\ShellService $shellService
+     * @param \TeamNeusta\Magedev\Runtime\Helper\FileHelper $fileHelper
      */
     public function __construct(
         \TeamNeusta\Magedev\Runtime\Config $config,
         \TeamNeusta\Magedev\Services\DockerService $dockerService,
-        \TeamNeusta\Magedev\Services\ShellService $shellService
+        \TeamNeusta\Magedev\Services\ShellService $shellService,
+        \TeamNeusta\Magedev\Runtime\Helper\FileHelper $fileHelper
     ) {
         $this->config = $config;
         $this->dockerService = $dockerService;
         $this->shellService = $shellService;
+        $this->fileHelper = $fileHelper;
         parent::__construct();
     }
 
@@ -93,7 +102,7 @@ class NpmCommand extends AbstractCommand
             }
 
             // avoid ENOENT, open '/var/www/html/package.json' error
-            if (!file_exists($sourceFolder . "/package.json") && file_exists($sourceFolder . "package.json.sample")) {
+            if (!$this->fileHelper->fileExists($sourceFolder . "/package.json") && $this->fileHelper->fileExists($sourceFolder . "package.json.sample")) {
                 $this->shellService->bash("cp ".$sourceFolder."/package.json.sample ".$sourceFolder."/package.json");
             }
             $this->execNpmCommand("npm install -g grunt-cli");

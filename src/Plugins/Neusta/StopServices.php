@@ -12,7 +12,6 @@
 namespace TeamNeusta\Magedev\Plugins\Neusta;
 
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use TeamNeusta\Magedev\Runtime\Runtime;
 
 /**
  * Class StopServices
@@ -20,19 +19,40 @@ use TeamNeusta\Magedev\Runtime\Runtime;
 class StopServices
 {
     /**
-     * @var \TeamNeusta\Magedev\Runtime\Runtime
+     * @var \Symfony\Component\Console\Input\InputInterface
      */
-    protected $runtime;
+    protected $input;
+
+    /**
+     * @var \Symfony\Component\Console\Output\OutputInterface
+     */
+    protected $output;
+
+    /**
+     * @var \TeamNeusta\Magedev\Services\ShellService
+     */
+    protected $shellService;
+
+    /**
+     * @var \Symfony\Component\Console\Helper\QuestionHelper
+     */
+    protected $questionHelper;
+
 
     /**
      * __construct
      *
-     * @param mixed $runtime
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @param ShellService $shellService
+     * @param QuestionHelper $questionHelper
      */
-    public function __construct(Runtime $runtime)
-    {
-        $this->runtime = $runtime;
-        $this->runtime->getDispatcher()->addListener('before:docker:start', array($this, 'stopServices'));
+    public function __construct(\Pimple\Container $c) {
+        $this->input = $c['console.input'];
+        $this->output = $c['console.output'];
+        $this->shellService = $c['services.shell'];
+        $this->questionHelper = $c['console.questionhelper'];
+        $c['runtime.eventdispatcher']->addListener('before:docker:start', array($this, 'stopServices'));
     }
 
     /**
@@ -40,29 +60,41 @@ class StopServices
      */
     public function stopServices()
     {
-        $this->runtime->getOutput()->writeln("let me check if you have local services like apache or mysql running...");
+        $this->output->writeln("let me check if you have local services like apache or mysql running...");
 
-        $apacheRunning = $this->runtime->getHelper('ProcessHelper')->isProcessRunning("apache2");
-        $mysqlRunning = $this->runtime->getHelper('ProcessHelper')->isProcessRunning("mysqld");
-        $redisRunning = $this->runtime->getHelper('ProcessHelper')->isProcessRunning("redis-server");
+        $apacheRunning = $this->isProcessRunning("apache2");
+        $mysqlRunning = $this->isProcessRunning("mysqld");
+        $redisRunning = $this->isProcessRunning("redis-server");
 
         if ($apacheRunning || $mysqlRunning || $redisRunning) {
-            $questionHelper = $this->runtime->getQuestionHelper();
             $question = new ConfirmationQuestion("you have a local apache/mysql running. Should I stop it for you? [y]", false);
 
-            if (!$questionHelper->ask($this->runtime->getInput(), $this->runtime->getOutput(), $question)) {
+            if (!$this->questionHelper->ask($this->input, $this->output, $question)) {
                 throw new \Exception("could not proceed");
             }
 
             if ($apacheRunning) {
-                $this->runtime->getShell()->execute("sudo service apache2 stop");
+                $this->shellService->execute("sudo service apache2 stop");
             }
             if ($mysqlRunning) {
-                $this->runtime->getShell()->execute("sudo service mysql stop");
+                $this->shellService->execute("sudo service mysql stop");
             }
             if ($redisRunning) {
-                $this->runtime->getShell()->execute("sudo service redis-server stop");
+                $this->shellService->execute("sudo service redis-server stop");
             }
         }
+    }
+
+    /**
+     * isProcessRunning
+     *
+     * @param string $processName
+     * @return bool
+     */
+    public function isProcessRunning($processName)
+    {
+        $pid = [];
+        exec("sudo pidof -c ".$processName, $pid);
+        return !empty($pid);
     }
 }

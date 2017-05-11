@@ -30,8 +30,6 @@ class RefreshCommandTest extends \PHPUnit_Framework_TestCase
             'getMagentoVersion' => 2
         ]);
 
-        $dockerManager = m::mock('\TeamNeusta\Magedev\Docker\Manager');
-        $dockerManager->shouldReceive('stopContainers')->times(1);
         $dockerService = m::mock('\TeamNeusta\Magedev\Services\DockerService');
         $dockerService->shouldReceive('execute')->with("rm -rf var/generation/*");
         $dockerService->shouldReceive('execute')->with("rm -rf var/di/*");

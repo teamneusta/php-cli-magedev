@@ -84,7 +84,7 @@ class ResetCommand extends AbstractCommand
             $configDefault = $this->fileHelper->findPath("var/data/magento2/config.yml");
         }
 
-        if (file_exists($configDefault)) {
+        if ($this->fileHelper->fileExists($configDefault)) {
             $data = Yaml::parse($this->fileHelper->read($configDefault));
 
             foreach ($data as $key => $value) {

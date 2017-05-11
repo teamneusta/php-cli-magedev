@@ -72,13 +72,13 @@ class Config
         $projectConfigFile = getcwd() . "/magedev.json";
         $defaultConfigFile = $this->fileHelper->findPath("var/config/magedev.json");
 
-        if (file_exists($projectConfigFile)) {
+        if ($this->fileHelper->fileExists($projectConfigFile)) {
             $projectConfig = $this->loadConfigFile($projectConfigFile);
             $defaultConfig = $this->loadConfigFile($defaultConfigFile);
             $homeConfig = [];
 
             $homeConfigFile = $this->fileHelper->expandPath("~") . "/.magedev.json";
-            if (file_exists($homeConfigFile)) {
+            if ($this->fileHelper->fileExists($homeConfigFile)) {
                 $homeConfig = $this->loadConfigFile($homeConfigFile);
             }
             return array_merge(array_merge($defaultConfig, $homeConfig), $projectConfig);
@@ -94,7 +94,7 @@ class Config
      */
     protected function loadConfigFile($path)
     {
-        if (!file_exists($path)) {
+        if (!$this->fileHelper->fileExists($path)) {
             throw new \Exception("File " . $path . " not found");
         }
         $data = json_decode($this->fileHelper->read($path), true);

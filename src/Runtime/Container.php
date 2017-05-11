@@ -1,5 +1,5 @@
 <?php
-
+// @codeCoverageIgnoreStart
 $c = new \Pimple\Container();
 
 $c['console.input'] = function ($c) {
@@ -27,6 +27,14 @@ $c['runtime.config'] = function ($c) {
         $c['console.input'],
         $c['runtime.helper.filehelper']
     );
+};
+
+$c['console.questionhelper'] = function ($c) {
+    return new \Symfony\Component\Console\Helper\QuestionHelper();
+};
+
+$c['runtime.eventdispatcher'] = function ($c) {
+    return new \Symfony\Component\EventDispatcher\EventDispatcher();
 };
 
 $c['services.docker'] = function ($c) {
@@ -90,7 +98,7 @@ $c['commands'] = function($c) {
         /* // Init */
         new \TeamNeusta\Magedev\Commands\Init\AddHostEntryCommand($c['runtime.config'], $c['console.output'], $c['services.shell']),
         new \TeamNeusta\Magedev\Commands\Init\ComposerCommand($c['runtime.config'], $c['services.docker']),
-        new \TeamNeusta\Magedev\Commands\Init\NpmCommand($c['runtime.config'], $c['services.docker'], $c['services.shell']),
+        new \TeamNeusta\Magedev\Commands\Init\NpmCommand($c['runtime.config'], $c['services.docker'], $c['services.shell'], $c['runtime.helper.filehelper']),
         new \TeamNeusta\Magedev\Commands\Init\PermissionsCommand($c['runtime.config'], $c['services.docker']),
         new \TeamNeusta\Magedev\Commands\Init\ProjectCommand($c['runtime.config'], $c['console.output']),
 
@@ -115,10 +123,17 @@ $c['commands'] = function($c) {
     ];
 };
 
+$c['plugins.manager'] = function($c) {
+    return new \TeamNeusta\Magedev\Plugins\Manager($c['runtime.config'], $c['runtime.eventdispatcher']);
+};
+
 $c['application'] = function($c) {
-    $application = new \TeamNeusta\Magedev\Runtime\Application();
+    $c['plugins.manager']->loadPlugins($c);
+    $application = new \TeamNeusta\Magedev\Runtime\Application($c['plugins.manager']);
     $application->addCommands($c['commands']);
     return $application;
 };
 
 return $c;
+// @codeCoverageIgnoreEnd
+

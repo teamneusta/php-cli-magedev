@@ -77,7 +77,7 @@ class InstallMagerunCommand extends AbstractCommand
         }
         if ($magentoVersion == "2") {
             $this->shellService->wd($magentoRoot)->bash("curl -O https://files.magerun.net/n98-magerun2.phar");
-            $this->shellService->wd($magentoRoot)->bash("cp n98-magerun2.phar bin/magerun");
+            $this->shellService->wd($magentoRoot)->bash("mv n98-magerun2.phar bin/magerun");
             $this->shellService->wd($magentoRoot)->bash("chmod +x bin/magerun");
         }
     }
