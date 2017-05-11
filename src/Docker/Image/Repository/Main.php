@@ -36,15 +36,21 @@ class Main extends AbstractImage
             $this->from(new \TeamNeusta\Magedev\Docker\Image\Repository\Php5($this->context));
         }
 
-        $vhostConfig = $this->context->getFileHelper()->read("var/Docker/main/000-default.conf");
+        // TODO: have something like a simple template engine to replace vars
+        // like DOCUMENT_ROOT AND $GATEWAY ?
 
         $documentRoot = $this->context->getConfig()->getDocumentRootPath();
+        $vhostConfig = $this->context->getFileHelper()->read("var/Docker/main/000-default.conf");
         $vhostConfig = str_replace("\$DOCUMENT_ROOT", $documentRoot, $vhostConfig);
 
         $this->add("/etc/apache2/sites-available/000-default.conf", $vhostConfig);
         $this->add("/etc/apache2/sites-enabled/000-default.conf", $vhostConfig);
 
-        $this->addFile("var/Docker/main/php.ini", "/usr/local/etc/php/php.ini");
+        // $GATEWAY
+        $gatewayIP = $this->context->getConfig()->getGateway();
+        $phpIni = $this->context->getFileHelper()->read("var/Docker/main/php.ini");
+        $phpIni = str_replace("\$GATEWAY", $gatewayIP, $phpIni);
+        $this->add("/usr/local/etc/php/php.ini", $phpIni);
         $this->run("chmod 775 /usr/local/etc/php/php.ini"); // for www-data to read it
 
         $this->addFile("var/Docker/mysql/my.cnf","/root/.my.cnf");

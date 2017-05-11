@@ -159,6 +159,26 @@ class DockerService
         $dockerConfig->setHomePath($this->fileHelper->expandPath("~"));
         $dockerConfig->setDocumentRootPath("/var/www/html/" . $this->config->get("source_folder"));
         $dockerConfig->setMagentoVersion($this->config->getMagentoVersion());
+
+
+        $networkManager = new \TeamNeusta\Magedev\Docker\Network();
+        // TODO: make this configurable?
+        $networkName = "magedev_default";
+        // make sure this network exists
+        if (!$networkManager->networkExists($networkName)) {
+            $networkManager->createNetwork($networkName);
+            if (!$networkManager->networkExists($networkName)) {
+                throw new \Exception("something went wrong while creating network " . $networkName);
+            }
+        }
+
+        $network = $networkManager->getNetworkByName($networkName);
+        if (!$network->getId()) {
+            throw new \Exception("no id for network " . $network->getName() . " found.");
+        }
+        $dockerConfig->setNetworkId($network->getId());
+        $dockerConfig->setGateway($networkManager->getGatewayForNetwork($network));
+
         $context = new \TeamNeusta\Magedev\Docker\Context($dockerConfig, $this->fileHelper);
 
         return $context;

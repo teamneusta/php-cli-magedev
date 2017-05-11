@@ -14,6 +14,7 @@ namespace TeamNeusta\Magedev\Docker\Container;
 use Docker\API\Model\ContainerConfig;
 use Docker\API\Model\EndpointSettings;
 use Docker\API\Model\HostConfig;
+use Docker\API\Model\NetworkCreateConfig;
 use Docker\API\Model\NetworkingConfig;
 use Docker\API\Model\PortBinding;
 
@@ -84,11 +85,10 @@ abstract class AbstractContainer extends DockerContainer
     {
         $config = new ContainerConfig();
         $this->endpointSettings->setLinks($this->links);
+        $this->endpointSettings->setNetworkID($this->context->getConfig()->getNetworkId());
 
         // TODO: make this configurable?
-        $networkName = "bridge";
-        $networkId = $this->getNetworkId($networkName);
-        $this->endpointSettings->setNetworkID($networkId);
+        $networkName = "magedev_default";
 
         $networkingConfig = new NetworkingConfig();
         $networkingConfig->setEndpointsConfig(new \ArrayObject([$networkName => $this->endpointSettings]));
@@ -139,22 +139,5 @@ abstract class AbstractContainer extends DockerContainer
     public function setBinds($binds = [])
     {
         $this->hostConfig->setBinds($binds);
-    }
-
-    /**
-     * getNetworkId
-     *
-     * @param string $name
-     * @return string
-     */
-    protected function getNetworkId($name)
-    {
-        $networks = $this->context->getNetworkManager()->findAll();
-        foreach ($networks as $network) {
-            if ($network->getName() == $name) {
-                return $network->getId();
-            }
-        }
-        throw new \Exception("Network " . $name . " could not be found");
     }
 }

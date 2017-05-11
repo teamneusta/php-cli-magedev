@@ -73,7 +73,7 @@ class DebugCommand extends AbstractCommand
 
         if ($this->config->optionExists("xdebug")) {
             $xdebugSettings = $this->config->get("xdebug");
-            $remoteHost = $xdebugSettings["remote_host"];
+            $remoteHost = $this->dockerService->getContext()->getConfig()->getGateway();
             $ideKey = $xdebugSettings["idekey"];
             if ($ideKey && $remoteHost) {
                 $cmd  = "XDEBUG_CONFIG=\"idekey=" . $ideKey . "\"";
