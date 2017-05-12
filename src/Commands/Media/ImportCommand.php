@@ -102,7 +102,7 @@ class ImportCommand extends AbstractCommand
             }
 
             $this->shellService
-                ->wd($config->get("source_folder"))
+                ->wd($this->config->get("source_folder"))
                 ->bash($cmd);
         }
     }

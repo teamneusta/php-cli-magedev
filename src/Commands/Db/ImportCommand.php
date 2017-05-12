@@ -79,18 +79,17 @@ class ImportCommand extends AbstractCommand
     {
         if ($this->config->optionExists('dump_file')) {
             $dumpFile = $this->config->get('dump_file');
+            $sourceFolder = $this->config->get("source_folder");
 
             // escape whitespaces for command
             $dumpFile = str_replace(" ", "\\ ", $dumpFile);
 
             if (!file_exists(getcwd() . $dumpFile)) {
                 // copy it to project folder
-                $this->shellService->execute("cp ".$dumpFile." .");
+                $this->shellService->execute("cp ".$dumpFile." " . $sourceFolder);
+                $this->dockerService->execute("mysql < ".basename($dumpFile));
             }
 
-            $this->dockerService->execute("mysql < ".basename($dumpFile));
-
-            unlink(basename($dumpFile));
         }
         parent::execute($input, $output);
     }

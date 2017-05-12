@@ -65,6 +65,7 @@ class MountSharefolder
         $this->questionHelper = $c['console.questionhelper'];
         $c['runtime.eventdispatcher']->addListener('before:db:import', array($this, 'checkShareFolder'));
         $c['runtime.eventdispatcher']->addListener('before:media:import', array($this, 'checkShareFolder'));
+        $c['runtime.eventdispatcher']->addListener('before:init:project', array($this, 'checkShareFolder'));
     }
 
     /**

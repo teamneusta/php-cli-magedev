@@ -157,7 +157,7 @@ class Config
      */
     public function setGateway($gateway)
     {
-        $gateway = strstr($gateway, "/", true);
+        strstr($gateway, "/", true);
         $this->gateway = $gateway;
     }
 

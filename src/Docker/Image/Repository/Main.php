@@ -47,9 +47,12 @@ class Main extends AbstractImage
         $this->add("/etc/apache2/sites-enabled/000-default.conf", $vhostConfig);
 
         // $GATEWAY
-        $gatewayIP = $this->context->getConfig()->getGateway();
+        $gatewayIp = $this->context->getConfig()->getGateway();
+        if (empty($gatewayIp)) {
+            throw new \Exception("no gateway ip found");
+        }
         $phpIni = $this->context->getFileHelper()->read("var/Docker/main/php.ini");
-        $phpIni = str_replace("\$GATEWAY", $gatewayIP, $phpIni);
+        $phpIni = str_replace("\$GATEWAY", $gatewayIp, $phpIni);
         $this->add("/usr/local/etc/php/php.ini", $phpIni);
         $this->run("chmod 775 /usr/local/etc/php/php.ini"); // for www-data to read it
 

@@ -73,3 +73,8 @@ This task will do a lot of things for your, while taking differences between Mag
 * adds a host entry to your /etc/hosts
 
 If everything went fine, you may open your browser and visit `http://some-project.local` in this case. Learn more on how to prepare existing projects for magedev [here](prepare-existing-projects).
+
+
+# Install Project with custom settings
+
+Read [this](custom-settings.md) to find out how to apply custom configuration settings for your project.

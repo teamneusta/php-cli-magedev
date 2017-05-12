@@ -177,7 +177,12 @@ class DockerService
             throw new \Exception("no id for network " . $network->getName() . " found.");
         }
         $dockerConfig->setNetworkId($network->getId());
-        $dockerConfig->setGateway($networkManager->getGatewayForNetwork($network));
+        $gateway = $networkManager->getGatewayForNetwork($network);
+        $dockerConfig->setGateway($gateway);
+
+        if (empty($dockerConfig->getGateway())) {
+            throw new \Exception("no gateway ip found");
+        }
 
         $context = new \TeamNeusta\Magedev\Docker\Context($dockerConfig, $this->fileHelper);
 

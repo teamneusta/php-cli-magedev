@@ -77,7 +77,7 @@ class AddHostEntryCommand extends AbstractCommand
         if ($this->config->optionExists("domains")) {
             $domains = $this->config->get("domains");
             foreach ($domains as $domain => $scopeId) {
-                $this->addHostEntryIfRequired($runtime, $domain);
+                $this->addHostEntryIfRequired($domain);
             }
         } else {
             $domain = $this->config->get("domain");
