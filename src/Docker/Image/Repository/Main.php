@@ -26,32 +26,34 @@ class Main extends AbstractImage
         $this->name("main");
 
         // PHP Image is selected based on magento version
-        $magentoVersion = $this->context->getConfig()->getMagentoVersion();
+        $magentoVersion = $this->config->getMagentoVersion();
 
-        if ($this->context->getConfig()->getMagentoVersion() == "2") {
-            $this->from(new \TeamNeusta\Magedev\Docker\Image\Repository\Php7($this->context));
+        if ($magentoVersion == "2") {
+            $this->from($this->imageFactory->create("Php7"));
+            /* $this->from(new \TeamNeusta\Magedev\Docker\Image\Repository\Php7($this->context)); */
         }
 
-        if ($this->context->getConfig()->getMagentoVersion() == "1") {
-            $this->from(new \TeamNeusta\Magedev\Docker\Image\Repository\Php5($this->context));
+        if ($magentoVersion == "1") {
+            $this->from($this->imageFactory->create("Php5"));
+            /* $this->from(new \TeamNeusta\Magedev\Docker\Image\Repository\Php5($this->context)); */
         }
 
         // TODO: have something like a simple template engine to replace vars
         // like DOCUMENT_ROOT AND $GATEWAY ?
 
-        $documentRoot = $this->context->getConfig()->getDocumentRootPath();
-        $vhostConfig = $this->context->getFileHelper()->read("var/Docker/main/000-default.conf");
+        $documentRoot = $this->config->get('document_root');
+        $vhostConfig = $this->fileHelper->read("var/Docker/main/000-default.conf");
         $vhostConfig = str_replace("\$DOCUMENT_ROOT", $documentRoot, $vhostConfig);
 
         $this->add("/etc/apache2/sites-available/000-default.conf", $vhostConfig);
         $this->add("/etc/apache2/sites-enabled/000-default.conf", $vhostConfig);
 
         // $GATEWAY
-        $gatewayIp = $this->context->getConfig()->getGateway();
+        $gatewayIp = $this->config->get('gateway');
         if (empty($gatewayIp)) {
             throw new \Exception("no gateway ip found");
         }
-        $phpIni = $this->context->getFileHelper()->read("var/Docker/main/php.ini");
+        $phpIni = $this->fileHelper->read("var/Docker/main/php.ini");
         $phpIni = str_replace("\$GATEWAY", $gatewayIp, $phpIni);
         $this->add("/usr/local/etc/php/php.ini", $phpIni);
         $this->run("chmod 775 /usr/local/etc/php/php.ini"); // for www-data to read it

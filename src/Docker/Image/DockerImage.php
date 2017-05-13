@@ -23,9 +23,14 @@ use Docker\Manager\ImageManager;
 abstract class DockerImage
 {
     /**
-     * @var \TeamNeusta\Magedev\Docker\Context
+     * @var \TeamNeusta\Magedev\Runtime\Config
      */
-    protected $context;
+    protected $config;
+
+    /**
+     * @var \TeamNeusta\Magedev\Docker\Image\Factory
+     */
+    protected $imageFactory;
 
     /**
      * @var \Docker\Context\ContextBuilder
@@ -33,15 +38,28 @@ abstract class DockerImage
     protected $contextBuilder;
 
     /**
+     * @var \TeamNeusta\Magedev\Runtime\Helper\FileHelper
+     */
+    protected $fileHelper;
+
+    /**
      * __construct
      *
+     * @param \TeamNeusta\Magedev\Runtime\Config  $config
+     * @param \TeamNeusta\Magedev\Docker\Image\Factory $imageFactory
+     * @param \TeamNeusta\Magedev\Runtime\Helper\FileHelper $fileHelper
      * @param \TeamNeusta\Magedev\Docker\Context $context
      */
     public function __construct(
-        \TeamNeusta\Magedev\Docker\Context $context
+        \TeamNeusta\Magedev\Runtime\Config $config,
+        \TeamNeusta\Magedev\Docker\Image\Factory $imageFactory,
+        \TeamNeusta\Magedev\Runtime\Helper\FileHelper $fileHelper,
+        \Docker\Context\ContextBuilder $contextBuilder
     ) {
-        $this->context = $context;
-        $this->contextBuilder = new ContextBuilder();
+        $this->config = $config;
+        $this->imageFactory = $imageFactory;
+        $this->fileHelper = $fileHelper;
+        $this->contextBuilder = $contextBuilder;
     }
 
     /**

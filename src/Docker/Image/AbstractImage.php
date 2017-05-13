@@ -89,9 +89,7 @@ abstract class AbstractImage extends DockerImage
      */
     public function addFile($srcPath, $dstPath)
     {
-        $fileHelper = $this->context->getFileHelper();
-        /* $srcPath = $this->context->findPath($srcPath); */
-        $this->add($dstPath, $fileHelper->read($srcPath));
+        $this->add($dstPath, $this->fileHelper->read($srcPath));
     }
 
     /**
