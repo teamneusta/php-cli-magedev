@@ -33,7 +33,7 @@ class NpmCommandTest extends \TeamNeusta\Magedev\Test\TestCase
 
         $dockerService = m::mock('\TeamNeusta\Magedev\Services\DockerService');
         $shellService = m::mock('\TeamNeusta\Magedev\Services\ShellService');
-        $fileHelper = m::mock('\TeamNeusta\Magedev\Helper\FileHelper');
+        $fileHelper = m::mock('\TeamNeusta\Magedev\Runtime\Helper\FileHelper');
         $fileHelper->shouldReceive('fileExists');
         $dockerService->shouldReceive("execute")->with("bash -c \"[[ ! -f \"/usr/bin/node\" ]] && ln -s /usr/bin/nodejs /usr/bin/node\"", ['user'=>'root']);
         $dockerService->shouldReceive("execute")->with("npm install -g grunt-cli", ['user'=>'root']);
@@ -62,7 +62,7 @@ class NpmCommandTest extends \TeamNeusta\Magedev\Test\TestCase
 
         $dockerService = m::mock('\TeamNeusta\Magedev\Services\DockerService');
         $shellService = m::mock('\TeamNeusta\Magedev\Services\ShellService');
-        $fileHelper = m::mock('\TeamNeusta\Magedev\Helper\FileHelper');
+        $fileHelper = m::mock('\TeamNeusta\Magedev\Runtime\Helper\FileHelper');
         $fileHelper->shouldReceive('fileExists');
         $dockerService->shouldReceive("execute")->with("bash -c \"[[ ! -f \"/usr/bin/node\" ]] && ln -s /usr/bin/nodejs /usr/bin/node\"", ['user'=>'root']);
         $dockerService->shouldReceive("execute")->with("npm config set https-proxy http://someproxy.de:8080 && npm config set proxy http://someproxy.de:8080 && npm install -g grunt-cli", ['user'=>'root']);
