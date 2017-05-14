@@ -24,17 +24,22 @@ use Docker\API\Model\PortBinding;
  * @see DockerContainer
  * @abstract
  */
-abstract class AbstractContainer extends DockerContainer
+abstract class AbstractContainer
 {
     /**
-     * @var \Docker\API\Model\HostConfig
+     * @var \TeamNeusta\Magedev\Runtime\Config
      */
-    protected $hostConfig;
+    protected $config;
 
     /**
-     * @var Docker\API\Model\EndpointSettings
+     * @var \TeamNeusta\Magedev\Docker\Image\Factory
      */
-    protected $endpointSettings;
+    protected $imageFactory;
+
+    /**
+     * @var string[]
+     */
+    protected $binds;
 
     /**
      * @var \ArrayObject
@@ -49,15 +54,17 @@ abstract class AbstractContainer extends DockerContainer
     /**
      * __construct
      *
-     * @param \TeamNeusta\Magedev\Docker\Context $context
+     * @param \TeamNeusta\Magedev\Runtime\Config $config
      */
     public function __construct(
-        \TeamNeusta\Magedev\Docker\Context $context
+        \TeamNeusta\Magedev\Runtime\Config $config,
+        \TeamNeusta\Magedev\Docker\Image\Factory $imageFactory
     ) {
-        parent::__construct($context);
-        $this->hostConfig = new HostConfig();
-        $this->endpointSettings = new EndpointSettings();
+        $this->config = $config;
+        $this->imageFactory = $imageFactory;
         $this->mapPorts = new \ArrayObject();
+        $this->binds = [];
+        $this->links = [];
     }
 
     /**
@@ -84,21 +91,24 @@ abstract class AbstractContainer extends DockerContainer
     public function getConfig()
     {
         $config = new ContainerConfig();
-        $this->endpointSettings->setLinks($this->links);
-        $this->endpointSettings->setNetworkID($this->context->getConfig()->getNetworkId());
+        $endpointSettings = new EndpointSettings();
+        $endpointSettings->setLinks($this->links);
+        $endpointSettings->setNetworkID($this->config->get("network_id"));
 
         // TODO: make this configurable?
         $networkName = "magedev_default";
 
         $networkingConfig = new NetworkingConfig();
-        $networkingConfig->setEndpointsConfig(new \ArrayObject([$networkName => $this->endpointSettings]));
+        $networkingConfig->setEndpointsConfig(new \ArrayObject([$networkName => $endpointSettings]));
 
         $config->setNetworkingConfig($networkingConfig);
-        $this->hostConfig->setPortBindings($this->mapPorts);
-        $config->setHostConfig($this->hostConfig);
+        $hostConfig = new HostConfig();
+        $hostConfig->setBinds($this->binds);
+        $hostConfig->setPortBindings($this->mapPorts);
+        $config->setHostConfig($hostConfig);
 
         $env = [];
-        foreach ($this->context->getEnvVars() as $key => $value) {
+        foreach ($this->config->get('env_vars') as $key => $value) {
             $env[] = $key . "=" . $value;
         }
 
@@ -138,6 +148,6 @@ abstract class AbstractContainer extends DockerContainer
      */
     public function setBinds($binds = [])
     {
-        $this->hostConfig->setBinds($binds);
+        $this->binds = $binds;
     }
 }

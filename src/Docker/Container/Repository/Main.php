@@ -33,18 +33,7 @@ class Main extends AbstractContainer
      */
     public function getImage()
     {
-        return new \TeamNeusta\Magedev\Docker\Image\Repository\Main($this->context);
-    }
-
-    /**
-     * getBuildName
-     */
-    public function getBuildName()
-    {
-        // name for this image is project dependend
-        return $this->context->buildName(
-            $this->getName()
-        );
+        return $this->imageFactory->create("Main");
     }
 
     /**
@@ -52,8 +41,11 @@ class Main extends AbstractContainer
      */
     public function getConfig()
     {
-        $homePath    = $this->context->getConfig()->getHomePath();
-        $projectPath = $this->context->getConfig()->getProjectPath();
+        $homePath       = $this->config->get("home_path");
+        $projectPath    = $this->config->get("project_path");
+
+        /* $homePath    = $this->context->getConfig()->getHomePath(); */
+        /* $projectPath = $this->context->getConfig()->getProjectPath(); */
 
         // TODO: make this configurable ?
         $this->setBinds([

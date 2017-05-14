@@ -52,6 +52,7 @@ class Config
     ) {
         $this->input = $input;
         $this->fileHelper = $fileHelper;
+        $this->configData = [];
     }
 
     /**
@@ -60,6 +61,7 @@ class Config
     public function load()
     {
         $this->configData = $this->loadConfiguration();
+        $this->isLoaded = true;
     }
 
     /**
@@ -138,6 +140,11 @@ class Config
         $value = $this->configData[$key];
 
         return $value;
+    }
+
+    public function set($key, $value)
+    {
+        $this->configData[$key] = $value;
     }
 
     /**

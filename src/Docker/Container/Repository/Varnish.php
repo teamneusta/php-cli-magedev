@@ -33,6 +33,6 @@ class Varnish extends AbstractContainer
      */
     public function getImage()
     {
-        return new \TeamNeusta\Magedev\Docker\Image\Repository\Varnish($this->context);
+        return $this->imageFactory->create("Varnish");
     }
 }

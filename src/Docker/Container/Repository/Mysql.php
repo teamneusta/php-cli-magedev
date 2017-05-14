@@ -33,7 +33,7 @@ class Mysql extends AbstractContainer
      */
     public function getImage()
     {
-        return new \TeamNeusta\Magedev\Docker\Image\Repository\Mysql($this->context);
+        return $this->imageFactory->create("Mysql");
     }
 
     /**
@@ -42,7 +42,7 @@ class Mysql extends AbstractContainer
     public function getConfig()
     {
         $this->setBinds([
-            $this->context->getConfig()->getProjectPath() . '/mysql:/var/lib/mysql:rw'
+            $this->config->get('project_path') . '/mysql:/var/lib/mysql:rw'
         ]);
 
         $config = parent::getConfig();
