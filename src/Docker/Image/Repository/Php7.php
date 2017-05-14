@@ -29,10 +29,14 @@ class Php7 extends AbstractImage
         $uid = getmyuid();
         $this->run("usermod -u " . $uid . " www-data");
 
-        if (array_key_exists("HTTP_PROXY", $this->context->getEnvVars())) {
-            $httpProxy = $this->context->getEnvVars()["HTTP_PROXY"];
-            $this->run("echo \"Acquire::http::Proxy \\\"".$httpProxy.";\\\" > /etc/apt/apt.conf\"");
-            $this->run("pear config-set http_proxy  " . $httpProxy);
+        $useProxy = $this->config->optionExists("proxy");
+        if ($useProxy) {
+            $proxy = $this->config->get("proxy");
+            if (array_key_exists("HTTP", $proxy)) {
+                $httpProxy = $proxy["HTTP"];
+                $this->run("echo \"Acquire::http::Proxy \\\"".$httpProxy.";\\\" > /etc/apt/apt.conf\"");
+                $this->run("pear config-set http_proxy  " . $httpProxy);
+            }
         }
 
         $this->run("apt-get update");

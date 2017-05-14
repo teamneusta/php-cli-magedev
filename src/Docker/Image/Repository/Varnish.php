@@ -24,7 +24,7 @@ class Varnish extends AbstractImage
     public function configure()
     {
         $this->name("varnish");
-        $this->from(new \TeamNeusta\Magedev\Docker\Image\Repository\Varnish4($this->context));
+        $this->from($this->imageFactory->create("Varnish4"));
         $this->addFile("var/Docker/varnish/conf/supervisord.conf", "/etc/supervisor/conf.d/supervisord.conf");
         $this->addFile("var/Docker/varnish/etc/default/varnish", "/etc/default/varnish");
         $this->addFile("var/Docker/varnish/etc/varnish/default.vcl", "/etc/varnish/default.vcl");

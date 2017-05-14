@@ -9,7 +9,7 @@
  * @license https://opensource.org/licenses/mit-license MIT License
  */
 
-namespace TeamNeusta\Magedev\Docker\Image;
+namespace TeamNeusta\Magedev\Docker\Api;
 
 use Docker\API\Model\BuildInfo;
 use Docker\API\Model\CreateImageInfo;
@@ -18,60 +18,33 @@ use Docker\Docker;
 use Docker\Manager\ImageManager;
 
 /**
- * Class DockerImage
+ * Class Image
  */
-abstract class DockerImage
+class Image
 {
     /**
-     * @var \TeamNeusta\Magedev\Runtime\Config
+     * @var \Docker\Manager\ImageManager
      */
-    protected $config;
+    protected $imageManager;
 
     /**
-     * @var \TeamNeusta\Magedev\Docker\Image\Factory
+     * @var \TeamNeusta\Magedev\Docker\Image\AbstractImage
      */
-    protected $imageFactory;
-
-    /**
-     * @var \Docker\Context\ContextBuilder
-     */
-    protected $contextBuilder;
-
-    /**
-     * @var \TeamNeusta\Magedev\Runtime\Helper\FileHelper
-     */
-    protected $fileHelper;
+    protected $image;
 
     /**
      * __construct
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config  $config
-     * @param \TeamNeusta\Magedev\Docker\Image\Factory $imageFactory
-     * @param \TeamNeusta\Magedev\Runtime\Helper\FileHelper $fileHelper
-     * @param \TeamNeusta\Magedev\Docker\Context $context
+     * @param \Docker\Manager\ImageManager $imageManager
+     * @param \TeamNeusta\Magedev\Docker\Image\AbstractImage $image
      */
     public function __construct(
-        \TeamNeusta\Magedev\Runtime\Config $config,
-        \TeamNeusta\Magedev\Docker\Image\Factory $imageFactory,
-        \TeamNeusta\Magedev\Runtime\Helper\FileHelper $fileHelper,
-        \Docker\Context\ContextBuilder $contextBuilder
+        \Docker\Manager\ImageManager $imageManager,
+        \TeamNeusta\Magedev\Docker\Image\AbstractImage $image
     ) {
-        $this->config = $config;
-        $this->imageFactory = $imageFactory;
-        $this->fileHelper = $fileHelper;
-        $this->contextBuilder = $contextBuilder;
+        $this->imageManager = $imageManager;
+        $this->image = $image;
     }
-
-    /**
-     * getBuildName
-     * @return string
-     */
-    public abstract function getBuildName();
-
-    /**
-     * configure
-     */
-    public abstract function configure();
 
     /**
      * exists
@@ -79,13 +52,13 @@ abstract class DockerImage
      */
     public function exists()
     {
-        $images = $this->context->getImageManager()->findAll();
+        $images = $this->imageManager->findAll();
         foreach ($images as $image) {
             foreach ($image->getRepoTags() as $tags) {
                 $nameParts = explode(":", $tags);
                 $name = $nameParts[0];
                 $version = $nameParts[1];
-                if ($name === $this->getBuildName()) {
+                if ($name === $this->image->getBuildName()) {
                     return true;
                 }
             }
@@ -98,9 +71,9 @@ abstract class DockerImage
      */
     public function build()
     {
-        $name = $this->getBuildName();
+        $name = $this->image->getBuildName();
         if (!$this->exists()) {
-            $contextBuilder = $context = $this->getContextBuilder();
+            $contextBuilder = $this->image->getContextBuilder();
             foreach ($this->context->getEnvVars() as $key => $value) {
                 $contextBuilder->env($key, $value);
             }

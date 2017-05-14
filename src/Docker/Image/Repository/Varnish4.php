@@ -26,13 +26,14 @@ class Varnish4 extends AbstractImage
         $this->name('varnish4');
         $this->from('ubuntu:16.04');
 
-        if (array_key_exists("HTTP_PROXY", $this->context->getEnvVars())) {
-            $httpProxy = $this->context->getEnvVars()["HTTP_PROXY"];
-            $this->run("echo \"Acquire::http::Proxy \\\"".$httpProxy.";\\\" > /etc/apt/apt.conf\"");
-        }
-        if (array_key_exists("HTTPS_PROXY", $this->context->getEnvVars())) {
-            $httpsProxy = $this->context->getEnvVars()["HTTPS_PROXY"];
-            $this->run("echo \"Acquire::https::Proxy \\\"".$httpsProxy.";\\\" > /etc/apt/apt.conf\"");
+        $useProxy = $this->config->optionExists("proxy");
+        if ($useProxy) {
+            $proxy = $this->config->get("proxy");
+            if (array_key_exists("HTTP", $proxy)) {
+                $httpProxy = $proxy["HTTP"];
+                $this->run("echo \"Acquire::http::Proxy \\\"".$httpProxy.";\\\" > /etc/apt/apt.conf\"");
+                $this->run("pear config-set http_proxy  " . $httpProxy);
+            }
         }
         // Update the package repository and install applications
         $this->run("apt-get update");

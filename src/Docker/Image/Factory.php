@@ -18,8 +18,46 @@ namespace TeamNeusta\Magedev\Docker\Image;
  */
 class Factory
 {
+    /**
+     * @var \TeamNeusta\Magedev\Runtime\Config
+     */
+    protected $config;
+
+    /**
+     * @var \Docker\Context\ContextBuilder
+     */
+    protected $contextBuilder;
+
+    /**
+     * @var \TeamNeusta\Magedev\Runtime\Helper\FileHelper
+     */
+    protected $fileHelper;
+
+    /**
+     * __construct
+     *
+     * @param \TeamNeusta\Magedev\Runtime\Config  $config
+     * @param \TeamNeusta\Magedev\Runtime\Helper\FileHelper $fileHelper
+     * @param \TeamNeusta\Magedev\Docker\Context $context
+     */
+    public function __construct(
+        \TeamNeusta\Magedev\Runtime\Config $config,
+        \TeamNeusta\Magedev\Runtime\Helper\FileHelper $fileHelper,
+        \Docker\Context\ContextBuilder $contextBuilder
+    ) {
+        $this->config = $config;
+        $this->fileHelper = $fileHelper;
+        $this->contextBuilder = $contextBuilder;
+    }
+
     public function create($className)
     {
-
+        $className = "\\TeamNeusta\\Magedev\\Docker\\Image\\Repository\\" . $className;
+        return new $className(
+            $this->config,
+            $this,
+            $this->fileHelper,
+            $this->contextBuilder
+        );
     }
 }

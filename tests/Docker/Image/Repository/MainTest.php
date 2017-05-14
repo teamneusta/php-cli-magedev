@@ -33,8 +33,8 @@ class MainTest extends \TeamNeusta\Magedev\Test\TestCase
         $config->shouldReceive("get")->with("document_root")->andReturn("/var/www/html/Source");
         $config->shouldReceive("get")->with("gateway")->andReturn("172.20.0.1");
 
-        $imageFactory = m::mock(ImageFactory::class)->makePartial();
-        /* $imageFactory->shouldReceive("create")->with("Php7")->times(1); */
+        $imageFactory = m::mock(ImageFactory::class);
+        $imageFactory->shouldReceive("create")->with("Php7")->times(1);
 
         $fileHelper = m::mock(FileHelper::class);
         $fileHelper->shouldReceive('read')
@@ -93,7 +93,6 @@ class MainTest extends \TeamNeusta\Magedev\Test\TestCase
                 "/usr/bin/mini_sendmail",
                 "sendmail bin"
             );
-        $contextBuilder->shouldReceive("__destruct");
 
         $image = new Main(
             $config,

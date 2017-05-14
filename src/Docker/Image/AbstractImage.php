@@ -12,17 +12,62 @@
 namespace TeamNeusta\Magedev\Docker\Image;
 
 use Docker\Context\ContextBuilder;
-use Docker\Docker;
 
 /**
  * Class AbstractImage
  */
-abstract class AbstractImage extends DockerImage
+abstract class AbstractImage
 {
     /**
      * @var string
      */
     protected $name;
+
+    /**
+     * @var \TeamNeusta\Magedev\Runtime\Config
+     */
+    protected $config;
+
+    /**
+     * @var \TeamNeusta\Magedev\Docker\Image\Factory
+     */
+    protected $imageFactory;
+
+    /**
+     * @var \Docker\Context\ContextBuilder
+     */
+    protected $contextBuilder;
+
+    /**
+     * @var \TeamNeusta\Magedev\Runtime\Helper\FileHelper
+     */
+    protected $fileHelper;
+
+    /**
+     * __construct
+     *
+     * @param \TeamNeusta\Magedev\Runtime\Config  $config
+     * @param \TeamNeusta\Magedev\Docker\Image\Factory $imageFactory
+     * @param \TeamNeusta\Magedev\Runtime\Helper\FileHelper $fileHelper
+     * @param \TeamNeusta\Magedev\Docker\Context $context
+     */
+    public function __construct(
+        \TeamNeusta\Magedev\Runtime\Config $config,
+        \TeamNeusta\Magedev\Docker\Image\Factory $imageFactory,
+        \TeamNeusta\Magedev\Runtime\Helper\FileHelper $fileHelper,
+        \Docker\Context\ContextBuilder $contextBuilder
+    ) {
+        $this->config = $config;
+        $this->imageFactory = $imageFactory;
+        $this->fileHelper = $fileHelper;
+        $this->contextBuilder = $contextBuilder;
+    }
+
+    /**
+     * configure
+     */
+    public abstract function configure();
+
 
     /**
      * getBuildName
@@ -120,5 +165,14 @@ abstract class AbstractImage extends DockerImage
     public function cmd($cmd)
     {
         $this->contextBuilder->command($cmd);
+    }
+
+    /**
+     * getContextBuilder
+     * @return \Docker\Context\ContextBuilder
+     */
+    public function getContextBuilder()
+    {
+        return $this->contextBuilder;
     }
 }
