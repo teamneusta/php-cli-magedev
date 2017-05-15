@@ -11,7 +11,7 @@
 
 namespace TeamNeusta\Magedev\Test\Commands\Docker;
 
-use TeamNeusta\Magedev\Test\TestHelper\CommandMockHelper;
+use \Mockery as m;
 use TeamNeusta\Magedev\Commands\Docker\StopCommand;
 
 /**
@@ -23,9 +23,18 @@ class StopCommandTest extends \PHPUnit_Framework_TestCase
 {
     public function testExecute()
     {
-        $helper = new CommandMockHelper();
-        $command = $helper->getCommand(StopCommand::class);
-        $helper->getDocker()->expects(self::once())->method('stopContainers');
-        $helper->executeCommand($command);
+        $input = m::mock('\Symfony\Component\Console\Input\InputInterface');
+        $output = m::mock('\Symfony\Component\Console\Output\ConsoleOutput[]', ['writeln']);
+
+        $dockerManager = m::mock('\TeamNeusta\Magedev\Docker\Manager');
+        $dockerManager->shouldReceive('stopContainers')->times(1);
+        $dockerService = m::mock(
+            '\TeamNeusta\Magedev\Services\DockerService',
+            [
+                'getManager' => $dockerManager
+            ]
+        );
+        $command = new StopCommand($dockerService);
+        $command->execute($input, $output);
     }
 }

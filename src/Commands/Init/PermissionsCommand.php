@@ -11,7 +11,11 @@
 
 namespace TeamNeusta\Magedev\Commands\Init;
 
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use TeamNeusta\Magedev\Commands\AbstractCommand;
+use TeamNeusta\Magedev\Runtime\Config;
+use TeamNeusta\Magedev\Services\DockerService;
 
 /**
  * Class: PermissionsCommand
@@ -21,46 +25,78 @@ use TeamNeusta\Magedev\Commands\AbstractCommand;
 class PermissionsCommand extends AbstractCommand
 {
     /**
+     * @var \TeamNeusta\Magedev\Runtime\Config
+     */
+    protected $config;
+
+    /**
+     * @var \TeamNeusta\Magedev\Services\DockerService
+     */
+    protected $dockerService;
+
+    /**
+     * __construct
+     *
+     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
+     */
+    public function __construct(
+        \TeamNeusta\Magedev\Runtime\Config $config,
+        \TeamNeusta\Magedev\Services\DockerService $dockerService
+    ) {
+        $this->config = $config;
+        $this->dockerService = $dockerService;
+        parent::__construct();
+    }
+
+    /**
      * configure
      */
     protected function configure()
     {
         $this->setName("init:permissions");
         $this->setDescription("set file and folder permissions for magento");
-        $this->onExecute(function ($runtime) {
-            $config = $runtime->getConfig();
-            $sourceFolder = $config->get("source_folder");
+    }
 
-            // use current folder, if it is the current one
-            if (empty($sourceFolder)) {
-                $sourceFolder = ".";
-            }
+    /**
+     * execute
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    public function execute(InputInterface $input, OutputInterface $output)
+    {
+        $sourceFolder = $this->config->get("source_folder");
 
-            $commands = [
-                "chown -R www-data:users /var/www/html",
-                "chown -R www-data:users /var/www/.composer",
-                "chown -R www-data:users /var/www/.ssh",
-                "chown -R www-data:users /var/www/modules",
-                "chown -R www-data:users /var/www/composer-cache",
-                // TODO: more fine grained permissions
-                "cd /var/www/html && chmod -R 775 ".$sourceFolder
-            ];
+        // use current folder, if it is the current one
+        if (empty($sourceFolder)) {
+            $sourceFolder = ".";
+        }
 
-            foreach ($commands as $cmd) {
-                $runtime->getDocker()->execute(
-                    $cmd,
-                    [
-                      'user' => 'root'
-                    ]
-                );
-            }
-            $runtime->getDocker()->execute(
-                "usermod -u ".getmyuid()." mysql",
+        $commands = [
+            "chown -R www-data:users /var/www/html",
+            "chown -R www-data:users /var/www/.composer",
+            "chown -R www-data:users /var/www/.ssh",
+            "chown -R www-data:users /var/www/modules",
+            "chown -R www-data:users /var/www/composer-cache",
+            // TODO: more fine grained permissions
+            "cd /var/www/html && chmod -R 775 ".$sourceFolder
+        ];
+
+        foreach ($commands as $cmd) {
+            $this->dockerService->execute(
+                $cmd,
                 [
-                    'user' => 'root',
-                    'container' => 'mysql'
+                  'user' => 'root'
                 ]
             );
-        });
+        }
+        $this->dockerService->execute(
+            "usermod -u ".getmyuid()." mysql",
+            [
+                'user' => 'root',
+                'container' => 'mysql'
+            ]
+        );
     }
 }

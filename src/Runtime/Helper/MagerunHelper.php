@@ -11,24 +11,59 @@
 
 namespace TeamNeusta\Magedev\Runtime\Helper;
 
+use TeamNeusta\Magedev\Runtime\Config;
+use TeamNeusta\Magedev\Runtime\Helper\FileHelper;
+use TeamNeusta\Magedev\Services\DockerService;
+
 /**
  * Class MagerunHelper
  */
-class MagerunHelper extends AbstractHelper
+class MagerunHelper
 {
+    /**
+     * @var \TeamNeusta\Magedev\Runtime\Config
+     */
+    protected $config;
+
+    /**
+     * @var \TeamNeusta\Magedev\Runtime\Helper\FileHelper
+     */
+    protected $fileHelper;
+
+    /**
+     * @var \TeamNeusta\Magedev\Services\DockerService
+     */
+    protected $dockerService;
+
+    /**
+     * __construct
+     *
+     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Runtime\Helper\FileHelper $fileHelper
+     * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
+     */
+    public function __construct(
+        \TeamNeusta\Magedev\Runtime\Config $config,
+        \TeamNeusta\Magedev\Runtime\Helper\FileHelper $fileHelper,
+        \TeamNeusta\Magedev\Services\DockerService $dockerService
+    ) {
+        $this->config = $config;
+        $this->fileHelper = $fileHelper;
+        $this->dockerService = $dockerService;
+    }
+
     /**
      * isMagerunInstalled
      * @return bool
      */
     public function isMagerunInstalled()
     {
-        $sourceFolder = $this->runtime->getConfig()->get("source_folder");
-        $fileHelper = $this->runtime->getHelper('FileHelper');
-        if ($this->runtime->getConfig()->getMagentoVersion() == "1") {
-            return $fileHelper->fileExists($sourceFolder . "shell/magerun");
+        $sourceFolder = $this->config->get("source_folder");
+        if ($this->config->getMagentoVersion() == "1") {
+            return $this->fileHelper->fileExists($sourceFolder . "shell/magerun");
         }
-        if ($this->runtime->getConfig()->getMagentoVersion() == "2") {
-            return $fileHelper->fileExists($sourceFolder . "bin/magerun");
+        if ($this->config->getMagentoVersion() == "2") {
+            return $this->fileHelper->fileExists($sourceFolder . "bin/magerun");
         }
     }
 
@@ -50,7 +85,7 @@ class MagerunHelper extends AbstractHelper
     public function magerunCommand($magerunCommand)
     {
         $this->abortIfMagerunNotInstalled();
-        $magentoVersion = $this->runtime->getConfig()->getMagentoVersion();
+        $magentoVersion = $this->config->getMagentoVersion();
 
         if ($magentoVersion == "1") {
             $cmd = "shell/magerun ".$magerunCommand;
@@ -59,7 +94,6 @@ class MagerunHelper extends AbstractHelper
         if ($magentoVersion == "2") {
             $cmd = "bin/magerun ".$magerunCommand;
         }
-        $cmd = $this->runtime->getDocker()
-            ->execute($cmd);
+        $this->dockerService->execute($cmd);
     }
 }

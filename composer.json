@@ -19,7 +19,9 @@
         "stecman/symfony-console-completion": "^0.7.0",
         "herrera-io/phar-update": "^2.0",
         "docker-php/docker-php": "^1.24",
-        "symfony/event-dispatcher": "^3.2"
+        "symfony/event-dispatcher": "^3.2",
+        "pimple/pimple": "^3.0",
+        "mockery/mockery": "^0.9.9"
     },
     "autoload": {
         "psr-4" : {

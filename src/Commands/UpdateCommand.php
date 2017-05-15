@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class: UpdateCommand
- *
+ * @codeCoverageIgnore
  * @see Command
  */
 class UpdateCommand extends Command

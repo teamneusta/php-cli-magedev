@@ -17,8 +17,7 @@
      }
   },
   "xdebug": {
-    "idekey": "vim",
-    "remote_host": "172.17.0.1"
+    "idekey": "vim"
   },
   "docker": {
     "links": {

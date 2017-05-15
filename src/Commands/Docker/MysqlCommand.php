@@ -11,14 +11,15 @@
 
 namespace TeamNeusta\Magedev\Commands\Docker;
 
-use TeamNeusta\Magedev\Commands\AbstractCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class: MysqlCommand
  *
  * @see AbstractCommand
  */
-class MysqlCommand extends AbstractCommand
+class MysqlCommand extends Base
 {
     /**
      * configure
@@ -27,9 +28,17 @@ class MysqlCommand extends AbstractCommand
     {
         $this->setName("docker:cli:mysql");
         $this->setDescription("drop a mysql shell");
+    }
 
-        $this->onExecute(function ($runtime) {
-            $runtime->getDocker()->execute("mysql");
-        });
+    /**
+     * execute
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    public function execute(InputInterface $input, OutputInterface $output)
+    {
+        $this->dockerService->execute("mysql");
+        parent::execute($input, $output);
     }
 }

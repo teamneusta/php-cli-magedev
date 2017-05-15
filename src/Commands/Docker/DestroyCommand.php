@@ -11,14 +11,15 @@
 
 namespace TeamNeusta\Magedev\Commands\Docker;
 
-use TeamNeusta\Magedev\Commands\AbstractCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class: DestroyCommand
  *
  * @see AbstractCommand
  */
-class DestroyCommand extends AbstractCommand
+class DestroyCommand extends Base
 {
     /**
      * configure
@@ -27,12 +28,17 @@ class DestroyCommand extends AbstractCommand
     {
         $this->setName("docker:destroy");
         $this->setDescription("destroy all containers");
+    }
 
-        $this->onExecute(function ($runtime) {
-            $runtime
-                ->getDocker()
-                ->getManager()
-                ->destroyContainers();
-        });
+    /**
+     * execute
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    public function execute(InputInterface $input, OutputInterface $output)
+    {
+        $this->dockerService->getManager()->destroyContainers();
+        parent::execute($input, $output);
     }
 }

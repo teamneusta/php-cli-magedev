@@ -11,7 +11,7 @@
 
 namespace TeamNeusta\Magedev\Test\Commands\Docker;
 
-use TeamNeusta\Magedev\Test\TestHelper\CommandMockHelper;
+use \Mockery as m;
 use TeamNeusta\Magedev\Commands\Docker\StartCommand;
 
 /**
@@ -19,13 +19,22 @@ use TeamNeusta\Magedev\Commands\Docker\StartCommand;
  *
  * @see \PHPUnit_Framework_TestCase
  */
-class StartCommandTest extends \PHPUnit_Framework_TestCase
+class StartCommandTest extends \TeamNeusta\Magedev\Test\TestCase
 {
     public function testExecute()
     {
-        $helper = new CommandMockHelper();
-        $command = $helper->getCommand(StartCommand::class);
-        $helper->getDocker()->expects(self::once())->method('startContainers');
-        $helper->executeCommand($command);
+        $input = m::mock('\Symfony\Component\Console\Input\InputInterface');
+        $output = m::mock('\Symfony\Component\Console\Output\ConsoleOutput[]', ['writeln']);
+
+        $dockerManager = m::mock('\TeamNeusta\Magedev\Docker\Manager');
+        $dockerManager->shouldReceive('startContainers')->times(1);
+        $dockerService = m::mock(
+            '\TeamNeusta\Magedev\Services\DockerService',
+            [
+                'getManager' => $dockerManager
+            ]
+        );
+        $command = new StartCommand($dockerService);
+        $command->execute($input, $output);
     }
 }

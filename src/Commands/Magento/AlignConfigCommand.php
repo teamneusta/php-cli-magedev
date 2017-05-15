@@ -11,7 +11,10 @@
 
 namespace TeamNeusta\Magedev\Commands\Magento;
 
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use TeamNeusta\Magedev\Commands\AbstractCommand;
+use TeamNeusta\Magedev\Runtime\Config;
 
 /**
  * Class: AlignConfigCommand
@@ -21,26 +24,49 @@ use TeamNeusta\Magedev\Commands\AbstractCommand;
 class AlignConfigCommand extends AbstractCommand
 {
     /**
+     * @var \TeamNeusta\Magedev\Runtime\Config
+     */
+    protected $config;
+
+    /**
+     * __construct
+     *
+     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     */
+    public function __construct(
+        \TeamNeusta\Magedev\Runtime\Config $config
+    ) {
+        $this->config = $config;
+        parent::__construct();
+    }
+
+    /**
      * configure
      */
     protected function configure()
     {
         $this->setName("magento:align-config");
         $this->setDescription("changes credentials for db in env.php or local.xml in order to run this project");
+    }
 
-        $this->onExecute(function ($runtime) {
-            $config = $runtime->getConfig();
-            $magentoVersion = $config->getMagentoVersion();
-            $wd = $config->get("source_folder");
+    /**
+     * execute
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    public function execute(InputInterface $input, OutputInterface $output)
+    {
+        $magentoVersion = $this->config->getMagentoVersion();
+        $wd = $this->config->get("source_folder");
 
-            if ($magentoVersion == "1") {
-                $this->updateMagento1Credentials($wd, "magento", "magento", "magento", "mysql");
-            }
+        if ($magentoVersion == "1") {
+            $this->updateMagento1Credentials($wd, "magento", "magento", "magento", "mysql");
+        }
 
-            if ($magentoVersion == "2") {
-                $this->updateMagento2Credentials($wd, "magento", "magento", "magento", "mysql");
-            }
-        });
+        if ($magentoVersion == "2") {
+            $this->updateMagento2Credentials($wd, "magento", "magento", "magento", "mysql");
+        }
     }
 
     /**

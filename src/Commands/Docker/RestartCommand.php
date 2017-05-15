@@ -11,8 +11,9 @@
 
 namespace TeamNeusta\Magedev\Commands\Docker;
 
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use TeamNeusta\Magedev\Commands\AbstractCommand;
-
 
 /**
  * Class: RestartCommand
@@ -28,11 +29,17 @@ class RestartCommand extends AbstractCommand
     {
         $this->setName("docker:restart");
         $this->setDescription("restart docker container");
+    }
 
-        $this->onExecute(function ($runtime) {
-            (new \TeamNeusta\Magedev\Commands\Docker\StopCommand())->executeCommand();
-            (new \TeamNeusta\Magedev\Commands\Docker\StartCommand())->executeCommand();
-        });
+    /**
+     * execute
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    public function execute(InputInterface $input, OutputInterface $output)
+    {
+        $this->getApplication()->find('docker:stop')->execute($input, $output);
+        $this->getApplication()->find('docker:start')->execute($input, $output);
     }
 }
-

@@ -15,6 +15,8 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use TeamNeusta\Magedev\Commands\AbstractCommand;
+use TeamNeusta\Magedev\Runtime\Config;
+use TeamNeusta\Magedev\Services\DockerService;
 
 /**
  * Class: CacheCleanCommand
@@ -25,6 +27,31 @@ class CommandCommand extends AbstractCommand
 {
     const ARGUMENT_MAGENTO_COMMAND = 'magento_command';
     const ARGUMENT_MAGENTO_COMMAND_ARGS = 'magento_command_args';
+
+    /**
+     * @var \TeamNeusta\Magedev\Runtime\Config
+     */
+    protected $config;
+
+    /**
+     * @var \TeamNeusta\Magedev\Services\DockerService
+     */
+    protected $dockerService;
+
+    /**
+     * __construct
+     *
+     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
+     */
+    public function __construct(
+        \TeamNeusta\Magedev\Runtime\Config $config,
+        \TeamNeusta\Magedev\Services\DockerService $dockerService
+    ) {
+        $this->config = $config;
+        $this->dockerService = $dockerService;
+        parent::__construct();
+    }
 
     /**
      * configure
@@ -44,16 +71,15 @@ class CommandCommand extends AbstractCommand
             InputArgument::IS_ARRAY,
             'parameters for bin/magento'
         );
-
-        $this->onExecute([$this, 'onExecuteCallback']);
     }
 
     /**
-     * onExecuteCallback
+     * execute
      *
-     * @param Runtime $runtime
+     * @param InputInterface $input
+     * @param OutputInterface $output
      */
-    public function onExecuteCallback($runtime)
+    public function execute(InputInterface $input, OutputInterface $output)
     {
         $command = $this->input->getArgument(self::ARGUMENT_MAGENTO_COMMAND);
         $arguments = $this->input->getArgument(self::ARGUMENT_MAGENTO_COMMAND_ARGS);
@@ -64,14 +90,10 @@ class CommandCommand extends AbstractCommand
             implode(' ', $arguments)
         );
 
-        if ($context->getMagentoVersion() == "2") {
-            $runtime->getDocker()
-                ->execute(
-                    $shellCommand
-                );
+        if ($this->config->getMagentoVersion() == "2") {
+            $this->dockerService->execute($shellCommand);
         } else {
             $this->output->writeln('<error>This command works for magento 2 only!</error>');
         }
     }
-
 }

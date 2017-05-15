@@ -70,7 +70,7 @@ class Varnish4 extends AbstractImage
 
 
         $this->expose("80");
-        $this->addFile("var/Docker/conf/varnish/start.sh", "/start.sh");
+        $this->addFile("var/Docker/varnish/start.sh", "/start.sh");
         $this->cmd("supervisord");
     }
 }

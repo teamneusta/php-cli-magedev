@@ -11,14 +11,15 @@
 
 namespace TeamNeusta\Magedev\Commands\Docker;
 
-use TeamNeusta\Magedev\Commands\AbstractCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class: SshCommand
  *
  * @see AbstractCommand
  */
-class SshCommand extends AbstractCommand
+class SshCommand extends Base
 {
     /**
      * configure
@@ -27,9 +28,17 @@ class SshCommand extends AbstractCommand
     {
         $this->setName("docker:cli:ssh");
         $this->setDescription("ssh shell inside container");
+    }
 
-        $this->onExecute(function ($runtime) {
-            $runtime->getDocker()->execute("bash");
-        });
+    /**
+     * execute
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    public function execute(InputInterface $input, OutputInterface $output)
+    {
+        $this->dockerService->execute("bash");
+        parent::execute($input, $output);
     }
 }

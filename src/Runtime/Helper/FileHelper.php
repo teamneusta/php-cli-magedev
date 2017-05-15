@@ -12,9 +12,9 @@
 namespace TeamNeusta\Magedev\Runtime\Helper;
 
 /**
- * Class MagerunHelper
+ * Class FileHelper
  */
-class FileHelper extends AbstractHelper
+class FileHelper
 {
     /**
      * findPath
@@ -83,5 +83,17 @@ class FileHelper extends AbstractHelper
     public function fileExists($path)
     {
         return file_exists($path);
+    }
+
+    /**
+     * deleteFile
+     *
+     * @param string $path
+     */
+    public function deleteFile($path)
+    {
+        if (file_exists($path) && !is_dir($path)) {
+            unlink($path);
+        }
     }
 }

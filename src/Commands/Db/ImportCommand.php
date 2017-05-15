@@ -12,7 +12,12 @@
 namespace TeamNeusta\Magedev\Commands\Db;
 
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use TeamNeusta\Magedev\Commands\AbstractCommand;
+use TeamNeusta\Magedev\Runtime\Config;
+use TeamNeusta\Magedev\Services\DockerService;
+use TeamNeusta\Magedev\Services\ShellService;
 
 /**
  * Class: ImportCommand
@@ -22,6 +27,39 @@ use TeamNeusta\Magedev\Commands\AbstractCommand;
 class ImportCommand extends AbstractCommand
 {
     /**
+     * @var \TeamNeusta\Magedev\Runtime\Config
+     */
+    protected $config;
+
+    /**
+     * @var \TeamNeusta\Magedev\Services\ShellService
+     */
+    protected $shellService;
+
+    /**
+     * @var \TeamNeusta\Magedev\Services\DockerService
+     */
+    protected $dockerService;
+
+    /**
+     * __construct
+     *
+     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Services\ShellService $shellService
+     * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
+     */
+    public function __construct(
+        Config $config,
+        ShellService $shellService,
+        DockerService $dockerService
+    ) {
+        parent::__construct();
+        $this->config = $config;
+        $this->shellService = $shellService;
+        $this->dockerService = $dockerService;
+    }
+
+    /**
      * configure
      */
     protected function configure()
@@ -29,28 +67,30 @@ class ImportCommand extends AbstractCommand
         $this->setName("db:import");
         $this->setDescription("import db");
         $this->addArgument('dump_file', InputArgument::OPTIONAL, 'path to sql dump');
+    }
 
-        $this->onExecute(function ($runtime) {
-            $config = $runtime->getConfig();
-            $fileHelper = $runtime->getHelper('FileHelper');
+    /**
+     * execute
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    public function execute(InputInterface $input, OutputInterface $output)
+    {
+        if ($this->config->optionExists('dump_file')) {
+            $dumpFile = $this->config->get('dump_file');
+            $sourceFolder = $this->config->get("source_folder");
 
-            if ($config->optionExists('dump_file')) {
-                $dumpFile = $config->get('dump_file');
+            // escape whitespaces for command
+            $dumpFile = str_replace(" ", "\\ ", $dumpFile);
 
-                // escape whitespaces for command
-                $dumpFile = str_replace(" ", "\\ ", $dumpFile);
-
-                if (!file_exists(getcwd() . $dumpFile)) {
-                    // copy it to project folder
-                    $runtime->getShell()->execute("cp ".$dumpFile." .");
-                }
-
-                $runtime
-                    ->getDocker()
-                    ->execute("mysql < ".basename($dumpFile));
-
-                unlink(basename($dumpFile));
+            if (!file_exists(getcwd() . $dumpFile)) {
+                // copy it to project folder
+                $this->shellService->execute("cp ".$dumpFile." " . $sourceFolder);
+                $this->dockerService->execute("mysql < ".basename($dumpFile));
             }
-        });
+
+        }
+        parent::execute($input, $output);
     }
 }

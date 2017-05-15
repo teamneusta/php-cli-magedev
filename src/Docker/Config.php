@@ -44,6 +44,16 @@ class Config
     protected $magentoVersion;
 
     /**
+     * @var string
+     */
+    protected $gateway;
+
+    /**
+     * @var string
+     */
+    protected $networkId;
+
+    /**
      * setProjectName
      *
      * @param string $projectName
@@ -139,4 +149,44 @@ class Config
     {
         return $this->magentoVersion;
     }
+
+    /**
+     * setGateway
+     *
+     * @param string $gateway
+     */
+    public function setGateway($gateway)
+    {
+        strstr($gateway, "/", true);
+        $this->gateway = $gateway;
+    }
+
+    /**
+     * getGateway
+     * @return string
+     */
+    public function getGateway()
+    {
+        return $this->gateway;
+    }
+
+    /**
+     * setNetworkId
+     *
+     * @param string $networkId
+     */
+    public function setNetworkId($networkId)
+    {
+        $this->networkId = $networkId;
+    }
+
+    /**
+     * getNetworkId
+     * @return string
+     */
+    public function getNetworkId()
+    {
+        return $this->networkId;
+    }
+
 }

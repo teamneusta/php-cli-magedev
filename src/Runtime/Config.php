@@ -12,6 +12,7 @@
 namespace TeamNeusta\Magedev\Runtime;
 
 use Symfony\Component\Console\Input\InputInterface;
+use TeamNeusta\Magedev\Runtime\Helper\FileHelper;
 
 /**
  * Class Config
@@ -29,22 +30,28 @@ class Config
     protected $fileHelper;
 
     /**
-     * configData
-     *
-     * @var mixed
+     * @var Array
      */
     protected $configData;
+
+    /**
+     * isLoaded
+     *
+     * @var bool
+     */
+    protected $isLoaded;
 
     /**
      * __construct
      *
      * @param Runtime $runtime
      */
-    public function __construct(Runtime $runtime)
-    {
-        $this->input = $runtime->getInput();
-        $this->fileHelper = $runtime->getHelper('FileHelper');
-        $this->load();
+    public function __construct(
+        InputInterface $input,
+        FileHelper $fileHelper
+    ) {
+        $this->input = $input;
+        $this->fileHelper = $fileHelper;
     }
 
     /**
@@ -65,13 +72,13 @@ class Config
         $projectConfigFile = getcwd() . "/magedev.json";
         $defaultConfigFile = $this->fileHelper->findPath("var/config/magedev.json");
 
-        if (file_exists($projectConfigFile)) {
+        if ($this->fileHelper->fileExists($projectConfigFile)) {
             $projectConfig = $this->loadConfigFile($projectConfigFile);
             $defaultConfig = $this->loadConfigFile($defaultConfigFile);
             $homeConfig = [];
 
             $homeConfigFile = $this->fileHelper->expandPath("~") . "/.magedev.json";
-            if (file_exists($homeConfigFile)) {
+            if ($this->fileHelper->fileExists($homeConfigFile)) {
                 $homeConfig = $this->loadConfigFile($homeConfigFile);
             }
             return array_merge(array_merge($defaultConfig, $homeConfig), $projectConfig);
@@ -87,7 +94,7 @@ class Config
      */
     protected function loadConfigFile($path)
     {
-        if (!file_exists($path)) {
+        if (!$this->fileHelper->fileExists($path)) {
             throw new \Exception("File " . $path . " not found");
         }
         $data = json_decode($this->fileHelper->read($path), true);
@@ -108,6 +115,10 @@ class Config
      */
     public function get($key)
     {
+        if (!$this->isLoaded) {
+            $this->load();
+        }
+
         $value = null;
 
         if ($this->input) {

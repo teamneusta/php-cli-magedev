@@ -11,14 +11,15 @@
 
 namespace TeamNeusta\Magedev\Commands\Docker;
 
-use TeamNeusta\Magedev\Commands\AbstractCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class: BuildCommand
  *
  * @see AbstractCommand
  */
-class BuildCommand extends AbstractCommand
+class BuildCommand extends Base
 {
     /**
      * configure
@@ -27,13 +28,18 @@ class BuildCommand extends AbstractCommand
     {
         $this->setName("docker:build");
         $this->setDescription("build docker container");
+    }
 
+    /**
+     * execute
+     *
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    public function execute(InputInterface $input, OutputInterface $output)
+    {
         // TODO: add argument force, with cache, or no cache
-        $this->onExecute(function ($runtime) {
-            $runtime
-                ->getDocker()
-                ->getManager()
-                ->rebuildContainers();
-        });
+        $this->dockerService->getManager()->rebuildContainers();
+        parent::execute($input, $output);
     }
 }
