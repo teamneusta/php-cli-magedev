@@ -28,7 +28,8 @@ class MailcatcherTest extends \TeamNeusta\Magedev\Test\TestCase
     {
         $config = m::mock(Config::class);
         $imageFactory = m::mock(ImageFactory::class);
-        $container = new Mailcatcher($config, $imageFactory);
+        $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
+        $container = new Mailcatcher($config, $imageFactory, $nameBuilder);
         self::assertSame("schickling/mailcatcher", $container->getImage());
     }
 
@@ -36,7 +37,8 @@ class MailcatcherTest extends \TeamNeusta\Magedev\Test\TestCase
     {
         $config = m::mock(Config::class);
         $imageFactory = m::mock(ImageFactory::class);
-        $container = new Mailcatcher($config, $imageFactory);
+        $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
+        $container = new Mailcatcher($config, $imageFactory, $nameBuilder);
         self::assertSame("mailcatcher", $container->getName());
     }
 }

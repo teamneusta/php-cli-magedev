@@ -13,7 +13,6 @@ namespace TeamNeusta\Magedev\Test\Docker\Image\Repository;
 
 use \Mockery as m;
 use TeamNeusta\Magedev\Docker\Image\Repository\Main;
-/* use TeamNeusta\Magedev\Docker\Context; */
 use TeamNeusta\Magedev\Runtime\Config;
 use TeamNeusta\Magedev\Runtime\Helper\FileHelper;
 use TeamNeusta\Magedev\Docker\Image\Factory as ImageFactory;
@@ -30,6 +29,7 @@ class MainTest extends \TeamNeusta\Magedev\Test\TestCase
     {
         $config = m::mock(Config::class);
         $config->shouldReceive("getMagentoVersion")->andReturn(2);
+        $config->shouldReceive("get")->with("env_vars")->andReturn([]);
         $config->shouldReceive("get")->with("document_root")->andReturn("/var/www/html/Source");
         $config->shouldReceive("get")->with("gateway")->andReturn("172.20.0.1");
 
@@ -94,11 +94,16 @@ class MainTest extends \TeamNeusta\Magedev\Test\TestCase
                 "sendmail bin"
             );
 
+        $imageApiFactory = m::mock("\TeamNeusta\Magedev\Docker\Api\ImageFactory");
+        $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
+
         $image = new Main(
             $config,
             $imageFactory,
             $fileHelper,
-            $contextBuilder
+            $contextBuilder,
+            $imageApiFactory,
+            $nameBuilder
         );
         $image->configure();
     }
@@ -107,6 +112,7 @@ class MainTest extends \TeamNeusta\Magedev\Test\TestCase
     {
         $config = m::mock(Config::class);
         $config->shouldReceive("getMagentoVersion")->andReturn(1);
+        $config->shouldReceive("get")->with("env_vars")->andReturn([]);
         $config->shouldReceive("get")->with("document_root");
         $config->shouldReceive("get")->with("gateway")->andReturn("172.20.0.1");
 
@@ -121,11 +127,16 @@ class MainTest extends \TeamNeusta\Magedev\Test\TestCase
         $contextBuilder->shouldReceive("__destruct")->andReturn(null);
         $contextBuilder->shouldReceive("add");
 
+        $imageApiFactory = m::mock("\TeamNeusta\Magedev\Docker\Api\ImageFactory");
+        $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
+
         $image = new Main(
             $config,
             $imageFactory,
             $fileHelper,
-            $contextBuilder
+            $contextBuilder,
+            $imageApiFactory,
+            $nameBuilder
         );
         $image->configure();
     }

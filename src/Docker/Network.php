@@ -27,8 +27,9 @@ class Network
     public function __construct(NetworkManager $networkManager = null)
     {
         if (!$networkManager) {
-            $this->networkManager = (new \Docker\Docker())->getNetworkManager();
+            $networkManager = (new \Docker\Docker())->getNetworkManager();
         }
+        $this->networkManager = $networkManager;
     }
     /**
      * networkExists

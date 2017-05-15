@@ -28,6 +28,7 @@ class Php5Test extends \TeamNeusta\Magedev\Test\TestCase
     public function testConfigure()
     {
         $config = m::mock(Config::class);
+        $config->shouldReceive("get")->with("env_vars")->andReturn([]);
         $config->shouldReceive("optionExists")->with("proxy")->andReturn(true);
         $config->shouldReceive("get")->with("proxy")->andReturn([
           "HTTP" => "someproxy.com:8872"
@@ -71,11 +72,16 @@ class Php5Test extends \TeamNeusta\Magedev\Test\TestCase
 
         $contextBuilder->shouldReceive("__destruct");
 
+        $imageApiFactory = m::mock("\TeamNeusta\Magedev\Docker\Api\ImageFactory");
+        $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
+
         $image = new Php5(
             $config,
             $imageFactory,
             $fileHelper,
-            $contextBuilder
+            $contextBuilder,
+            $imageApiFactory,
+            $nameBuilder
         );
         $image->configure();
     }

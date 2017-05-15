@@ -28,7 +28,8 @@ class RedisTest extends \TeamNeusta\Magedev\Test\TestCase
     {
         $config = m::mock(Config::class);
         $imageFactory = m::mock(ImageFactory::class);
-        $container = new Redis($config, $imageFactory);
+        $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
+        $container = new Redis($config, $imageFactory, $nameBuilder);
         self::assertSame("redis:2.8", $container->getImage());
     }
 
@@ -36,7 +37,8 @@ class RedisTest extends \TeamNeusta\Magedev\Test\TestCase
     {
         $config = m::mock(Config::class);
         $imageFactory = m::mock(ImageFactory::class);
-        $container = new Redis($config, $imageFactory);
+        $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
+        $container = new Redis($config, $imageFactory, $nameBuilder);
         self::assertSame("redis", $container->getName());
     }
 }

@@ -19,23 +19,48 @@ use TeamNeusta\Magedev\Docker\Image\AbstractImage;
 class Main extends AbstractImage
 {
     /**
+     * getBuildName
+     * @return string
+     */
+    public function getBuildName()
+    {
+        return $this->nameBuilder->buildName(
+             $this->getName()
+        );
+    }
+
+    /**
      * configure
      */
     public function configure()
     {
         $this->name("main");
 
-        // PHP Image is selected based on magento version
         $magentoVersion = $this->config->getMagentoVersion();
 
+        $buildStrategy = "build";
+        $dockerConfig = $this->config->get("docker");
+        if (array_key_exists("build_strategy", $dockerConfig)) {
+            $buildStrategy = $dockerConfig["build_strategy"];
+        }
+
+        // PHP Image is selected based on magento version
         if ($magentoVersion == "2") {
-            $this->from($this->imageFactory->create("Php7"));
-            /* $this->from(new \TeamNeusta\Magedev\Docker\Image\Repository\Php7($this->context)); */
+            if ($buildStrategy == "pull") {
+                $this->from("bleers/magedev-php7:1.0");
+            }
+            if ($buildStrategy == "build") {
+                $this->from($this->imageFactory->create("Php7"));
+            }
         }
 
         if ($magentoVersion == "1") {
-            $this->from($this->imageFactory->create("Php5"));
-            /* $this->from(new \TeamNeusta\Magedev\Docker\Image\Repository\Php5($this->context)); */
+            if ($buildStrategy == "pull") {
+                $this->from("bleers/magedev-php5:1.0");
+            }
+            if ($buildStrategy == "build") {
+                $this->from($this->imageFactory->create("Php5"));
+            }
         }
 
         // TODO: have something like a simple template engine to replace vars

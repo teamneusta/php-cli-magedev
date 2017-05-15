@@ -28,7 +28,8 @@ class ElasticSearchTest extends \TeamNeusta\Magedev\Test\TestCase
     {
         $config = m::mock(Config::class);
         $imageFactory = m::mock(ImageFactory::class);
-        $container = new ElasticSearch($config, $imageFactory);
+        $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
+        $container = new ElasticSearch($config, $imageFactory, $nameBuilder);
         self::assertSame("elasticsearch:1.7.5", $container->getImage());
     }
 
@@ -36,7 +37,8 @@ class ElasticSearchTest extends \TeamNeusta\Magedev\Test\TestCase
     {
         $config = m::mock(Config::class);
         $imageFactory = m::mock(ImageFactory::class);
-        $container = new ElasticSearch($config, $imageFactory);
+        $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
+        $container = new ElasticSearch($config, $imageFactory, $nameBuilder);
         self::assertSame("elasticsearch", $container->getName());
     }
 }

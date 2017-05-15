@@ -37,12 +37,69 @@ $c['runtime.eventdispatcher'] = function ($c) {
     return new \Symfony\Component\EventDispatcher\EventDispatcher();
 };
 
+
+$c['lib.docker.containerManager'] = function ($c) {
+    return (new \Docker\Docker())->getContainerManager();
+};
+
+$c['lib.docker.imageManager'] = function ($c) {
+    return (new \Docker\Docker())->getImageManager();
+};
+$c['docker.helper.namebuilder'] = function($c) {
+    return new \TeamNeusta\Magedev\Docker\Helper\NameBuilder($c['runtime.config']);
+};
+$c['docker.networkManager'] = function($c) {
+    return new \TeamNeusta\Magedev\Docker\Network((new \Docker\Docker)->getNetworkManager());
+};
+
+$c['docker.api.container.factory'] = function($c) {
+    return new \TeamNeusta\Magedev\Docker\Api\ContainerFactory(
+        $c['lib.docker.containerManager'],
+        $c['docker.image.factory'],
+        $c['docker.api.image.factory']
+    );
+};
+$c['docker.api.image.factory'] = function($c) {
+    return new \TeamNeusta\Magedev\Docker\Api\ImageFactory(
+        $c['lib.docker.imageManager']
+    );
+};
+
+$c['docker.image.factory'] = function ($c) {
+    return new \TeamNeusta\Magedev\Docker\Image\Factory(
+        $c['runtime.config'],
+        $c['runtime.helper.filehelper'],
+        $c['docker.api.image.factory'],
+        $c['docker.helper.namebuilder']
+    );
+};
+
+$c['docker.container.factory'] = function ($c) {
+    return new \TeamNeusta\Magedev\Docker\Container\Factory(
+        $c['runtime.config'],
+        $c['docker.image.factory'],
+        $c['docker.helper.namebuilder']
+    );
+};
+
+$c['docker.manager'] = function ($c) {
+    return new \TeamNeusta\Magedev\Docker\Manager(
+        $c['console.output'],
+        $c['docker.api.container.factory'],
+        $c['docker.api.image.factory']
+    );
+};
+
 $c['services.docker'] = function ($c) {
     return new \TeamNeusta\Magedev\Services\DockerService(
         $c['runtime.config'],
         $c['console.output'],
         $c['services.shell'],
-        $c['runtime.helper.filehelper']
+        $c['runtime.helper.filehelper'],
+        $c['docker.manager'],
+        $c['docker.networkManager'],
+        $c['docker.container.factory'],
+        $c['docker.helper.namebuilder']
     );
 };
 

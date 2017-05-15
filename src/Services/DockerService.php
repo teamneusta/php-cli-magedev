@@ -15,6 +15,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use TeamNeusta\Magedev\Runtime\Config;
 use TeamNeusta\Magedev\Runtime\Helper\FileHelper;
 use TeamNeusta\Magedev\Services\ShellService;
+use TeamNeusta\Magedev\Docker\Manager as DockerManager;
+use TeamNeusta\Magedev\Docker\Network as NetworkManager;
+use TeamNeusta\Magedev\Docker\Container\Factory as ContainerFactory;
+use TeamNeusta\Magedev\Docker\Helper\NameBuilder;
 
 /**
  * Class DockerService
@@ -42,75 +46,98 @@ class DockerService
     protected $fileHelper;
 
     /**
+     * @var \TeamNeusta\Magedev\Docker\Manager
+     */
+    protected $dockerManager;
+
+    /**
+     * @var \TeamNeusta\Magedev\Docker\Network
+     */
+    protected $networkManager;
+
+    /**
+     * @var \TeamNeusta\Magedev\Docker\Container\Factory
+     */
+    protected $containerFactory;
+
+    /**
+     * @var \TeamNeusta\Magedev\Docker\Helper\NameBuilder
+     */
+    protected $nameBuilder;
+
+    /**
      * __construct
      *
      * @param Config $config
      * @param ConsoleOutput $output
      * @param Shell $shell
      * @param FileHelper $fileHelper
+     * @param \TeamNeusta\Magedev\Docker\Manager $dockerManager
+     * @param \TeamNeusta\Magedev\Docker\Network $networkManager
+     * @param \TeamNeusta\Magedev\Docker\Container\Factory $containerFactory
+     * @param \TeamNeusta\Magedev\Docker\Helper\NameBuilder $nameBuilder
      */
     public function __construct(
         Config $config,
         OutputInterface $output,
         ShellService $shell,
-        FileHelper $fileHelper
+        FileHelper $fileHelper,
+        DockerManager $dockerManager,
+        NetworkManager $networkManager,
+        ContainerFactory $containerFactory,
+        NameBuilder $nameBuilder
     ) {
         $this->config = $config;
         $this->output = $output;
         $this->shell = $shell;
         $this->fileHelper = $fileHelper;
+        $this->dockerManager = $dockerManager;
+        $this->networkManager = $networkManager;
+        $this->containerFactory = $containerFactory;
+        $this->nameBuilder = $nameBuilder;
+        $this->initDocker();
     }
 
-    /**
-     * getManager
-     */
-    public function getManager()
+    protected function initDocker()
     {
-        $dockerManager = new \TeamNeusta\Magedev\Docker\Manager();
-        $context = $this->getContext();
-
-        $context->addEnv("USERID", getmyuid());
-        $context->addEnv("MYSQL_ROOT", "root");
-        $context->addEnv("MYSQL_ROOT_PASSWORD", "root");
-        $context->addEnv("MYSQL_USER", "magento");
-        $context->addEnv("MYSQL_PASSWORD", "magento");
-        $context->addEnv("MYSQL_DATABASE", "magento");
-
-        if ($this->config->optionExists("proxy")) {
-            $proxy = $this->config->get("proxy");
-            if (array_key_exists("HTTP", $proxy)) {
-                $context->addEnv("HTTP_PROXY", $proxy["HTTP"]);
-                $context->addEnv("http_proxy", $proxy["HTTP"]);
-            }
-            if (array_key_exists("HTTPS", $proxy)) {
-                $context->addEnv("HTTPS_PROXY", $proxy["HTTPS"]);
-                $context->addEnv("https_proxy", $proxy["HTTPS"]);
-            }
-            $context->addEnv("HTTPS_PROXY_REQUEST_FULLURI", "false");
-            $context->addEnv("no_proxy", "'localhost,elasticsearch,httpd,mysql'");
-        }
+        /* $containers = [ */
+        /*     new \TeamNeusta\Magedev\Docker\Container\Repository\ElasticSearch($context), */
+        /*     new \TeamNeusta\Magedev\Docker\Container\Repository\Mailcatcher($context), */
+        /*     new \TeamNeusta\Magedev\Docker\Container\Repository\Main($context), */
+        /*     new \TeamNeusta\Magedev\Docker\Container\Repository\Mysql($context), */
+        /*     new \TeamNeusta\Magedev\Docker\Container\Repository\Redis($context), */
+        /*     new \TeamNeusta\Magedev\Docker\Container\Repository\Varnish($context) */
+        /* ]; */
+        $this->applyDockerSettingsToConfig();
+        $this->addEnv();
+        /* $dockerManager = new \TeamNeusta\Magedev\Docker\Manager(); */
+        /* $context = $this->getContext(); */
 
         $dockerLinks = [];
         $dockerPorts = [];
+        $containers = [];
 
-        if ($this->config->optionExists("docker")) {
-            $dockerConfig = $this->config->get("docker");
-            if (array_key_exists("links", $dockerConfig)) {
-                $dockerLinks = $dockerConfig["links"];
-            }
-            if (array_key_exists("ports", $dockerConfig)) {
-                $dockerPorts = $dockerConfig["ports"];
+        if (!$this->config->optionExists("docker")) {
+            throw new \Exception("no docker config found. check your magedev.json please");
+        }
+
+        $dockerConfig = $this->config->get("docker");
+        if (array_key_exists("links", $dockerConfig)) {
+            $dockerLinks = $dockerConfig["links"];
+        }
+        if (array_key_exists("ports", $dockerConfig)) {
+            $dockerPorts = $dockerConfig["ports"];
+        }
+        if (array_key_exists("containers", $dockerConfig)) {
+            foreach ($dockerConfig["containers"] as $containerName) {
+                $containers[] = $this->containerFactory->create($containerName);
             }
         }
 
-        $containers = [
-            new \TeamNeusta\Magedev\Docker\Container\Repository\ElasticSearch($context),
-            new \TeamNeusta\Magedev\Docker\Container\Repository\Mailcatcher($context),
-            new \TeamNeusta\Magedev\Docker\Container\Repository\Main($context),
-            new \TeamNeusta\Magedev\Docker\Container\Repository\Mysql($context),
-            new \TeamNeusta\Magedev\Docker\Container\Repository\Redis($context),
-            new \TeamNeusta\Magedev\Docker\Container\Repository\Varnish($context)
-        ];
+        if (sizeof($containers) == 0) {
+            throw new \Exception("no containers found, please check your magedev.json");
+        }
+
         foreach ($containers as $container) {
             // extract name for container out of classname
             // e.g. elasticsearch, main, mysql ...
@@ -138,55 +165,77 @@ class DockerService
                 foreach ($dockerLinks[$name] as $link) {
                     // format: "containerName:alias", whereas containerName
                     // is built dynamically out of projectname
-                    $container->addLink($context->buildName($link) . ":" . $link);
+                    $container->addLink($this->nameBuilder->buildName($link) . ":" . $link);
                 }
             }
-            $dockerManager->containers()->add($name, $container);
-        }
 
-        return $dockerManager;
+            $this->dockerManager->addContainer($container);
+        }
     }
 
     /**
-     * getContext
-     * @return \TeamNeusta\Magedev\Docker\Config
+     * getManager
      */
-    public function getContext()
+    public function getManager()
     {
-        $dockerConfig = new \TeamNeusta\Magedev\Docker\Config();
-        $dockerConfig->setProjectName(basename(getcwd()));
-        $dockerConfig->setProjectPath(getcwd());
-        $dockerConfig->setHomePath($this->fileHelper->expandPath("~"));
-        $dockerConfig->setDocumentRootPath("/var/www/html/" . $this->config->get("source_folder"));
-        $dockerConfig->setMagentoVersion($this->config->getMagentoVersion());
+        return $this->dockerManager;
+    }
 
+    protected function applyDockerSettingsToConfig()
+    {
+        /* $dockerConfig = new \TeamNeusta\Magedev\Docker\Config(); */
+        $this->config->set("project_name", basename(getcwd()));
+        $this->config->set("project_path", getcwd());
+        $this->config->set("home_path", $this->fileHelper->expandPath("~"));
+        $this->config->set("document_root", "/var/www/html/" . $this->config->get("source_folder"));
 
-        $networkManager = new \TeamNeusta\Magedev\Docker\Network();
         // TODO: make this configurable?
         $networkName = "magedev_default";
         // make sure this network exists
-        if (!$networkManager->networkExists($networkName)) {
-            $networkManager->createNetwork($networkName);
-            if (!$networkManager->networkExists($networkName)) {
+        if (!$this->networkManager->networkExists($networkName)) {
+            $this->networkManager->createNetwork($networkName);
+            if (!$this->networkManager->networkExists($networkName)) {
                 throw new \Exception("something went wrong while creating network " . $networkName);
             }
         }
 
-        $network = $networkManager->getNetworkByName($networkName);
+        $network = $this->networkManager->getNetworkByName($networkName);
         if (!$network->getId()) {
             throw new \Exception("no id for network " . $network->getName() . " found.");
         }
-        $dockerConfig->setNetworkId($network->getId());
-        $gateway = $networkManager->getGatewayForNetwork($network);
-        $dockerConfig->setGateway($gateway);
+        $this->config->set("network_id", $network->getId());
+        $gateway = $this->networkManager->getGatewayForNetwork($network);
+        $this->config->set("gateway", $gateway);
 
-        if (empty($dockerConfig->getGateway())) {
+        if (empty($this->config->get("gateway"))) {
             throw new \Exception("no gateway ip found");
         }
+    }
 
-        $context = new \TeamNeusta\Magedev\Docker\Context($dockerConfig, $this->fileHelper);
+    protected function addEnv()
+    {
+        $envVars = [];
+        $envVars["USERID"] = getmyuid();
+        $envVars["MYSQL_ROOT"] = "root";
+        $envVars["MYSQL_ROOT_PASSWORD"] = "root";
+        $envVars["MYSQL_USER"] = "magento";
+        $envVars["MYSQL_PASSWORD"] = "magento";
+        $envVars["MYSQL_DATABASE"] = "magento";
 
-        return $context;
+        if ($this->config->optionExists("proxy")) {
+            $proxy = $this->config->get("proxy");
+            if (array_key_exists("HTTP", $proxy)) {
+                $envVars["HTTP_PROXY"] = $proxy["HTTP"];
+                $envVars["http_proxy"] = $proxy["HTTP"];
+            }
+            if (array_key_exists("HTTPS", $proxy)) {
+                $envVars["HTTPS_PROXY"] = $proxy["HTTPS"];
+                $envVars["https_proxy"] = $proxy["HTTPS"];
+            }
+            $envVars["HTTPS_PROXY_REQUEST_FULLURI"] = "false";
+            $envVars["no_proxy"] = "'localhost,elasticsearch,httpd,mysql'";
+        }
+        $this->config->set("env_vars", $envVars);
     }
 
     /**
@@ -221,9 +270,7 @@ class DockerService
 
         $dockerManager = $this->getManager();
 
-        $container = $dockerManager
-            ->containers()
-            ->find($containerName);
+        $container = $dockerManager->findContainer($containerName);
 
         if (!$container) {
             throw new \Exception("Sorry, container with name " . $containerName . " is not running");
@@ -231,7 +278,7 @@ class DockerService
 
         $containerName = $container->getBuildName();
 
-        if (!$container->isRunning()) {
+        if (!$dockerManager->isRunning($containerName)) {
             throw new \Exception("Cannot execute command. Expected to find container named ".$containerName);
         }
 

@@ -28,6 +28,7 @@ class MysqlTest extends \TeamNeusta\Magedev\Test\TestCase
     public function testConfigure()
     {
         $config = m::mock(Config::class);
+        $config->shouldReceive("get")->with("env_vars")->andReturn([]);
         $imageFactory = m::mock(ImageFactory::class);
         $fileHelper = m::mock(FileHelper::class);
         $fileHelper->shouldReceive("read")->with("var/Docker/mysql/mysql.cnf")->andReturn("mysql.cnf content");
@@ -46,11 +47,16 @@ class MysqlTest extends \TeamNeusta\Magedev\Test\TestCase
         $contextBuilder->shouldReceive("add")
             ->with("/var/www/.my.cnf", "my.cnf content")->times(1);
 
+        $imageApiFactory = m::mock("\TeamNeusta\Magedev\Docker\Api\ImageFactory");
+        $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
+
         $image = new Mysql(
             $config,
             $imageFactory,
             $fileHelper,
-            $contextBuilder
+            $contextBuilder,
+            $imageApiFactory,
+            $nameBuilder
         );
         $image->configure();
     }

@@ -12,6 +12,7 @@
 namespace TeamNeusta\Magedev\Docker\Image;
 
 use Docker\Context\ContextBuilder;
+use TeamNeusta\Magedev\Docker\Api\ImageFactory;
 
 /**
  * Class AbstractImage
@@ -44,23 +45,44 @@ abstract class AbstractImage
     protected $fileHelper;
 
     /**
+     * @var \TeamNeusta\Magedev\Docker\Api\ImageFactory
+     */
+    protected $imageApiFactory;
+
+    /**
+     * @var \TeamNeusta\Magedev\Docker\Helper\NameBuilder
+     */
+    protected $nameBuilder;
+
+
+    /**
      * __construct
      *
      * @param \TeamNeusta\Magedev\Runtime\Config  $config
      * @param \TeamNeusta\Magedev\Docker\Image\Factory $imageFactory
      * @param \TeamNeusta\Magedev\Runtime\Helper\FileHelper $fileHelper
      * @param \TeamNeusta\Magedev\Docker\Context $context
+     * @param \TeamNeusta\Magedev\Docker\Api\ImageFactory $imageApi
+     * @param \TeamNeusta\Magedev\Docker\Helper\NameBuilder $nameBuilder
      */
     public function __construct(
         \TeamNeusta\Magedev\Runtime\Config $config,
         \TeamNeusta\Magedev\Docker\Image\Factory $imageFactory,
         \TeamNeusta\Magedev\Runtime\Helper\FileHelper $fileHelper,
-        \Docker\Context\ContextBuilder $contextBuilder
+        \Docker\Context\ContextBuilder $contextBuilder,
+        \TeamNeusta\Magedev\Docker\Api\ImageFactory $imageApiFactory,
+        \TeamNeusta\Magedev\Docker\Helper\NameBuilder $nameBuilder
     ) {
         $this->config = $config;
         $this->imageFactory = $imageFactory;
         $this->fileHelper = $fileHelper;
         $this->contextBuilder = $contextBuilder;
+        $this->imageApiFactory = $imageApiFactory;
+        $this->nameBuilder = $nameBuilder;
+
+        foreach ($this->config->get('env_vars') as $key => $value) {
+            $this->env($key, $value);
+        }
     }
 
     /**
@@ -104,7 +126,7 @@ abstract class AbstractImage
     public function from($image)
     {
         if ($image instanceof AbstractImage) {
-            $image->build();
+            $this->imageApiFactory->create($image)->build();
             $this->contextBuilder->from($image->getBuildName());
             return;
         }
@@ -113,6 +135,7 @@ abstract class AbstractImage
             $imageName = $image;
             $this->contextBuilder->from($imageName);
         }
+
     }
 
     /**
@@ -165,6 +188,17 @@ abstract class AbstractImage
     public function cmd($cmd)
     {
         $this->contextBuilder->command($cmd);
+    }
+
+    /**
+     * env
+     *
+     * @param string $key
+     * @param string $value
+     */
+    public function env($key, $value)
+    {
+        $this->contextBuilder->env($key, $value);
     }
 
     /**

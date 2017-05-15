@@ -42,7 +42,9 @@ class MysqlTest extends \TeamNeusta\Magedev\Test\TestCase
         $config->set("network_id", "582f685244a4");
         $config->set("env_vars", ["MYSQL_USER" => "root", "USERID" => 1000]);
 
-        $main = new Mysql($config, $imageFactory);
+        $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
+
+        $main = new Mysql($config, $imageFactory, $nameBuilder);
         $containerConfig = $main->getConfig();
         self::assertSame(
             [
@@ -55,16 +57,20 @@ class MysqlTest extends \TeamNeusta\Magedev\Test\TestCase
     public function testGetImage()
     {
         $config = m::mock(Config::class);
+        $config->shouldReceive("get")->with("env_vars")->andReturn([]);
         $fileHelper = m::mock(FileHelper::class);
         $contextBuilder = m::mock("Docker\Context\ContextBuilder[__destruct,add,run,from]");
         $contextBuilder->shouldReceive("__destruct");
+        $imageApiFactory = m::mock("\TeamNeusta\Magedev\Docker\Api\ImageFactory");
+        $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
         $imageFactory = new ImageFactory(
             $config,
             $fileHelper,
-            $contextBuilder
+            $imageApiFactory,
+            $nameBuilder
         );
 
-        $mysql = new Mysql($config, $imageFactory);
+        $mysql = new Mysql($config, $imageFactory, $nameBuilder);
         self::assertSame(\TeamNeusta\Magedev\Docker\Image\Repository\Mysql::class, get_class($mysql->getImage()));
     }
 
@@ -72,7 +78,8 @@ class MysqlTest extends \TeamNeusta\Magedev\Test\TestCase
     {
         $config = m::mock(Config::class);
         $imageFactory = m::mock(ImageFactory::class);
-        $mysql = new Mysql($config, $imageFactory);
+        $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
+        $mysql = new Mysql($config, $imageFactory, $nameBuilder);
         self::assertSame("mysql", $mysql->getName());
     }
 }

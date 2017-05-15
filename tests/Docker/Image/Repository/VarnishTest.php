@@ -28,6 +28,7 @@ class VarnishTest extends \TeamNeusta\Magedev\Test\TestCase
     public function testConfigure()
     {
         $config = m::mock(Config::class);
+        $config->shouldReceive("get")->with("env_vars")->andReturn([]);
         $config->shouldReceive("optionExists")->with("proxy")->andReturn(true);
         $config->shouldReceive("get")->with("proxy")->andReturn([
           "HTTP" => "someproxy.com:8872"
@@ -35,7 +36,6 @@ class VarnishTest extends \TeamNeusta\Magedev\Test\TestCase
 
         $image = m::mock(\TeamNeusta\Magedev\Docker\Image\Repository\Varnish4::class);
         $image->shouldReceive("getBuildName")->andReturn("magedev-project-varnish4");
-        $image->shouldReceive("build")->times(1);
 
         $imageFactory = m::mock(ImageFactory::class);
         $imageFactory->shouldReceive("create")->andReturn($image);
@@ -56,11 +56,19 @@ class VarnishTest extends \TeamNeusta\Magedev\Test\TestCase
 
         $contextBuilder->shouldReceive("__destruct");
 
+        $imageApiFactory = m::mock("\TeamNeusta\Magedev\Docker\Api\ImageFactory");
+        $imageApiFactory->shouldReceive("create")->with($image)->andReturnSelf();
+        $imageApiFactory->shouldReceive("build")->times(1);
+
+        $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
+
         $image = new Varnish(
             $config,
             $imageFactory,
             $fileHelper,
-            $contextBuilder
+            $contextBuilder,
+            $imageApiFactory,
+            $nameBuilder
         );
         $image->configure();
     }

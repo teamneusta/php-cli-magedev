@@ -9,48 +9,57 @@
  * @license https://opensource.org/licenses/mit-license MIT License
  */
 
-namespace TeamNeusta\Magedev\Docker\Container;
+namespace TeamNeusta\Magedev\Docker\Api;
 
 use Docker\Docker;
+use Docker\Manager\ContainerManager;
+use TeamNeusta\Magedev\Docker\Container\AbstractContainer;
+use TeamNeusta\Magedev\Docker\Image\Factory as ImageFactory;
 
 /**
- * Class DockerContainer
+ * Class Container
  */
-abstract class DockerContainer
+class Container
 {
     /**
-     * @var \TeamNeusta\Magedev\Docker\Context
+     * @var \Docker\Manager\ContainerManager
      */
-    protected $context;
+    protected $containerManager;
+
+    /**
+     * @var \TeamNeusta\Magedev\Docker\Image\Factory
+     */
+    protected $imageFactory;
+
+    /**
+     * @var \TeamNeusta\Magedev\Docker\Api\ImageFactory
+     */
+    protected $imageApiFactory;
+
+    /**
+     * @var \TeamNeusta\Magedev\Docker\Container\AbstractContainer
+     */
+    protected $container;
 
     /**
      * __construct
      *
-     * @param \TeamNeusta\Magedev\Docker\Context $context
+     * @param \Docker\Manager\ContainerManager $containerManager
+     * @param \TeamNeusta\Magedev\Docker\Image\Factory $imageFactory
+     * @param \TeamNeusta\Magedev\Docker\Api\ImageFactory $imageApi
+     * @param \TeamNeusta\Magedev\Docker\Container\AbstractContainer $container
      */
     public function __construct(
-        \TeamNeusta\Magedev\Docker\Context $context
+        \Docker\Manager\ContainerManager $containerManager,
+        \TeamNeusta\Magedev\Docker\Image\Factory $imageFactory,
+        \TeamNeusta\Magedev\Docker\Api\ImageFactory $imageApiFactory,
+        \TeamNeusta\Magedev\Docker\Container\AbstractContainer $container
     ) {
-        $this->context = $context;
+        $this->containerManager = $containerManager;
+        $this->imageFactory = $imageFactory;
+        $this->imageApiFactory = $imageApiFactory;
+        $this->container = $container;
     }
-
-    /**
-     * getBuildName
-     * @return string
-     */
-    public abstract function getBuildName();
-
-    /**
-     * getConfig
-     * @return \Docker\API\Model\ContainerConfig
-     */
-    public abstract function getConfig();
-
-    /**
-     * getImage
-     * @return TeamNeusta\Magedev\Docker\Container | string
-     */
-    public abstract function getImage();
 
     /**
      * start
@@ -62,7 +71,7 @@ abstract class DockerContainer
         }
         if (!$this->isRunning()) {
             try {
-                $this->context->getContainerManager()->start($this->getBuildName());
+                $this->containerManager->start($this->container->getBuildName());
             } catch (\Http\Client\Common\Exception\ServerErrorException $e) {
                 // TODO error handling
                 // grap logs from journalctl -u docker.service
@@ -76,9 +85,9 @@ abstract class DockerContainer
      */
     public function stop()
     {
-        $name = $this->getBuildName();
+        $name = $this->container->getBuildName();
         if ($this->isRunning()) {
-            $this->context->getContainerManager()->stop($name);
+            $this->containerManager->stop($name);
         }
     }
 
@@ -88,8 +97,8 @@ abstract class DockerContainer
      */
     public function exists()
     {
-        $containerName = $this->getBuildName();
-        $containers = $this->context->getContainerManager()->findAll(['all' => true]);
+        $containerName = $this->container->getBuildName();
+        $containers = $this->containerManager->findAll(['all' => true]);
         foreach ($containers as $container) {
             foreach ($container->getNames() as $name) {
                 if ($name === "/" . $containerName) {
@@ -106,9 +115,9 @@ abstract class DockerContainer
      */
     public function isRunning()
     {
-        $containerName = $this->getBuildName();
+        $containerName = $this->container->getBuildName();
         // TODO; make this more DRY
-        $containers = $this->context->getContainerManager()->findAll();
+        $containers = $this->containerManager->findAll();
         foreach ($containers as $container) {
             foreach ($container->getNames() as $name) {
                 if ($name === "/" . $containerName) {
@@ -125,28 +134,31 @@ abstract class DockerContainer
     public function build()
     {
         if (!$this->exists()) {
-            $containerConfig = $this->getConfig();
-            $image = $this->getImage();
+            $containerConfig = $this->container->getConfig();
+            $image = $this->container->getImage();
 
             if (is_string($image)) {
                 $imageName = $image;
-                $image = (new \TeamNeusta\Magedev\Docker\Image\ExternImage($this->context))
-                    ->setBuildName($imageName);
-                $image->pull(); // is an extern image lets pull it
+                $image = $this->imageFactory->create("ExternImage");
+                $image->setBuildName($imageName);
+                /* $image = (new \TeamNeusta\Magedev\Docker\Image\ExternImage($this->context)) */
+                    /* ->setBuildName($imageName); */
+                $this->imageApiFactory->create($image)->pull(); // is an extern image lets pull it
             }
-            if (!($image instanceof \TeamNeusta\Magedev\Docker\Image\DockerImage)) {
-                throw new Exception ("image of " . get_class($image) . " cannot be build");
+            if (!($image instanceof \TeamNeusta\Magedev\Docker\Image\AbstractImage)) {
+                throw new \Exception ("image of " . get_class($image) . " cannot be build");
             }
 
-            if (!$image->exists()) {
-                $image->build();
+            $imageApi = $this->imageApiFactory->create($image);
+
+            if (!$imageApi->exists()) {
+                $imageApi->build();
             }
 
             $containerConfig->setImage($image->getBuildName());
-
-            $containerCreateResult = $this->context->getContainerManager()->create(
+            $containerCreateResult = $this->containerManager->create(
                 $containerConfig,
-                ['name' => $this->getBuildName()]
+                ['name' => $this->container->getBuildName()]
             );
         }
     }
@@ -158,7 +170,7 @@ abstract class DockerContainer
     {
         if ($this->exists()) {
             if (!$this->isRunning()) {
-                $this->context->getContainerManager()->remove($this->getBuildName());
+                $this->containerManager->remove($this->container->getBuildName());
             }
         }
     }

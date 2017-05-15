@@ -19,6 +19,17 @@ use TeamNeusta\Magedev\Docker\Image\AbstractImage;
 class Mysql extends AbstractImage
 {
     /**
+     * getBuildName
+     * @return string
+     */
+    public function getBuildName()
+    {
+        return $this->nameBuilder->buildName(
+             $this->getName()
+        );
+    }
+
+    /**
      * configure
      */
     public function configure()

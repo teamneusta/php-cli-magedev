@@ -9,7 +9,7 @@
  * @license https://opensource.org/licenses/mit-license MIT License
  */
 
-namespace TeamNeusta\Magedev\Docker\Image;
+namespace TeamNeusta\Magedev\Docker\Container;
 
 /**
  * Class: Factory
@@ -24,14 +24,9 @@ class Factory
     protected $config;
 
     /**
-     * @var \TeamNeusta\Magedev\Runtime\Helper\FileHelper
+     * @var \TeamNeusta\Magedev\Docker\Image\Factory
      */
-    protected $fileHelper;
-
-    /**
-     * @var \TeamNeusta\Magedev\Docker\Api\ImageFactory
-     */
-    protected $imageApiFactory;
+    protected $imageFactory;
 
     /**
      * @var \TeamNeusta\Magedev\Docker\Helper\NameBuilder
@@ -41,31 +36,25 @@ class Factory
     /**
      * __construct
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config  $config
-     * @param \TeamNeusta\Magedev\Runtime\Helper\FileHelper $fileHelper
+     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Docker\Image\Factory $imageFactory
      */
     public function __construct(
         \TeamNeusta\Magedev\Runtime\Config $config,
-        \TeamNeusta\Magedev\Runtime\Helper\FileHelper $fileHelper,
-        \TeamNeusta\Magedev\Docker\Api\ImageFactory $imageApiFactory,
+        \TeamNeusta\Magedev\Docker\Image\Factory $imageFactory,
         \TeamNeusta\Magedev\Docker\Helper\NameBuilder $nameBuilder
     ) {
         $this->config = $config;
-        $this->fileHelper = $fileHelper;
-        $this->imageApiFactory = $imageApiFactory;
+        $this->imageFactory = $imageFactory;
         $this->nameBuilder = $nameBuilder;
     }
 
     public function create($className)
     {
-        $className = "\\TeamNeusta\\Magedev\\Docker\\Image\\Repository\\" . $className;
-        $contextBuilder = new \Docker\Context\ContextBuilder();
+        $className = "\\TeamNeusta\\Magedev\\Docker\\Container\\Repository\\" . $className;
         return new $className(
             $this->config,
-            $this,
-            $this->fileHelper,
-            $contextBuilder,
-            $this->imageApiFactory,
+            $this->imageFactory,
             $this->nameBuilder
         );
     }

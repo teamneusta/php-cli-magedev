@@ -71,16 +71,17 @@ class Image
      */
     public function build()
     {
+        $this->image->configure();
         $name = $this->image->getBuildName();
         if (!$this->exists()) {
             $contextBuilder = $this->image->getContextBuilder();
-            foreach ($this->context->getEnvVars() as $key => $value) {
-                $contextBuilder->env($key, $value);
-            }
-            $this->configure();
+            // TODO: move this somewhere else
+            /* foreach ($this->context->getEnvVars() as $key => $value) { */
+            /*     $contextBuilder->env($key, $value); */
+            /* } */
             $context = $contextBuilder->getContext();
-            $buildStream = $this->context->getImageManager()->build($context->read(), [
-                't' => $this->getBuildName(),
+            $buildStream = $this->imageManager->build($context->read(), [
+                't' => $this->image->getBuildName(),
                 'rm' => true,
                 'nocache' => false
             ], ImageManager::FETCH_STREAM);
@@ -103,9 +104,9 @@ class Image
      */
     public function pull()
     {
-        $name = $this->getBuildName();
+        $name = $this->image->getBuildName();
         if (!$this->exists()) {
-            $buildStream = $this->context->getImageManager()->create(
+            $buildStream = $this->imageManager->create(
                 null,
                 [
                   'fromImage' => $name

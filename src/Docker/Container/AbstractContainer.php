@@ -37,6 +37,11 @@ abstract class AbstractContainer
     protected $imageFactory;
 
     /**
+     * @var \TeamNeusta\Magedev\Docker\Helper\NameBuilder
+     */
+    protected $nameBuilder;
+
+    /**
      * @var string[]
      */
     protected $binds;
@@ -55,13 +60,17 @@ abstract class AbstractContainer
      * __construct
      *
      * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Docker\Image\Factory $imageFactory
+     * @param \TeamNeusta\Magedev\Docker\Helper\NameBuilder $nameBuilder
      */
     public function __construct(
         \TeamNeusta\Magedev\Runtime\Config $config,
-        \TeamNeusta\Magedev\Docker\Image\Factory $imageFactory
+        \TeamNeusta\Magedev\Docker\Image\Factory $imageFactory,
+        \TeamNeusta\Magedev\Docker\Helper\NameBuilder $nameBuilder
     ) {
         $this->config = $config;
         $this->imageFactory = $imageFactory;
+        $this->nameBuilder = $nameBuilder;
         $this->mapPorts = new \ArrayObject();
         $this->binds = [];
         $this->links = [];
@@ -74,12 +83,18 @@ abstract class AbstractContainer
     public abstract function getName();
 
     /**
+     * getImage
+     * @return TeamNeusta\Magedev\Docker\Container | string
+     */
+    public abstract function getImage();
+
+    /**
      * getBuildName
      * @return project specifc container name
      */
     public function getBuildName()
     {
-        return $this->context->buildName(
+        return $this->nameBuilder->buildName(
              $this->getName()
         );
     }

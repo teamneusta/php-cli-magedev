@@ -20,6 +20,8 @@
     "idekey": "vim"
   },
   "docker": {
+    "build_strategy": "pull",
+    "containers": ["ElasticSearch", "Mailcatcher", "Main", "Mysql", "Redis", "Varnish"],
     "links": {
       "main": ["mysql", "redis", "elasticsearch"]
     },
