@@ -95,23 +95,12 @@ class DockerService
         $this->networkManager = $networkManager;
         $this->containerFactory = $containerFactory;
         $this->nameBuilder = $nameBuilder;
-        $this->initDocker();
     }
 
     protected function initDocker()
     {
-        /* $containers = [ */
-        /*     new \TeamNeusta\Magedev\Docker\Container\Repository\ElasticSearch($context), */
-        /*     new \TeamNeusta\Magedev\Docker\Container\Repository\Mailcatcher($context), */
-        /*     new \TeamNeusta\Magedev\Docker\Container\Repository\Main($context), */
-        /*     new \TeamNeusta\Magedev\Docker\Container\Repository\Mysql($context), */
-        /*     new \TeamNeusta\Magedev\Docker\Container\Repository\Redis($context), */
-        /*     new \TeamNeusta\Magedev\Docker\Container\Repository\Varnish($context) */
-        /* ]; */
         $this->applyDockerSettingsToConfig();
         $this->addEnv();
-        /* $dockerManager = new \TeamNeusta\Magedev\Docker\Manager(); */
-        /* $context = $this->getContext(); */
 
         $dockerLinks = [];
         $dockerPorts = [];
@@ -178,6 +167,7 @@ class DockerService
      */
     public function getManager()
     {
+        $this->initDocker();
         return $this->dockerManager;
     }
 
@@ -246,6 +236,8 @@ class DockerService
      */
     public function execute($cmd, $options = [])
     {
+        $this->initDocker();
+
         $user = "www-data";
         $containerName = "main";
 

@@ -63,6 +63,9 @@ class Main extends AbstractImage
             }
         }
 
+        $uid = getmyuid();
+        $this->run("usermod -u " . $uid . " www-data");
+
         // TODO: have something like a simple template engine to replace vars
         // like DOCUMENT_ROOT AND $GATEWAY ?
 

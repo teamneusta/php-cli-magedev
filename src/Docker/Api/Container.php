@@ -14,7 +14,6 @@ namespace TeamNeusta\Magedev\Docker\Api;
 use Docker\Docker;
 use Docker\Manager\ContainerManager;
 use TeamNeusta\Magedev\Docker\Container\AbstractContainer;
-use TeamNeusta\Magedev\Docker\Image\Factory as ImageFactory;
 
 /**
  * Class Container

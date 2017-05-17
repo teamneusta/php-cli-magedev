@@ -26,9 +26,6 @@ class Php5 extends AbstractImage
         $this->name('php5');
         $this->from('php:5.6-apache');
 
-        $uid = getmyuid();
-        $this->run("usermod -u " . $uid . " www-data");
-
         $useProxy = $this->config->optionExists("proxy");
         if ($useProxy) {
             $proxy = $this->config->get("proxy");

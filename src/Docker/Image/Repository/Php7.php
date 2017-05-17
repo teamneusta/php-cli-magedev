@@ -26,9 +26,6 @@ class Php7 extends AbstractImage
         $this->name("php7");
         $this->from('php:7.0.14-apache');
 
-        $uid = getmyuid();
-        $this->run("usermod -u " . $uid . " www-data");
-
         $useProxy = $this->config->optionExists("proxy");
         if ($useProxy) {
             $proxy = $this->config->get("proxy");
