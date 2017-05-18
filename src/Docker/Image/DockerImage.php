@@ -63,6 +63,9 @@ abstract class DockerImage
     {
         $images = $this->context->getImageManager()->findAll();
         foreach ($images as $image) {
+            if (!$image->getRepoTags()) {
+                continue;
+            }
             foreach ($image->getRepoTags() as $tags) {
                 $nameParts = explode(":", $tags);
                 $name = $nameParts[0];
