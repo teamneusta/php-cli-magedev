@@ -14,14 +14,14 @@ namespace TeamNeusta\Magedev\Docker\Container\Repository;
 use TeamNeusta\Magedev\Docker\Container\AbstractContainer;
 
 /**
- * Class: ElasticSearch
+ * Class: ElasticSearch.
  *
  * @see AbstractContainer
  */
 class ElasticSearch extends AbstractContainer
 {
     /**
-     * getName
+     * getName.
      */
     public function getName()
     {
@@ -29,7 +29,7 @@ class ElasticSearch extends AbstractContainer
     }
 
     /**
-     * getImage
+     * getImage.
      */
     public function getImage()
     {

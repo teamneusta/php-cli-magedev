@@ -11,11 +11,11 @@
 
 namespace TeamNeusta\Magedev\Test\Commands\Docker;
 
-use \Mockery as m;
+use Mockery as m;
 use TeamNeusta\Magedev\Commands\Docker\RestartCommand;
 
 /**
- * Class: RestartCommandTest
+ * Class: RestartCommandTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -36,7 +36,7 @@ class RestartCommandTest extends \TeamNeusta\Magedev\Test\TestCase
         $command = m::mock(
             RestartCommand::class,
             [
-                'getApplication' => $application
+                'getApplication' => $application,
             ]
         );
         $command->execute($input, $output);

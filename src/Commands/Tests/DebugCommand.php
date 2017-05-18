@@ -18,7 +18,7 @@ use TeamNeusta\Magedev\Runtime\Config;
 use TeamNeusta\Magedev\Services\DockerService;
 
 /**
- * Class: DebugCommand
+ * Class: DebugCommand.
  *
  * @see AbstractCommand
  */
@@ -35,9 +35,9 @@ class DebugCommand extends AbstractCommand
     protected $dockerService;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Runtime\Config         $config
      * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
      */
     public function __construct(
@@ -50,40 +50,41 @@ class DebugCommand extends AbstractCommand
     }
 
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("tests:debug");
-        $this->setDescription("debug tests");
+        $this->setName('tests:debug');
+        $this->setDescription('debug tests');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $phpunitConfig = "/var/www/html/phpunit.xml";
-        if ($this->config->optionExists("phpunitxml_path")) {
-            $phpunitConfig = $this->config->get("phpunitxml_path");
+        $phpunitConfig = '/var/www/html/phpunit.xml';
+        if ($this->config->optionExists('phpunitxml_path')) {
+            $phpunitConfig = $this->config->get('phpunitxml_path');
         }
 
-        if ($this->config->optionExists("xdebug")) {
-            $xdebugSettings = $this->config->get("xdebug");
+        if ($this->config->optionExists('xdebug')) {
+            $xdebugSettings = $this->config->get('xdebug');
             $remoteHost = $this->dockerService->getContext()->getConfig()->getGateway();
-            $ideKey = $xdebugSettings["idekey"];
+            $ideKey = $xdebugSettings['idekey'];
             if ($ideKey && $remoteHost) {
-                $cmd  = "XDEBUG_CONFIG=\"idekey=" . $ideKey . "\"";
-                $cmd .= " php -dxdebug.remote_host=" . $remoteHost;
-                $cmd .= " -dxdebug.remote_enable=on vendor/bin/phpunit";
-                $cmd .= " -c ".$phpunitConfig;
+                $cmd = 'XDEBUG_CONFIG="idekey='.$ideKey.'"';
+                $cmd .= ' php -dxdebug.remote_host='.$remoteHost;
+                $cmd .= ' -dxdebug.remote_enable=on vendor/bin/phpunit';
+                $cmd .= ' -c '.$phpunitConfig;
                 $this->dockerService->execute($cmd);
+
                 return;
             }
         }
-        throw new \Exception("xdebug settings not found");
+        throw new \Exception('xdebug settings not found');
     }
 }

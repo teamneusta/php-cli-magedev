@@ -11,11 +11,11 @@
 
 namespace TeamNeusta\Magedev\Test\Commands\Docker;
 
-use \Mockery as m;
+use Mockery as m;
 use TeamNeusta\Magedev\Commands\Docker\DestroyCommand;
 
 /**
- * Class: DestroyCommandTest
+ * Class: DestroyCommandTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -31,7 +31,7 @@ class DestroyCommandTest extends \TeamNeusta\Magedev\Test\TestCase
         $dockerService = m::mock(
             '\TeamNeusta\Magedev\Services\DockerService',
             [
-                'getManager' => $dockerManager
+                'getManager' => $dockerManager,
             ]
         );
         $command = new DestroyCommand($dockerService);

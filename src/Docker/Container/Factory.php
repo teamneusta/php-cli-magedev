@@ -12,7 +12,7 @@
 namespace TeamNeusta\Magedev\Docker\Container;
 
 /**
- * Class: Factory
+ * Class: Factory.
  *
  * @see DockerImage
  */
@@ -34,9 +34,9 @@ class Factory
     protected $nameBuilder;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Runtime\Config       $config
      * @param \TeamNeusta\Magedev\Docker\Image\Factory $imageFactory
      */
     public function __construct(
@@ -51,7 +51,8 @@ class Factory
 
     public function create($className)
     {
-        $className = "\\TeamNeusta\\Magedev\\Docker\\Container\\Repository\\" . $className;
+        $className = '\\TeamNeusta\\Magedev\\Docker\\Container\\Repository\\'.$className;
+
         return new $className(
             $this->config,
             $this->imageFactory,

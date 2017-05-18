@@ -12,7 +12,7 @@
 namespace TeamNeusta\Magedev\Docker\Api;
 
 /**
- * Class ImageFactory
+ * Class ImageFactory.
  */
 class ImageFactory
 {
@@ -22,9 +22,9 @@ class ImageFactory
     protected $imageManager;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \Docker\Manager\ImageManager $imageManager
+     * @param \Docker\Manager\ImageManager                   $imageManager
      * @param \TeamNeusta\Magedev\Docker\Image\AbstractImage $image
      */
     public function __construct(
@@ -34,7 +34,7 @@ class ImageFactory
     }
 
     /**
-     * create
+     * create.
      *
      * @param \TeamNeusta\Magedev\Docker\Image\AbstractImage $image
      */

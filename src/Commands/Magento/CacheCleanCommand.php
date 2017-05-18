@@ -19,7 +19,7 @@ use TeamNeusta\Magedev\Runtime\Helper\MagerunHelper;
 use TeamNeusta\Magedev\Services\DockerService;
 
 /**
- * Class: CacheCleanCommand
+ * Class: CacheCleanCommand.
  *
  * @see AbstractCommand
  */
@@ -41,11 +41,11 @@ class CacheCleanCommand extends AbstractCommand
     protected $dockerService;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Runtime\Config               $config
      * @param \TeamNeusta\Magedev\Runtime\Helper\MagerunHelper $magerunHelper
-     * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
+     * @param \TeamNeusta\Magedev\Services\DockerService       $dockerService
      */
     public function __construct(
         \TeamNeusta\Magedev\Runtime\Config $config,
@@ -59,29 +59,29 @@ class CacheCleanCommand extends AbstractCommand
     }
 
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("magento:cache:clean");
-        $this->setDescription("cleans magento cache");
+        $this->setName('magento:cache:clean');
+        $this->setDescription('cleans magento cache');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $magentoVersion = $this->config->getMagentoVersion();
-        if ($magentoVersion == "1") {
-            $this->magerunHelper->magerunCommand("cache:clean");
+        if ($magentoVersion == '1') {
+            $this->magerunHelper->magerunCommand('cache:clean');
         }
 
-        if ($magentoVersion == "2") {
-            $this->dockerService->execute("bin/magento cache:clean");
+        if ($magentoVersion == '2') {
+            $this->dockerService->execute('bin/magento cache:clean');
         }
     }
 }

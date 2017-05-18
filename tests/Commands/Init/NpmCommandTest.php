@@ -11,11 +11,11 @@
 
 namespace TeamNeusta\Magedev\Test\Commands\Init;
 
-use \Mockery as m;
+use Mockery as m;
 use TeamNeusta\Magedev\Commands\Init\NpmCommand;
 
 /**
- * Class: NpmCommandTest
+ * Class: NpmCommandTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -27,17 +27,17 @@ class NpmCommandTest extends \TeamNeusta\Magedev\Test\TestCase
         $output = m::mock('\Symfony\Component\Console\Output\ConsoleOutput[]', ['writeln']);
 
         $config = m::mock('\TeamNeusta\Magedev\Runtime\Config');
-        $config->shouldReceive('get')->with("source_folder")->andReturn("./");
-        $config->shouldReceive('optionExists')->with("proxy")->andReturn(false);
-        $config->shouldReceive('getMagentoVersion')->andReturn("2");
+        $config->shouldReceive('get')->with('source_folder')->andReturn('./');
+        $config->shouldReceive('optionExists')->with('proxy')->andReturn(false);
+        $config->shouldReceive('getMagentoVersion')->andReturn('2');
 
         $dockerService = m::mock('\TeamNeusta\Magedev\Services\DockerService');
         $shellService = m::mock('\TeamNeusta\Magedev\Services\ShellService');
         $fileHelper = m::mock('\TeamNeusta\Magedev\Runtime\Helper\FileHelper');
         $fileHelper->shouldReceive('fileExists');
-        $dockerService->shouldReceive("execute")->with("bash -c \"[[ ! -f \"/usr/bin/node\" ]] && ln -s /usr/bin/nodejs /usr/bin/node\"", ['user'=>'root']);
-        $dockerService->shouldReceive("execute")->with("npm install -g grunt-cli", ['user'=>'root']);
-        $dockerService->shouldReceive("execute")->with("npm install", ['user'=>'root']);
+        $dockerService->shouldReceive('execute')->with('bash -c "[[ ! -f "/usr/bin/node" ]] && ln -s /usr/bin/nodejs /usr/bin/node"', ['user' => 'root']);
+        $dockerService->shouldReceive('execute')->with('npm install -g grunt-cli', ['user' => 'root']);
+        $dockerService->shouldReceive('execute')->with('npm install', ['user' => 'root']);
 
         $command = new NpmCommand(
             $config,
@@ -54,19 +54,19 @@ class NpmCommandTest extends \TeamNeusta\Magedev\Test\TestCase
         $output = m::mock('\Symfony\Component\Console\Output\ConsoleOutput[]', ['writeln']);
 
         $config = m::mock('\TeamNeusta\Magedev\Runtime\Config');
-        $config->shouldReceive('get')->with("source_folder")->andReturn("./");
-        $config->shouldReceive('get')->with("proxy")->andReturn(['HTTP' => 'http://someproxy.de:8080', 'HTTPS' => 'http://someproxy.de:8080']);
+        $config->shouldReceive('get')->with('source_folder')->andReturn('./');
+        $config->shouldReceive('get')->with('proxy')->andReturn(['HTTP' => 'http://someproxy.de:8080', 'HTTPS' => 'http://someproxy.de:8080']);
 
-        $config->shouldReceive('optionExists')->with("proxy")->andReturn(true);
-        $config->shouldReceive('getMagentoVersion')->andReturn("2");
+        $config->shouldReceive('optionExists')->with('proxy')->andReturn(true);
+        $config->shouldReceive('getMagentoVersion')->andReturn('2');
 
         $dockerService = m::mock('\TeamNeusta\Magedev\Services\DockerService');
         $shellService = m::mock('\TeamNeusta\Magedev\Services\ShellService');
         $fileHelper = m::mock('\TeamNeusta\Magedev\Runtime\Helper\FileHelper');
         $fileHelper->shouldReceive('fileExists');
-        $dockerService->shouldReceive("execute")->with("bash -c \"[[ ! -f \"/usr/bin/node\" ]] && ln -s /usr/bin/nodejs /usr/bin/node\"", ['user'=>'root']);
-        $dockerService->shouldReceive("execute")->with("npm config set https-proxy http://someproxy.de:8080 && npm config set proxy http://someproxy.de:8080 && npm install -g grunt-cli", ['user'=>'root']);
-        $dockerService->shouldReceive("execute")->with("npm config set https-proxy http://someproxy.de:8080 && npm config set proxy http://someproxy.de:8080 && npm install", ['user'=>'root']);
+        $dockerService->shouldReceive('execute')->with('bash -c "[[ ! -f "/usr/bin/node" ]] && ln -s /usr/bin/nodejs /usr/bin/node"', ['user' => 'root']);
+        $dockerService->shouldReceive('execute')->with('npm config set https-proxy http://someproxy.de:8080 && npm config set proxy http://someproxy.de:8080 && npm install -g grunt-cli', ['user' => 'root']);
+        $dockerService->shouldReceive('execute')->with('npm config set https-proxy http://someproxy.de:8080 && npm config set proxy http://someproxy.de:8080 && npm install', ['user' => 'root']);
 
         $command = new NpmCommand(
             $config,

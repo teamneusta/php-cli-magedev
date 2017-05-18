@@ -11,11 +11,11 @@
 
 namespace TeamNeusta\Magedev\Test\Commands\Docker;
 
-use \Mockery as m;
+use Mockery as m;
 use TeamNeusta\Magedev\Commands\Docker\ReinitCommand;
 
 /**
- * Class: ReinitCommandTest
+ * Class: ReinitCommandTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -37,7 +37,7 @@ class ReinitCommandTest extends \TeamNeusta\Magedev\Test\TestCase
         $command = m::mock(
             ReinitCommand::class,
             [
-                'getApplication' => $application
+                'getApplication' => $application,
             ]
         );
         $command->execute($input, $output);

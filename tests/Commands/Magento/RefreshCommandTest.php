@@ -11,11 +11,11 @@
 
 namespace TeamNeusta\Magedev\Test\Commands\Magento;
 
-use \Mockery as m;
+use Mockery as m;
 use TeamNeusta\Magedev\Commands\Magento\RefreshCommand;
 
 /**
- * Class: RefreshCommandTest
+ * Class: RefreshCommandTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -27,17 +27,17 @@ class RefreshCommandTest extends \PHPUnit_Framework_TestCase
         $output = m::mock('\Symfony\Component\Console\Output\ConsoleOutput[]', ['writeln']);
 
         $config = m::mock('\TeamNeusta\Magedev\Runtime\Config', [
-            'getMagentoVersion' => 2
+            'getMagentoVersion' => 2,
         ]);
 
         $dockerService = m::mock('\TeamNeusta\Magedev\Services\DockerService');
-        $dockerService->shouldReceive('execute')->with("rm -rf var/generation/*");
-        $dockerService->shouldReceive('execute')->with("rm -rf var/di/*");
-        $dockerService->shouldReceive('execute')->with("rm -rf var/cache/*");
-        $dockerService->shouldReceive('execute')->with("rm -rf var/view_preprocessed/*");
-        $dockerService->shouldReceive('execute')->with("rm -rf pub/static/_requirejs");
-        $dockerService->shouldReceive('execute')->with("rm -rf pub/static/adminhtml");
-        $dockerService->shouldReceive('execute')->with("rm -rf pub/static/frontend");
+        $dockerService->shouldReceive('execute')->with('rm -rf var/generation/*');
+        $dockerService->shouldReceive('execute')->with('rm -rf var/di/*');
+        $dockerService->shouldReceive('execute')->with('rm -rf var/cache/*');
+        $dockerService->shouldReceive('execute')->with('rm -rf var/view_preprocessed/*');
+        $dockerService->shouldReceive('execute')->with('rm -rf pub/static/_requirejs');
+        $dockerService->shouldReceive('execute')->with('rm -rf pub/static/adminhtml');
+        $dockerService->shouldReceive('execute')->with('rm -rf pub/static/frontend');
 
         $command = new RefreshCommand($config, $dockerService);
         $command->execute($input, $output);

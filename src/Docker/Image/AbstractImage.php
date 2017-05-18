@@ -15,7 +15,7 @@ use Docker\Context\ContextBuilder;
 use TeamNeusta\Magedev\Docker\Api\ImageFactory;
 
 /**
- * Class AbstractImage
+ * Class AbstractImage.
  */
 abstract class AbstractImage
 {
@@ -54,15 +54,14 @@ abstract class AbstractImage
      */
     protected $nameBuilder;
 
-
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config  $config
-     * @param \TeamNeusta\Magedev\Docker\Image\Factory $imageFactory
+     * @param \TeamNeusta\Magedev\Runtime\Config            $config
+     * @param \TeamNeusta\Magedev\Docker\Image\Factory      $imageFactory
      * @param \TeamNeusta\Magedev\Runtime\Helper\FileHelper $fileHelper
-     * @param \TeamNeusta\Magedev\Docker\Context $context
-     * @param \TeamNeusta\Magedev\Docker\Api\ImageFactory $imageApi
+     * @param \TeamNeusta\Magedev\Docker\Context            $context
+     * @param \TeamNeusta\Magedev\Docker\Api\ImageFactory   $imageApi
      * @param \TeamNeusta\Magedev\Docker\Helper\NameBuilder $nameBuilder
      */
     public function __construct(
@@ -86,22 +85,23 @@ abstract class AbstractImage
     }
 
     /**
-     * configure
+     * configure.
      */
-    public abstract function configure();
-
+    abstract public function configure();
 
     /**
-     * getBuildName
+     * getBuildName.
+     *
      * @return string
      */
     public function getBuildName()
     {
-        return 'magedev-' . $this->getName();
+        return 'magedev-'.$this->getName();
     }
 
     /**
-     * getName
+     * getName.
+     *
      * @return string
      */
     public function getName()
@@ -110,7 +110,8 @@ abstract class AbstractImage
     }
 
     /**
-     * name
+     * name.
+     *
      * @param mixed $name
      */
     public function name($name)
@@ -119,15 +120,16 @@ abstract class AbstractImage
     }
 
     /**
-     * from
+     * from.
      *
      * @param string | AbstractImage $image
      */
     public function from($image)
     {
-        if ($image instanceof AbstractImage) {
+        if ($image instanceof self) {
             $this->imageApiFactory->create($image)->build();
             $this->contextBuilder->from($image->getBuildName());
+
             return;
         }
 
@@ -135,14 +137,13 @@ abstract class AbstractImage
             $imageName = $image;
             $this->contextBuilder->from($imageName);
         }
-
     }
 
     /**
-     * add
+     * add.
      *
      * @param string $path
-     * @param mixed $content
+     * @param mixed  $content
      */
     public function add($path, $content)
     {
@@ -150,7 +151,7 @@ abstract class AbstractImage
     }
 
     /**
-     * addFile
+     * addFile.
      *
      * @param string $srcPath
      * @param string $dstPath
@@ -161,7 +162,7 @@ abstract class AbstractImage
     }
 
     /**
-     * run
+     * run.
      *
      * @param string $cmd
      */
@@ -171,7 +172,7 @@ abstract class AbstractImage
     }
 
     /**
-     * expose
+     * expose.
      *
      * @param int $port
      */
@@ -181,7 +182,7 @@ abstract class AbstractImage
     }
 
     /**
-     * cmd
+     * cmd.
      *
      * @param string $cmd
      */
@@ -191,7 +192,7 @@ abstract class AbstractImage
     }
 
     /**
-     * env
+     * env.
      *
      * @param string $key
      * @param string $value
@@ -202,7 +203,8 @@ abstract class AbstractImage
     }
 
     /**
-     * getContextBuilder
+     * getContextBuilder.
+     *
      * @return \Docker\Context\ContextBuilder
      */
     public function getContextBuilder()

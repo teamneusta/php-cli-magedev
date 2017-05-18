@@ -16,7 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use TeamNeusta\Magedev\Commands\AbstractCommand;
 
 /**
- * Class: RefreshCommand
+ * Class: RefreshCommand.
  *
  * @see AbstractCommand
  */
@@ -33,11 +33,11 @@ class RefreshCommand extends AbstractCommand
     protected $dockerService;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Runtime\Config            $config
      * @param \TeamNeusta\Magedev\Runtime\Helper\FileHelper $fileHelper
-     * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
+     * @param \TeamNeusta\Magedev\Services\DockerService    $dockerService
      */
     public function __construct(
         \TeamNeusta\Magedev\Runtime\Config $config,
@@ -49,25 +49,25 @@ class RefreshCommand extends AbstractCommand
     }
 
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("grunt:refresh");
-        $this->setDescription("runs refresh inside container");
+        $this->setName('grunt:refresh');
+        $this->setDescription('runs refresh inside container');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $magentoVersion = $this->config->getMagentoVersion();
-        if ($magentoVersion == "2") {
-            $this->dockerService->execute("/usr/local/bin/grunt refresh");
+        if ($magentoVersion == '2') {
+            $this->dockerService->execute('/usr/local/bin/grunt refresh');
         }
     }
 }

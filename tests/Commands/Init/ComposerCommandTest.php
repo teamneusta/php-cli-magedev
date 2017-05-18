@@ -11,11 +11,11 @@
 
 namespace TeamNeusta\Magedev\Test\Commands\Init;
 
-use \Mockery as m;
+use Mockery as m;
 use TeamNeusta\Magedev\Commands\Init\ComposerCommand;
 
 /**
- * Class: ComposerCommandTest
+ * Class: ComposerCommandTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -27,10 +27,10 @@ class ComposerCommandTest extends \TeamNeusta\Magedev\Test\TestCase
         $output = m::mock('\Symfony\Component\Console\Output\ConsoleOutput[]', ['writeln']);
 
         $config = m::mock('\TeamNeusta\Magedev\Runtime\Config');
-        $config->shouldReceive('getMagentoVersion')->andReturn("2");
+        $config->shouldReceive('getMagentoVersion')->andReturn('2');
 
         $dockerService = m::mock('\TeamNeusta\Magedev\Services\DockerService');
-        $dockerService->shouldReceive("execute")->with("/usr/bin/loadssh.sh && composer install");
+        $dockerService->shouldReceive('execute')->with('/usr/bin/loadssh.sh && composer install');
         $command = new ComposerCommand(
             $config,
             $dockerService

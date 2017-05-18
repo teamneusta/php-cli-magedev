@@ -16,20 +16,22 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class: AbstractCommand
+ * Class: AbstractCommand.
+ *
  * @abstract
  */
 abstract class AbstractCommand extends Command
 {
     /**
-     * execute
+     * execute.
+     *
      * @codeCoverageIgnore
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln("finished ... have a nice day :)");
+        $output->writeln('finished ... have a nice day :)');
     }
 }

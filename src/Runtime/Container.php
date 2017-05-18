@@ -37,7 +37,6 @@ $c['runtime.eventdispatcher'] = function ($c) {
     return new \Symfony\Component\EventDispatcher\EventDispatcher();
 };
 
-
 $c['lib.docker.containerManager'] = function ($c) {
     return (new \Docker\Docker())->getContainerManager();
 };
@@ -45,21 +44,21 @@ $c['lib.docker.containerManager'] = function ($c) {
 $c['lib.docker.imageManager'] = function ($c) {
     return (new \Docker\Docker())->getImageManager();
 };
-$c['docker.helper.namebuilder'] = function($c) {
+$c['docker.helper.namebuilder'] = function ($c) {
     return new \TeamNeusta\Magedev\Docker\Helper\NameBuilder($c['runtime.config']);
 };
-$c['docker.networkManager'] = function($c) {
-    return new \TeamNeusta\Magedev\Docker\Network((new \Docker\Docker)->getNetworkManager());
+$c['docker.networkManager'] = function ($c) {
+    return new \TeamNeusta\Magedev\Docker\Network((new \Docker\Docker())->getNetworkManager());
 };
 
-$c['docker.api.container.factory'] = function($c) {
+$c['docker.api.container.factory'] = function ($c) {
     return new \TeamNeusta\Magedev\Docker\Api\ContainerFactory(
         $c['lib.docker.containerManager'],
         $c['docker.image.factory'],
         $c['docker.api.image.factory']
     );
 };
-$c['docker.api.image.factory'] = function($c) {
+$c['docker.api.image.factory'] = function ($c) {
     return new \TeamNeusta\Magedev\Docker\Api\ImageFactory(
         $c['lib.docker.imageManager']
     );
@@ -109,8 +108,7 @@ $c['services.shell'] = function ($c) {
     );
 };
 
-
-$c['commands'] = function($c) {
+$c['commands'] = function ($c) {
     return [
         new \Stecman\Component\Symfony\Console\BashCompletion\CompletionCommand(),
 
@@ -176,21 +174,21 @@ $c['commands'] = function($c) {
         new \TeamNeusta\Magedev\Commands\Tests\DebugCommand($c['runtime.config'], $c['services.docker']),
         new \TeamNeusta\Magedev\Commands\Tests\RunCommand($c['runtime.config'], $c['services.docker']),
 
-        new \TeamNeusta\Magedev\Commands\UpdateCommand()
+        new \TeamNeusta\Magedev\Commands\UpdateCommand(),
     ];
 };
 
-$c['plugins.manager'] = function($c) {
+$c['plugins.manager'] = function ($c) {
     return new \TeamNeusta\Magedev\Plugins\Manager($c['runtime.config'], $c['runtime.eventdispatcher']);
 };
 
-$c['application'] = function($c) {
+$c['application'] = function ($c) {
     $c['plugins.manager']->loadPlugins($c);
     $application = new \TeamNeusta\Magedev\Runtime\Application($c['plugins.manager']);
     $application->addCommands($c['commands']);
+
     return $application;
 };
 
 return $c;
 // @codeCoverageIgnoreEnd
-

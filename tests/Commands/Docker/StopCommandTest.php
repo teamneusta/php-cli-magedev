@@ -11,11 +11,11 @@
 
 namespace TeamNeusta\Magedev\Test\Commands\Docker;
 
-use \Mockery as m;
+use Mockery as m;
 use TeamNeusta\Magedev\Commands\Docker\StopCommand;
 
 /**
- * Class: StopCommandTest
+ * Class: StopCommandTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -31,7 +31,7 @@ class StopCommandTest extends \PHPUnit_Framework_TestCase
         $dockerService = m::mock(
             '\TeamNeusta\Magedev\Services\DockerService',
             [
-                'getManager' => $dockerManager
+                'getManager' => $dockerManager,
             ]
         );
         $command = new StopCommand($dockerService);

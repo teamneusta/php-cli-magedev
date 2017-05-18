@@ -11,11 +11,11 @@
 
 namespace TeamNeusta\Magedev\Test\Commands\Init;
 
-use \Mockery as m;
+use Mockery as m;
 use TeamNeusta\Magedev\Commands\Init\PermissionsCommand;
 
 /**
- * Class: PermissionsCommandTest
+ * Class: PermissionsCommandTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -31,13 +31,13 @@ class PermissionsCommandTest extends \TeamNeusta\Magedev\Test\TestCase
         $config->shouldReceive('get')->with('source_folder')->andReturn('Source');
 
         $dockerService = m::mock('\TeamNeusta\Magedev\Services\DockerService');
-        $dockerService->shouldReceive("execute")->with("chown -R www-data:users /var/www/html", ['user' => 'root']);
-        $dockerService->shouldReceive("execute")->with("chown -R www-data:users /var/www/.composer", ['user' => 'root']);
-        $dockerService->shouldReceive("execute")->with("chown -R www-data:users /var/www/.ssh", ['user' => 'root']);
-        $dockerService->shouldReceive("execute")->with("chown -R www-data:users /var/www/modules", ['user' => 'root']);
-        $dockerService->shouldReceive("execute")->with("chown -R www-data:users /var/www/composer-cache", ['user' => 'root']);
-        $dockerService->shouldReceive("execute")->with("cd /var/www/html && chmod -R 775 Source", ['user' => 'root']);
-        $dockerService->shouldReceive("execute")->with("usermod -u ".getmyuid()." mysql",
+        $dockerService->shouldReceive('execute')->with('chown -R www-data:users /var/www/html', ['user' => 'root']);
+        $dockerService->shouldReceive('execute')->with('chown -R www-data:users /var/www/.composer', ['user' => 'root']);
+        $dockerService->shouldReceive('execute')->with('chown -R www-data:users /var/www/.ssh', ['user' => 'root']);
+        $dockerService->shouldReceive('execute')->with('chown -R www-data:users /var/www/modules', ['user' => 'root']);
+        $dockerService->shouldReceive('execute')->with('chown -R www-data:users /var/www/composer-cache', ['user' => 'root']);
+        $dockerService->shouldReceive('execute')->with('cd /var/www/html && chmod -R 775 Source', ['user' => 'root']);
+        $dockerService->shouldReceive('execute')->with('usermod -u '.getmyuid().' mysql',
         ['user' => 'root', 'container' => 'mysql']);
         $command = new PermissionsCommand(
             $config,

@@ -14,11 +14,10 @@ namespace TeamNeusta\Magedev\Docker\Api;
 use Docker\API\Model\BuildInfo;
 use Docker\API\Model\CreateImageInfo;
 use Docker\Context\ContextBuilder;
-use Docker\Docker;
 use Docker\Manager\ImageManager;
 
 /**
- * Class Image
+ * Class Image.
  */
 class Image
 {
@@ -33,9 +32,9 @@ class Image
     protected $image;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \Docker\Manager\ImageManager $imageManager
+     * @param \Docker\Manager\ImageManager                   $imageManager
      * @param \TeamNeusta\Magedev\Docker\Image\AbstractImage $image
      */
     public function __construct(
@@ -47,7 +46,8 @@ class Image
     }
 
     /**
-     * exists
+     * exists.
+     *
      * @return bool
      */
     public function exists()
@@ -55,7 +55,7 @@ class Image
         $images = $this->imageManager->findAll();
         foreach ($images as $image) {
             foreach ($image->getRepoTags() as $tags) {
-                $nameParts = explode(":", $tags);
+                $nameParts = explode(':', $tags);
                 $name = $nameParts[0];
                 $version = $nameParts[1];
                 if ($name === $this->image->getBuildName()) {
@@ -63,11 +63,12 @@ class Image
                 }
             }
         }
+
         return false;
     }
 
     /**
-     * build
+     * build.
      */
     public function build()
     {
@@ -83,16 +84,16 @@ class Image
             $buildStream = $this->imageManager->build($context->read(), [
                 't' => $this->image->getBuildName(),
                 'rm' => true,
-                'nocache' => false
+                'nocache' => false,
             ], ImageManager::FETCH_STREAM);
 
             $buildStream->onFrame(function (BuildInfo $buildInfo) {
                 $status = $buildInfo->getStream();
                 $progress = $buildInfo->getProgress();
-                if ($status != "") {
-                    echo $status . "\n";
-                } elseif ($progress != "") {
-                    echo $progress . "\n";
+                if ($status != '') {
+                    echo $status."\n";
+                } elseif ($progress != '') {
+                    echo $progress."\n";
                 }
             });
             $buildStream->wait();
@@ -100,7 +101,7 @@ class Image
     }
 
     /**
-     * pull
+     * pull.
      */
     public function pull()
     {
@@ -109,18 +110,18 @@ class Image
             $buildStream = $this->imageManager->create(
                 null,
                 [
-                  'fromImage' => $name
+                  'fromImage' => $name,
                 ],
                 ImageManager::FETCH_STREAM);
             $buildStream->onFrame(function (CreateImageInfo $info) {
-                echo $info->getProgress() . "\n";
+                echo $info->getProgress()."\n";
             });
             $buildStream->wait();
         }
     }
 
     /**
-     * destroy
+     * destroy.
      */
     public function destroy()
     {
@@ -128,7 +129,8 @@ class Image
     }
 
     /**
-     * getContextBuilder
+     * getContextBuilder.
+     *
      * @return \Docker\Context\ContextBuilder
      */
     public function getContextBuilder()

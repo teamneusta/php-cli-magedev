@@ -11,13 +11,11 @@
 
 namespace TeamNeusta\Magedev\Docker\Api;
 
-use Docker\Docker;
 use Docker\Manager\ContainerManager;
-use TeamNeusta\Magedev\Docker\Container\AbstractContainer;
 use TeamNeusta\Magedev\Docker\Image\Factory as ImageFactory;
 
 /**
- * Class ContainerFactory
+ * Class ContainerFactory.
  */
 class ContainerFactory
 {
@@ -37,11 +35,11 @@ class ContainerFactory
     protected $imageApiFactory;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \Docker\Manager\ContainerManager $containerManager
-     * @param \TeamNeusta\Magedev\Docker\Image\Factory $imageFactory
-     * @param \TeamNeusta\Magedev\Docker\Api\ImageFactory $imageApi
+     * @param \Docker\Manager\ContainerManager                       $containerManager
+     * @param \TeamNeusta\Magedev\Docker\Image\Factory               $imageFactory
+     * @param \TeamNeusta\Magedev\Docker\Api\ImageFactory            $imageApi
      * @param \TeamNeusta\Magedev\Docker\Container\AbstractContainer $container
      */
     public function __construct(
@@ -55,7 +53,7 @@ class ContainerFactory
     }
 
     /**
-     * create
+     * create.
      *
      * @param \TeamNeusta\Magedev\Docker\Container\AbstractContainer $container
      */

@@ -11,15 +11,13 @@
 
 namespace TeamNeusta\Magedev\Test\Docker\Image;
 
-use \Mockery as m;
+use Mockery as m;
 use TeamNeusta\Magedev\Docker\Image\Factory;
 use TeamNeusta\Magedev\Runtime\Config;
 use TeamNeusta\Magedev\Runtime\Helper\FileHelper;
-use TeamNeusta\Magedev\Docker\Image\Factory as ImageFactory;
-use Docker\Context\ContextBuilder;
 
 /**
- * Class: FactoryTest
+ * Class: FactoryTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -28,10 +26,10 @@ class FactoryTest extends \TeamNeusta\Magedev\Test\TestCase
     public function testCreate()
     {
         $config = m::mock(Config::class);
-        $config->shouldReceive("get")->with("env_vars")->andReturn([]);
+        $config->shouldReceive('get')->with('env_vars')->andReturn([]);
         $fileHelper = m::mock(FileHelper::class);
         $contextBuilder = m::mock("Docker\Context\ContextBuilder[__destruct,add,run,from]");
-        $contextBuilder->shouldReceive("__destruct");
+        $contextBuilder->shouldReceive('__destruct');
         $imageApiFactory = m::mock("\TeamNeusta\Magedev\Docker\Api\ImageFactory");
         $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
 
@@ -42,11 +40,11 @@ class FactoryTest extends \TeamNeusta\Magedev\Test\TestCase
             $nameBuilder
         );
 
-        self::assertSame(get_class($factory->create("Main")), \TeamNeusta\Magedev\Docker\Image\Repository\Main::class);
-        self::assertSame(get_class($factory->create("Mysql")), \TeamNeusta\Magedev\Docker\Image\Repository\Mysql::class);
-        self::assertSame(get_class($factory->create("Php5")), \TeamNeusta\Magedev\Docker\Image\Repository\Php5::class);
-        self::assertSame(get_class($factory->create("Php7")), \TeamNeusta\Magedev\Docker\Image\Repository\Php7::class);
-        self::assertSame(get_class($factory->create("Varnish")), \TeamNeusta\Magedev\Docker\Image\Repository\Varnish::class);
-        self::assertSame(get_class($factory->create("Varnish4")), \TeamNeusta\Magedev\Docker\Image\Repository\Varnish4::class);
+        self::assertSame(get_class($factory->create('Main')), \TeamNeusta\Magedev\Docker\Image\Repository\Main::class);
+        self::assertSame(get_class($factory->create('Mysql')), \TeamNeusta\Magedev\Docker\Image\Repository\Mysql::class);
+        self::assertSame(get_class($factory->create('Php5')), \TeamNeusta\Magedev\Docker\Image\Repository\Php5::class);
+        self::assertSame(get_class($factory->create('Php7')), \TeamNeusta\Magedev\Docker\Image\Repository\Php7::class);
+        self::assertSame(get_class($factory->create('Varnish')), \TeamNeusta\Magedev\Docker\Image\Repository\Varnish::class);
+        self::assertSame(get_class($factory->create('Varnish4')), \TeamNeusta\Magedev\Docker\Image\Repository\Varnish4::class);
     }
 }

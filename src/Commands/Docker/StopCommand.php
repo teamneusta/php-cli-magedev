@@ -15,25 +15,25 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class: StopCommand
+ * Class: StopCommand.
  *
  * @see AbstractCommand
  */
 class StopCommand extends Base
 {
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("docker:stop");
-        $this->setDescription("stop docker container");
+        $this->setName('docker:stop');
+        $this->setDescription('stop docker container');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)

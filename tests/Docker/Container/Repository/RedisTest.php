@@ -11,14 +11,13 @@
 
 namespace TeamNeusta\Magedev\Test\Docker\Image;
 
-use \Mockery as m;
+use Mockery as m;
 use TeamNeusta\Magedev\Docker\Container\Repository\Redis;
 use TeamNeusta\Magedev\Runtime\Config;
 use TeamNeusta\Magedev\Docker\Image\Factory as ImageFactory;
-use TeamNeusta\Magedev\Runtime\Helper\FileHelper;
 
 /**
- * Class: RedisTest
+ * Class: RedisTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -30,7 +29,7 @@ class RedisTest extends \TeamNeusta\Magedev\Test\TestCase
         $imageFactory = m::mock(ImageFactory::class);
         $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
         $container = new Redis($config, $imageFactory, $nameBuilder);
-        self::assertSame("redis:2.8", $container->getImage());
+        self::assertSame('redis:2.8', $container->getImage());
     }
 
     public function testGetName()
@@ -39,6 +38,6 @@ class RedisTest extends \TeamNeusta\Magedev\Test\TestCase
         $imageFactory = m::mock(ImageFactory::class);
         $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
         $container = new Redis($config, $imageFactory, $nameBuilder);
-        self::assertSame("redis", $container->getName());
+        self::assertSame('redis', $container->getName());
     }
 }

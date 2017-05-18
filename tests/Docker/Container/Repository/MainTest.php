@@ -11,14 +11,14 @@
 
 namespace TeamNeusta\Magedev\Test\Docker\Image;
 
-use \Mockery as m;
+use Mockery as m;
 use TeamNeusta\Magedev\Docker\Container\Repository\Main;
 use TeamNeusta\Magedev\Runtime\Config;
 use TeamNeusta\Magedev\Docker\Image\Factory as ImageFactory;
 use TeamNeusta\Magedev\Runtime\Helper\FileHelper;
 
 /**
- * Class: MainTest
+ * Class: MainTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -27,37 +27,37 @@ class MainTest extends \TeamNeusta\Magedev\Test\TestCase
     public function testGetConfig()
     {
         $input = m::mock('Symfony\Component\Console\Input\InputInterface');
-        $input->shouldReceive("getArgument")->andReturn(null);
+        $input->shouldReceive('getArgument')->andReturn(null);
         $fileHelper = m::mock('\TeamNeusta\Magedev\Runtime\Helper\FileHelper');
         $fileHelper->shouldReceive('findPath');
         $fileHelper->shouldReceive('expandPath');
         $fileHelper->shouldReceive('fileExists')->andReturn(true);
-        $fileHelper->shouldReceive('read')->andReturn("[]");
+        $fileHelper->shouldReceive('read')->andReturn('[]');
 
         /* $config = m::mock("TeamNeusta\Magedev\Runtime\Config", [$input, $fileHelper])->makePartial(); */
         $imageFactory = m::mock(ImageFactory::class);
         $config = new Config($input, $fileHelper);
         $config->load();
-        $config->set("project_path", "/some/path/to/project");
-        $config->set("home_path", "/home/someuser");
-        $config->set("network_id", "582f685244a4");
-        $config->set("env_vars", ["MYSQL_USER" => "root", "USERID" => 1000]);
+        $config->set('project_path', '/some/path/to/project');
+        $config->set('home_path', '/home/someuser');
+        $config->set('network_id', '582f685244a4');
+        $config->set('env_vars', ['MYSQL_USER' => 'root', 'USERID' => 1000]);
 
         $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
 
         $main = new Main($config, $imageFactory, $nameBuilder);
         $containerConfig = $main->getConfig();
         self::assertSame(
-            "582f685244a4",
-            $containerConfig->getNetworkingConfig()->getEndpointsConfig()["magedev_default"]->getNetworkID()
+            '582f685244a4',
+            $containerConfig->getNetworkingConfig()->getEndpointsConfig()['magedev_default']->getNetworkID()
         );
-        self::assertSame(["MYSQL_USER=root", "USERID=1000"], $containerConfig->getEnv());
+        self::assertSame(['MYSQL_USER=root', 'USERID=1000'], $containerConfig->getEnv());
 
         self::assertSame(
             [
-                "/some/path/to/project:/var/www/html:rw",
-                "/home/someuser/.composer:/var/www/.composer:rw",
-                "/home/someuser/.ssh:/var/www/.ssh:rw"
+                '/some/path/to/project:/var/www/html:rw',
+                '/home/someuser/.composer:/var/www/.composer:rw',
+                '/home/someuser/.ssh:/var/www/.ssh:rw',
             ],
             $containerConfig->getHostConfig()->getBinds()
         );
@@ -66,10 +66,10 @@ class MainTest extends \TeamNeusta\Magedev\Test\TestCase
     public function testGetImage()
     {
         $config = m::mock(Config::class);
-        $config->shouldReceive("get")->with("env_vars")->andReturn([]);
+        $config->shouldReceive('get')->with('env_vars')->andReturn([]);
         $fileHelper = m::mock(FileHelper::class);
         $contextBuilder = m::mock("Docker\Context\ContextBuilder[__destruct,add,run,from]");
-        $contextBuilder->shouldReceive("__destruct");
+        $contextBuilder->shouldReceive('__destruct');
         $imageApiFactory = m::mock("\TeamNeusta\Magedev\Docker\Api\ImageFactory");
         $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
         $imageFactory = new ImageFactory(
@@ -91,6 +91,6 @@ class MainTest extends \TeamNeusta\Magedev\Test\TestCase
         $imageFactory = m::mock(ImageFactory::class);
         $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
         $main = new Main($config, $imageFactory, $nameBuilder);
-        self::assertSame("main", $main->getName());
+        self::assertSame('main', $main->getName());
     }
 }

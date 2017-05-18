@@ -14,12 +14,11 @@ namespace TeamNeusta\Magedev\Docker\Container;
 use Docker\API\Model\ContainerConfig;
 use Docker\API\Model\EndpointSettings;
 use Docker\API\Model\HostConfig;
-use Docker\API\Model\NetworkCreateConfig;
 use Docker\API\Model\NetworkingConfig;
 use Docker\API\Model\PortBinding;
 
 /**
- * Class: AbstractContainer
+ * Class: AbstractContainer.
  *
  * @see DockerContainer
  * @abstract
@@ -52,15 +51,15 @@ abstract class AbstractContainer
     protected $mapPorts;
 
     /**
-     * @var Array
+     * @var array
      */
     protected $links = [];
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config $config
-     * @param \TeamNeusta\Magedev\Docker\Image\Factory $imageFactory
+     * @param \TeamNeusta\Magedev\Runtime\Config            $config
+     * @param \TeamNeusta\Magedev\Docker\Image\Factory      $imageFactory
      * @param \TeamNeusta\Magedev\Docker\Helper\NameBuilder $nameBuilder
      */
     public function __construct(
@@ -77,19 +76,22 @@ abstract class AbstractContainer
     }
 
     /**
-     * getName
+     * getName.
+     *
      * @return containerName
      */
-    public abstract function getName();
+    abstract public function getName();
 
     /**
-     * getImage
+     * getImage.
+     *
      * @return TeamNeusta\Magedev\Docker\Container | string
      */
-    public abstract function getImage();
+    abstract public function getImage();
 
     /**
-     * getBuildName
+     * getBuildName.
+     *
      * @return project specifc container name
      */
     public function getBuildName()
@@ -100,7 +102,8 @@ abstract class AbstractContainer
     }
 
     /**
-     * getConfig
+     * getConfig.
+     *
      * @return \Docker\API\Model\ContainerConfig
      */
     public function getConfig()
@@ -108,10 +111,10 @@ abstract class AbstractContainer
         $config = new ContainerConfig();
         $endpointSettings = new EndpointSettings();
         $endpointSettings->setLinks($this->links);
-        $endpointSettings->setNetworkID($this->config->get("network_id"));
+        $endpointSettings->setNetworkID($this->config->get('network_id'));
 
         // TODO: make this configurable?
-        $networkName = "magedev_default";
+        $networkName = 'magedev_default';
 
         $networkingConfig = new NetworkingConfig();
         $networkingConfig->setEndpointsConfig(new \ArrayObject([$networkName => $endpointSettings]));
@@ -124,7 +127,7 @@ abstract class AbstractContainer
 
         $env = [];
         foreach ($this->config->get('env_vars') as $key => $value) {
-            $env[] = $key . "=" . $value;
+            $env[] = $key.'='.$value;
         }
 
         $config->setEnv($env);
@@ -133,7 +136,7 @@ abstract class AbstractContainer
     }
 
     /**
-     * addLink
+     * addLink.
      *
      * @param string $link
      */
@@ -143,7 +146,7 @@ abstract class AbstractContainer
     }
 
     /**
-     * forwardPort
+     * forwardPort.
      *
      * @param string $srcPort
      * @param string $dstPort
@@ -151,13 +154,13 @@ abstract class AbstractContainer
     public function forwardPort($srcPort, $dstPort)
     {
         $hostPortBinding = new PortBinding();
-        $hostPortBinding->setHostPort((string)$dstPort);
+        $hostPortBinding->setHostPort((string) $dstPort);
         $hostPortBinding->setHostIp('0.0.0.0');
-        $this->mapPorts[$srcPort . '/tcp'] = [$hostPortBinding];
+        $this->mapPorts[$srcPort.'/tcp'] = [$hostPortBinding];
     }
 
     /**
-     * setBinds
+     * setBinds.
      *
      * @param string[] $binds
      */

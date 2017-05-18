@@ -11,12 +11,11 @@
 
 namespace TeamNeusta\Magedev\Test\Commands\Magento;
 
-use \Mockery as m;
-use TeamNeusta\Magedev\Test\TestHelper\CommandMockHelper;
+use Mockery as m;
 use TeamNeusta\Magedev\Commands\Magento\ReindexCommand;
 
 /**
- * Class: ReindexCommandTest
+ * Class: ReindexCommandTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -28,13 +27,13 @@ class ReindexCommandTest extends \PHPUnit_Framework_TestCase
         $output = m::mock('\Symfony\Component\Console\Output\ConsoleOutput[]', ['writeln']);
 
         $config = m::mock('\TeamNeusta\Magedev\Runtime\Config', [
-            'getMagentoVersion' => 2
+            'getMagentoVersion' => 2,
         ]);
 
         $magerunHelper = m::mock('\TeamNeusta\Magedev\Runtime\Helper\MagerunHelper');
         $dockerService = m::mock(
             '\TeamNeusta\Magedev\Services\DockerService',
-            ['execute' => "docker exec --user=www-data -it magedev-neusta-magedev-main bash -c \"cd Source/ && bin/magento indexer:reindex\""]
+            ['execute' => 'docker exec --user=www-data -it magedev-neusta-magedev-main bash -c "cd Source/ && bin/magento indexer:reindex"']
         );
 
         $command = new ReindexCommand($config, $magerunHelper, $dockerService);
@@ -47,7 +46,7 @@ class ReindexCommandTest extends \PHPUnit_Framework_TestCase
         $output = m::mock('\Symfony\Component\Console\Output\ConsoleOutput[]', ['writeln']);
 
         $config = m::mock('\TeamNeusta\Magedev\Runtime\Config', [
-            'getMagentoVersion' => 1
+            'getMagentoVersion' => 1,
         ]);
 
         $magerunHelper = m::mock(

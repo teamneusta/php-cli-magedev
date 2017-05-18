@@ -14,14 +14,14 @@ namespace TeamNeusta\Magedev\Docker\Container\Repository;
 use TeamNeusta\Magedev\Docker\Container\AbstractContainer;
 
 /**
- * Class: Mysql
+ * Class: Mysql.
  *
  * @see AbstractContainer
  */
 class Mysql extends AbstractContainer
 {
     /**
-     * getName
+     * getName.
      */
     public function getName()
     {
@@ -29,23 +29,24 @@ class Mysql extends AbstractContainer
     }
 
     /**
-     * getImage
+     * getImage.
      */
     public function getImage()
     {
-        return $this->imageFactory->create("Mysql");
+        return $this->imageFactory->create('Mysql');
     }
 
     /**
-     * getConfig
+     * getConfig.
      */
     public function getConfig()
     {
         $this->setBinds([
-            $this->config->get('project_path') . '/mysql:/var/lib/mysql:rw'
+            $this->config->get('project_path').'/mysql:/var/lib/mysql:rw',
         ]);
 
         $config = parent::getConfig();
+
         return $config;
     }
 }

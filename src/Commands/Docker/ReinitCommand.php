@@ -16,25 +16,25 @@ use Symfony\Component\Console\Output\OutputInterface;
 use TeamNeusta\Magedev\Commands\AbstractCommand;
 
 /**
- * Class: ReinitCommand
+ * Class: ReinitCommand.
  *
  * @see AbstractCommand
  */
 class ReinitCommand extends AbstractCommand
 {
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("docker:reinit");
-        $this->setDescription("stops, rebuild and restarts containers");
+        $this->setName('docker:reinit');
+        $this->setDescription('stops, rebuild and restarts containers');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)

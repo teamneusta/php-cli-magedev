@@ -14,12 +14,13 @@ namespace TeamNeusta\Magedev\Docker\Image\Repository;
 use TeamNeusta\Magedev\Docker\Image\AbstractImage;
 
 /**
- * Class Mysql
+ * Class Mysql.
  */
 class Mysql extends AbstractImage
 {
     /**
-     * getBuildName
+     * getBuildName.
+     *
      * @return string
      */
     public function getBuildName()
@@ -30,7 +31,7 @@ class Mysql extends AbstractImage
     }
 
     /**
-     * configure
+     * configure.
      */
     public function configure()
     {
@@ -38,10 +39,10 @@ class Mysql extends AbstractImage
         $this->from('mysql:5.6');
 
         $uid = getmyuid();
-        $this->run("usermod -u " . $uid . " mysql");
+        $this->run('usermod -u '.$uid.' mysql');
 
-        $this->addFile("var/Docker/mysql/mysql.cnf", "/etc/mysql/conf.d/z99-docker.cnf");
-        $this->addFile("var/Docker/mysql/my.cnf","/root/.my.cnf");
-        $this->addFile("var/Docker/mysql/my.cnf","/var/www/.my.cnf");
+        $this->addFile('var/Docker/mysql/mysql.cnf', '/etc/mysql/conf.d/z99-docker.cnf');
+        $this->addFile('var/Docker/mysql/my.cnf', '/root/.my.cnf');
+        $this->addFile('var/Docker/mysql/my.cnf', '/var/www/.my.cnf');
     }
 }

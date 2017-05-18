@@ -20,7 +20,7 @@ use TeamNeusta\Magedev\Runtime\Helper\FileHelper;
 use TeamNeusta\Magedev\Services\DockerService;
 
 /**
- * Class: ResetCommand
+ * Class: ResetCommand.
  *
  * @see AbstractCommand
  */
@@ -42,11 +42,11 @@ class ResetCommand extends AbstractCommand
     protected $dockerService;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Runtime\Config            $config
      * @param \TeamNeusta\Magedev\Runtime\Helper\FileHelper $fileHelper
-     * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
+     * @param \TeamNeusta\Magedev\Services\DockerService    $dockerService
      */
     public function __construct(
         \TeamNeusta\Magedev\Runtime\Config $config,
@@ -59,29 +59,29 @@ class ResetCommand extends AbstractCommand
         parent::__construct();
     }
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("config:reset");
-        $this->setDescription("resets known values in core_config_data to dev defaults");
+        $this->setName('config:reset');
+        $this->setDescription('resets known values in core_config_data to dev defaults');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $magentoVersion = $this->config->getMagentoVersion();
 
-        if ($magentoVersion == "1") {
-            $configDefault = $this->fileHelper->findPath("var/data/magento1/config.yml");
+        if ($magentoVersion == '1') {
+            $configDefault = $this->fileHelper->findPath('var/data/magento1/config.yml');
         }
-        if ($magentoVersion == "2") {
-            $configDefault = $this->fileHelper->findPath("var/data/magento2/config.yml");
+        if ($magentoVersion == '2') {
+            $configDefault = $this->fileHelper->findPath('var/data/magento2/config.yml');
         }
 
         if ($this->fileHelper->fileExists($configDefault)) {
@@ -94,7 +94,7 @@ class ResetCommand extends AbstractCommand
     }
 
     /**
-     * updateConfigValue
+     * updateConfigValue.
      *
      * @param string $key
      * @param string $value
@@ -102,20 +102,20 @@ class ResetCommand extends AbstractCommand
     public function updateConfigValue($key, $value)
     {
         if (!$this->configExists($key)) {
-            $sql = "INSERT core_config_data (scope, scope_id, path, value) VALUES ('default', 0, '".$key."', ".$value.");";
+            $sql = "INSERT core_config_data (scope, scope_id, path, value) VALUES ('default', 0, '".$key."', ".$value.');';
         } else {
             $sql = "UPDATE core_config_data SET value='".$value."' WHERE path='".$key."'";
         }
         $this->dockerService->execute(
-            "mysql --execute \"".$sql."\"",
+            'mysql --execute "'.$sql.'"',
             [
-                'interactive' => false
+                'interactive' => false,
             ]
         );
     }
 
     /**
-     * configExists
+     * configExists.
      *
      * @param string $path
      */
@@ -124,9 +124,10 @@ class ResetCommand extends AbstractCommand
         $result = $this->dockerService->execute(
             "mysql --execute \"select * from core_config_data where path = '".$path."';\"",
             [
-                'interactive' => false
+                'interactive' => false,
             ]
         );
-        return $result != "";
+
+        return $result != '';
     }
 }

@@ -15,7 +15,7 @@ use Docker\Manager\NetworkManager;
 use Docker\API\Model\NetworkCreateConfig;
 
 /**
- * Class Network
+ * Class Network.
  */
 class Network
 {
@@ -32,9 +32,10 @@ class Network
         $this->networkManager = $networkManager;
     }
     /**
-     * networkExists
+     * networkExists.
      *
      * @param mixed $name
+     *
      * @return bool
      */
     public function networkExists($name)
@@ -43,9 +44,10 @@ class Network
     }
 
     /**
-     * getNetworkByName
+     * getNetworkByName.
      *
      * @param string $name
+     *
      * @return \Docker\API\Model\Network
      */
     public function getNetworkByName($name)
@@ -56,11 +58,12 @@ class Network
                 return $network;
             }
         }
-        return null;
+
+        return;
     }
 
     /**
-     * createNetwork
+     * createNetwork.
      *
      * @param string $name
      */
@@ -72,7 +75,7 @@ class Network
     }
 
     /**
-     * getGatewayForNetwork
+     * getGatewayForNetwork.
      *
      * @param \Docker\API\Model\Network $network
      */
@@ -88,6 +91,6 @@ class Network
                 return $config->getGateway();
             }
         }
-        throw new \Exception("Gateway for Network " . $network->getName() . " could not be found");
+        throw new \Exception('Gateway for Network '.$network->getName().' could not be found');
     }
 }

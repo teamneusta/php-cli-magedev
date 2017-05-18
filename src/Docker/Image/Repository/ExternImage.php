@@ -14,7 +14,7 @@ namespace TeamNeusta\Magedev\Docker\Image\Repository;
 use TeamNeusta\Magedev\Docker\Image\AbstractImage;
 
 /**
- * Class: ExternImage
+ * Class: ExternImage.
  *
  * @see DockerImage
  */
@@ -26,18 +26,20 @@ class ExternImage extends AbstractImage
     protected $buildName;
 
     /**
-     * setBuildName
+     * setBuildName.
      *
      * @param string $buildName
      */
     public function setBuildName($buildName)
     {
         $this->buildName = $buildName;
+
         return $this;
     }
 
     /**
-     * getBuildName
+     * getBuildName.
+     *
      * @return string
      */
     public function getBuildName()
@@ -46,7 +48,7 @@ class ExternImage extends AbstractImage
     }
 
     /**
-     * configure
+     * configure.
      */
     public function configure()
     {

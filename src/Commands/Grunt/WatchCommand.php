@@ -18,7 +18,7 @@ use TeamNeusta\Magedev\Runtime\Config;
 use TeamNeusta\Magedev\Services\DockerService;
 
 /**
- * Class: WatchCommand
+ * Class: WatchCommand.
  *
  * @see AbstractCommand
  */
@@ -35,9 +35,9 @@ class WatchCommand extends AbstractCommand
     protected $dockerService;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Runtime\Config         $config
      * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
      */
     public function __construct(
@@ -50,25 +50,25 @@ class WatchCommand extends AbstractCommand
     }
 
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("grunt:watch");
-        $this->setDescription("runs watch inside container");
+        $this->setName('grunt:watch');
+        $this->setDescription('runs watch inside container');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $magentoVersion = $this->config->getMagentoVersion();
-        if ($magentoVersion == "2") {
-            $this->dockerService->execute("/usr/local/bin/grunt watch");
+        if ($magentoVersion == '2') {
+            $this->dockerService->execute('/usr/local/bin/grunt watch');
         }
     }
 }

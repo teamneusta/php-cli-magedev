@@ -11,14 +11,14 @@
 
 namespace TeamNeusta\Magedev\Test\Docker\Image;
 
-use \Mockery as m;
+use Mockery as m;
 use TeamNeusta\Magedev\Docker\Container\Repository\Varnish;
 use TeamNeusta\Magedev\Runtime\Config;
 use TeamNeusta\Magedev\Docker\Image\Factory as ImageFactory;
 use TeamNeusta\Magedev\Runtime\Helper\FileHelper;
 
 /**
- * Class: VarnishTest
+ * Class: VarnishTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -27,10 +27,10 @@ class VarnishTest extends \TeamNeusta\Magedev\Test\TestCase
     public function testGetImage()
     {
         $config = m::mock(Config::class);
-        $config->shouldReceive("get")->with("env_vars")->andReturn([]);
+        $config->shouldReceive('get')->with('env_vars')->andReturn([]);
         $fileHelper = m::mock(FileHelper::class);
         $contextBuilder = m::mock("Docker\Context\ContextBuilder[__destruct,add,run,from]");
-        $contextBuilder->shouldReceive("__destruct");
+        $contextBuilder->shouldReceive('__destruct');
         $imageApiFactory = m::mock("\TeamNeusta\Magedev\Docker\Api\ImageFactory");
         $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
         $imageFactory = new ImageFactory(
@@ -50,6 +50,6 @@ class VarnishTest extends \TeamNeusta\Magedev\Test\TestCase
         $imageFactory = m::mock(ImageFactory::class);
         $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
         $container = new Varnish($config, $imageFactory, $nameBuilder);
-        self::assertSame("varnish", $container->getName());
+        self::assertSame('varnish', $container->getName());
     }
 }

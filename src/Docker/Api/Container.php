@@ -16,7 +16,7 @@ use Docker\Manager\ContainerManager;
 use TeamNeusta\Magedev\Docker\Container\AbstractContainer;
 
 /**
- * Class Container
+ * Class Container.
  */
 class Container
 {
@@ -41,11 +41,11 @@ class Container
     protected $container;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \Docker\Manager\ContainerManager $containerManager
-     * @param \TeamNeusta\Magedev\Docker\Image\Factory $imageFactory
-     * @param \TeamNeusta\Magedev\Docker\Api\ImageFactory $imageApi
+     * @param \Docker\Manager\ContainerManager                       $containerManager
+     * @param \TeamNeusta\Magedev\Docker\Image\Factory               $imageFactory
+     * @param \TeamNeusta\Magedev\Docker\Api\ImageFactory            $imageApi
      * @param \TeamNeusta\Magedev\Docker\Container\AbstractContainer $container
      */
     public function __construct(
@@ -61,7 +61,7 @@ class Container
     }
 
     /**
-     * start
+     * start.
      */
     public function start()
     {
@@ -74,13 +74,13 @@ class Container
             } catch (\Http\Client\Common\Exception\ServerErrorException $e) {
                 // TODO error handling
                 // grap logs from journalctl -u docker.service
-                echo "failed to start " . $this->getBuildName() . " with " . $e->getMessage() . "\n";
+                echo 'failed to start '.$this->getBuildName().' with '.$e->getMessage()."\n";
             }
         }
     }
 
     /**
-     * stop
+     * stop.
      */
     public function stop()
     {
@@ -91,7 +91,8 @@ class Container
     }
 
     /**
-     * exists
+     * exists.
+     *
      * @return bool
      */
     public function exists()
@@ -100,16 +101,18 @@ class Container
         $containers = $this->containerManager->findAll(['all' => true]);
         foreach ($containers as $container) {
             foreach ($container->getNames() as $name) {
-                if ($name === "/" . $containerName) {
+                if ($name === '/'.$containerName) {
                     return true;
                 }
             }
         }
+
         return false;
     }
 
     /**
-     * isRunning
+     * isRunning.
+     *
      * @return bool
      */
     public function isRunning()
@@ -119,16 +122,17 @@ class Container
         $containers = $this->containerManager->findAll();
         foreach ($containers as $container) {
             foreach ($container->getNames() as $name) {
-                if ($name === "/" . $containerName) {
+                if ($name === '/'.$containerName) {
                     return true;
                 }
             }
         }
+
         return false;
     }
 
     /**
-     * build
+     * build.
      */
     public function build()
     {
@@ -138,14 +142,14 @@ class Container
 
             if (is_string($image)) {
                 $imageName = $image;
-                $image = $this->imageFactory->create("ExternImage");
+                $image = $this->imageFactory->create('ExternImage');
                 $image->setBuildName($imageName);
                 /* $image = (new \TeamNeusta\Magedev\Docker\Image\ExternImage($this->context)) */
                     /* ->setBuildName($imageName); */
                 $this->imageApiFactory->create($image)->pull(); // is an extern image lets pull it
             }
             if (!($image instanceof \TeamNeusta\Magedev\Docker\Image\AbstractImage)) {
-                throw new \Exception ("image of " . get_class($image) . " cannot be build");
+                throw new \Exception('image of '.get_class($image).' cannot be build');
             }
 
             $imageApi = $this->imageApiFactory->create($image);
@@ -163,7 +167,7 @@ class Container
     }
 
     /**
-     * destroy
+     * destroy.
      */
     public function destroy()
     {

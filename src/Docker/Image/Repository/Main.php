@@ -14,12 +14,13 @@ namespace TeamNeusta\Magedev\Docker\Image\Repository;
 use TeamNeusta\Magedev\Docker\Image\AbstractImage;
 
 /**
- * Class Main
+ * Class Main.
  */
 class Main extends AbstractImage
 {
     /**
-     * getBuildName
+     * getBuildName.
+     *
      * @return string
      */
     public function getBuildName()
@@ -30,36 +31,36 @@ class Main extends AbstractImage
     }
 
     /**
-     * configure
+     * configure.
      */
     public function configure()
     {
-        $this->name("main");
+        $this->name('main');
 
         $magentoVersion = $this->config->getMagentoVersion();
 
-        $buildStrategy = "build";
-        $dockerConfig = $this->config->get("docker");
-        if (array_key_exists("build_strategy", $dockerConfig)) {
-            $buildStrategy = $dockerConfig["build_strategy"];
+        $buildStrategy = 'build';
+        $dockerConfig = $this->config->get('docker');
+        if (array_key_exists('build_strategy', $dockerConfig)) {
+            $buildStrategy = $dockerConfig['build_strategy'];
         }
 
         // PHP Image is selected based on magento version
-        if ($magentoVersion == "2") {
-            if ($buildStrategy == "pull") {
-                $this->from("bleers/magedev-php7:1.0");
+        if ($magentoVersion == '2') {
+            if ($buildStrategy == 'pull') {
+                $this->from('bleers/magedev-php7:1.0');
             }
-            if ($buildStrategy == "build") {
-                $this->from($this->imageFactory->create("Php7"));
+            if ($buildStrategy == 'build') {
+                $this->from($this->imageFactory->create('Php7'));
             }
         }
 
-        if ($magentoVersion == "1") {
-            if ($buildStrategy == "pull") {
-                $this->from("bleers/magedev-php5:1.0");
+        if ($magentoVersion == '1') {
+            if ($buildStrategy == 'pull') {
+                $this->from('bleers/magedev-php5:1.0');
             }
-            if ($buildStrategy == "build") {
-                $this->from($this->imageFactory->create("Php5"));
+            if ($buildStrategy == 'build') {
+                $this->from($this->imageFactory->create('Php5'));
             }
         }
 
@@ -70,36 +71,36 @@ class Main extends AbstractImage
         // like DOCUMENT_ROOT AND $GATEWAY ?
 
         $documentRoot = $this->config->get('document_root');
-        $vhostConfig = $this->fileHelper->read("var/Docker/main/000-default.conf");
-        $vhostConfig = str_replace("\$DOCUMENT_ROOT", $documentRoot, $vhostConfig);
+        $vhostConfig = $this->fileHelper->read('var/Docker/main/000-default.conf');
+        $vhostConfig = str_replace('$DOCUMENT_ROOT', $documentRoot, $vhostConfig);
 
-        $this->add("/etc/apache2/sites-available/000-default.conf", $vhostConfig);
-        $this->add("/etc/apache2/sites-enabled/000-default.conf", $vhostConfig);
+        $this->add('/etc/apache2/sites-available/000-default.conf', $vhostConfig);
+        $this->add('/etc/apache2/sites-enabled/000-default.conf', $vhostConfig);
 
         // $GATEWAY
         $gatewayIp = $this->config->get('gateway');
         if (empty($gatewayIp)) {
-            throw new \Exception("no gateway ip found");
+            throw new \Exception('no gateway ip found');
         }
-        $phpIni = $this->fileHelper->read("var/Docker/main/php.ini");
-        $phpIni = str_replace("\$GATEWAY", $gatewayIp, $phpIni);
-        $this->add("/usr/local/etc/php/php.ini", $phpIni);
-        $this->run("chmod 775 /usr/local/etc/php/php.ini"); // for www-data to read it
+        $phpIni = $this->fileHelper->read('var/Docker/main/php.ini');
+        $phpIni = str_replace('$GATEWAY', $gatewayIp, $phpIni);
+        $this->add('/usr/local/etc/php/php.ini', $phpIni);
+        $this->run('chmod 775 /usr/local/etc/php/php.ini'); // for www-data to read it
 
-        $this->addFile("var/Docker/mysql/my.cnf","/root/.my.cnf");
-        $this->addFile("var/Docker/mysql/my.cnf","/var/www/.my.cnf");
-        $this->run("chown www-data:www-data /var/www/.my.cnf");
+        $this->addFile('var/Docker/mysql/my.cnf', '/root/.my.cnf');
+        $this->addFile('var/Docker/mysql/my.cnf', '/var/www/.my.cnf');
+        $this->run('chown www-data:www-data /var/www/.my.cnf');
 
-        $this->run("curl -O https://getcomposer.org/composer.phar");
-        $this->run("mv composer.phar /usr/bin/composer");
-        $this->run("chmod 777 /usr/bin/composer");
-        $this->run("chmod +x /usr/bin/composer");
+        $this->run('curl -O https://getcomposer.org/composer.phar');
+        $this->run('mv composer.phar /usr/bin/composer');
+        $this->run('chmod 777 /usr/bin/composer');
+        $this->run('chmod +x /usr/bin/composer');
 
-        $this->addFile("var/Docker/main/loadssh.sh", "/usr/bin/loadssh.sh");
-        $this->run("chmod 777 /usr/bin/loadssh.sh");
-        $this->run("chmod +x /usr/bin/loadssh.sh");
+        $this->addFile('var/Docker/main/loadssh.sh', '/usr/bin/loadssh.sh');
+        $this->run('chmod 777 /usr/bin/loadssh.sh');
+        $this->run('chmod +x /usr/bin/loadssh.sh');
 
-        $this->addFile("var/Docker/vendor/mini_sendmail-1.3.9/mini_sendmail", "/usr/bin/mini_sendmail");
-        $this->run("chmod +x /usr/bin/mini_sendmail");
+        $this->addFile('var/Docker/vendor/mini_sendmail-1.3.9/mini_sendmail', '/usr/bin/mini_sendmail');
+        $this->run('chmod +x /usr/bin/mini_sendmail');
     }
 }

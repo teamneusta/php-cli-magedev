@@ -11,14 +11,13 @@
 
 namespace TeamNeusta\Magedev\Test\Docker\Image;
 
-use \Mockery as m;
+use Mockery as m;
 use TeamNeusta\Magedev\Docker\Container\Repository\Mailcatcher;
 use TeamNeusta\Magedev\Runtime\Config;
 use TeamNeusta\Magedev\Docker\Image\Factory as ImageFactory;
-use TeamNeusta\Magedev\Runtime\Helper\FileHelper;
 
 /**
- * Class: MailcatcherTest
+ * Class: MailcatcherTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -30,7 +29,7 @@ class MailcatcherTest extends \TeamNeusta\Magedev\Test\TestCase
         $imageFactory = m::mock(ImageFactory::class);
         $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
         $container = new Mailcatcher($config, $imageFactory, $nameBuilder);
-        self::assertSame("schickling/mailcatcher", $container->getImage());
+        self::assertSame('schickling/mailcatcher', $container->getImage());
     }
 
     public function testGetName()
@@ -39,6 +38,6 @@ class MailcatcherTest extends \TeamNeusta\Magedev\Test\TestCase
         $imageFactory = m::mock(ImageFactory::class);
         $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
         $container = new Mailcatcher($config, $imageFactory, $nameBuilder);
-        self::assertSame("mailcatcher", $container->getName());
+        self::assertSame('mailcatcher', $container->getName());
     }
 }

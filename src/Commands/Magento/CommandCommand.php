@@ -19,7 +19,7 @@ use TeamNeusta\Magedev\Runtime\Config;
 use TeamNeusta\Magedev\Services\DockerService;
 
 /**
- * Class: CacheCleanCommand
+ * Class: CacheCleanCommand.
  *
  * @see AbstractCommand
  */
@@ -39,9 +39,9 @@ class CommandCommand extends AbstractCommand
     protected $dockerService;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Runtime\Config         $config
      * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
      */
     public function __construct(
@@ -54,12 +54,12 @@ class CommandCommand extends AbstractCommand
     }
 
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("magento:command")
-            ->setDescription("Execute command with bin/magento (magento 2 only)");
+        $this->setName('magento:command')
+            ->setDescription('Execute command with bin/magento (magento 2 only)');
 
         $this->addArgument(
             self::ARGUMENT_MAGENTO_COMMAND,
@@ -74,9 +74,9 @@ class CommandCommand extends AbstractCommand
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
@@ -85,12 +85,12 @@ class CommandCommand extends AbstractCommand
         $arguments = $this->input->getArgument(self::ARGUMENT_MAGENTO_COMMAND_ARGS);
 
         $shellCommand = sprintf(
-            "bin/magento %s %s",
+            'bin/magento %s %s',
             $command,
             implode(' ', $arguments)
         );
 
-        if ($this->config->getMagentoVersion() == "2") {
+        if ($this->config->getMagentoVersion() == '2') {
             $this->dockerService->execute($shellCommand);
         } else {
             $this->output->writeln('<error>This command works for magento 2 only!</error>');

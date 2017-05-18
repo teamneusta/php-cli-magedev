@@ -14,7 +14,7 @@ namespace TeamNeusta\Magedev\Services;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class ShellService
+ * Class ShellService.
  */
 class ShellService
 {
@@ -26,7 +26,7 @@ class ShellService
     /**
      * @var string
      */
-    protected $cmd = "";
+    protected $cmd = '';
 
     /**
      * @var string
@@ -34,9 +34,9 @@ class ShellService
     protected $wd = null;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param Context $context
+     * @param Context         $context
      * @param OutputInterface $output
      */
     public function __construct(
@@ -46,45 +46,48 @@ class ShellService
     }
 
     /**
-     * wd
+     * wd.
      *
      * @param string $dir
      */
     public function wd($dir)
     {
         $this->wd = $dir;
+
         return $this;
     }
 
     /**
-     * bash
+     * bash.
      *
      * @param string $cmd
      */
     public function bash($cmd)
     {
         if ($this->wd) {
-            $cmd = "cd ".$this->wd." && ".$cmd;
+            $cmd = 'cd '.$this->wd.' && '.$cmd;
         }
+
         return $this->execute($cmd);
     }
 
     /**
-     * execute
+     * execute.
      *
      * @param string $cmd
      */
     public function execute($cmd, $interactive = true)
     {
-        $cmd = $this->cmd . $cmd;
+        $cmd = $this->cmd.$cmd;
         if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
-            $this->output->writeln("execute: ".$cmd);
+            $this->output->writeln('execute: '.$cmd);
         }
+
         return $this->nativeExecute($cmd, $interactive);
     }
 
     /**
-     * nativeExecute
+     * nativeExecute.
      *
      * @param string $cmd
      */
@@ -94,7 +97,7 @@ class ShellService
             $returnVar = 0;
             passthru($cmd, $returnVar);
             if ($returnVar != 0) {
-                throw new \Exception("last command ".$cmd." failed. cannot proceed");
+                throw new \Exception('last command '.$cmd.' failed. cannot proceed');
             }
         } else {
             return exec($cmd);

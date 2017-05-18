@@ -15,7 +15,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use TeamNeusta\Magedev\Runtime\Config;
 
 /**
- * Class Manager
+ * Class Manager.
  */
 class Manager
 {
@@ -30,9 +30,9 @@ class Manager
     protected $dispatcher;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param Config $config
+     * @param Config          $config
      * @param EventDispatcher $dispatcher
      */
     public function __construct(
@@ -44,20 +44,20 @@ class Manager
     }
 
     /**
-     * loadPlugins
+     * loadPlugins.
      *
      * @param \Pimple\Container $c
      */
     public function loadPlugins(\Pimple\Container $c)
     {
         // TODO: how to make this more generic?
-        if ($this->config->optionExists("plugins")) {
-            $plugins = $this->config->get("plugins");
+        if ($this->config->optionExists('plugins')) {
+            $plugins = $this->config->get('plugins');
             /* $plugins = ["StopServices", "MountSharefolder"]; */
             foreach ($plugins as $plugin) {
-                $class = "\TeamNeusta\Magedev\Plugins\Neusta\\" . $plugin;
+                $class = "\TeamNeusta\Magedev\Plugins\Neusta\\".$plugin;
                 if (!class_exists($class)) {
-                    throw new \Exception("Plugin ".$plugin." could not be found.");
+                    throw new \Exception('Plugin '.$plugin.' could not be found.');
                 }
                 new $class($c);
             }
@@ -65,7 +65,7 @@ class Manager
     }
 
     /**
-     * getDispatcher
+     * getDispatcher.
      */
     public function getDispatcher()
     {

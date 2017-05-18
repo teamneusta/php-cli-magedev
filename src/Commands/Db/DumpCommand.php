@@ -17,7 +17,7 @@ use TeamNeusta\Magedev\Commands\AbstractCommand;
 use TeamNeusta\Magedev\Services\DockerService;
 
 /**
- * Class: DumpCommand
+ * Class: DumpCommand.
  *
  * @see AbstractCommand
  */
@@ -29,7 +29,7 @@ class DumpCommand extends AbstractCommand
     protected $dockerService;
 
     /**
-     * __construct
+     * __construct.
      *
      * @param DockerService $dockerService
      */
@@ -40,26 +40,26 @@ class DumpCommand extends AbstractCommand
     }
 
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("db:dump");
-        $this->setDescription("dump db");
+        $this->setName('db:dump');
+        $this->setDescription('dump db');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $dumpFile = "dump.sql"; //TODO: make this configurable
-        $dbName = "magento";
+        $dumpFile = 'dump.sql'; //TODO: make this configurable
+        $dbName = 'magento';
 
-        $this->dockerService->execute("mysqldump ".$dbName." > ".$dumpFile);
+        $this->dockerService->execute('mysqldump '.$dbName.' > '.$dumpFile);
 
         parent::execute($input, $output);
     }

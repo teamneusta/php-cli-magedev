@@ -12,7 +12,7 @@
 namespace TeamNeusta\Magedev\Docker\Helper;
 
 /**
- * Class NameBuilder
+ * Class NameBuilder.
  */
 class NameBuilder
 {
@@ -22,7 +22,7 @@ class NameBuilder
     protected $config;
 
     /**
-     * __construct
+     * __construct.
      *
      * @param \TeamNeusta\Magedev\Runtime\Config $config
      */
@@ -32,17 +32,17 @@ class NameBuilder
         $this->config = $config;
     }
     /**
-     * buildName
+     * buildName.
      *
      * @param string $containerName
      */
     public function buildName($name)
     {
-        $projectName = $this->config->get("project_name");
-        if ($projectName !== "") {
-            $projectName = '-' . $projectName;
+        $projectName = $this->config->get('project_name');
+        if ($projectName !== '') {
+            $projectName = '-'.$projectName;
         }
 
-        return 'magedev' . $projectName . '-' . $name;
+        return 'magedev'.$projectName.'-'.$name;
     }
 }

@@ -18,7 +18,7 @@ use Symfony\Component\EventDispatcher\GenericEvent;
 use TeamNeusta\Magedev\Plugins\Manager as PluginManager;
 
 /**
- * Class: Application
+ * Class: Application.
  */
 class Application extends \Symfony\Component\Console\Application
 {
@@ -36,7 +36,8 @@ LOGO;
     protected $pluginManager;
 
     /**
-     * __construct
+     * __construct.
+     *
      * @codeCoverageIgnore
      */
     public function __construct(PluginManager $pluginManager)
@@ -46,24 +47,25 @@ LOGO;
     }
 
     /**
-     * doRunCommand
+     * doRunCommand.
      *
-     * @param Command $command
-     * @param InputInterface $input
+     * @param Command         $command
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     protected function doRunCommand(Command $command, InputInterface $input, OutputInterface $output)
     {
-        $this->pluginManager->getDispatcher()->dispatch("before:" . $command->getName(), new GenericEvent());
+        $this->pluginManager->getDispatcher()->dispatch('before:'.$command->getName(), new GenericEvent());
         parent::doRunCommand($command, $input, $output);
     }
 
     /**
      * @codeCoverageIgnore
+     *
      * @return string
      */
     public function getHelp()
     {
-        return static::$_logo . "\n\n" . parent::getHelp();
+        return static::$_logo."\n\n".parent::getHelp();
     }
 }

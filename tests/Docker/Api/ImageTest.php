@@ -11,7 +11,7 @@
 
 namespace TeamNeusta\Magedev\Test\Docker\Image\Repository;
 
-use \Mockery as m;
+use Mockery as m;
 use Docker\Manager\ImageManager;
 use TeamNeusta\Magedev\Docker\Image\AbstractImage;
 use TeamNeusta\Magedev\Docker\Api\Image;
@@ -21,7 +21,7 @@ use TeamNeusta\Magedev\Runtime\Helper\FileHelper;
 use TeamNeusta\Magedev\Docker\Image\Factory as ImageFactory;
 
 /**
- * Class: ImageTest
+ * Class: ImageTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -31,16 +31,16 @@ class ImageTest extends \TeamNeusta\Magedev\Test\TestCase
     {
         $images = [
             m::mock("\Docker\API\Model\Image", [
-                "getRepoTags" => ["redis:2.8"]
+                'getRepoTags' => ['redis:2.8'],
             ]),
             m::mock("\Docker\API\Model\Image", [
-                "getRepoTags" => ["magedev-varnish4:latest"]
+                'getRepoTags' => ['magedev-varnish4:latest'],
             ]),
         ];
         $imageManager = m::mock(ImageManager::class);
-        $imageManager->shouldReceive("findAll")->andReturn($images);
+        $imageManager->shouldReceive('findAll')->andReturn($images);
         $image = m::mock(AbstractImage::class);
-        $image->shouldReceive("getBuildName")->andReturn("magedev-varnish4");
+        $image->shouldReceive('getBuildName')->andReturn('magedev-varnish4');
         $imageApi = new Image($imageManager, $image);
         self::assertTrue($imageApi->exists());
     }
@@ -49,16 +49,16 @@ class ImageTest extends \TeamNeusta\Magedev\Test\TestCase
     {
         $images = [
             m::mock("\Docker\API\Model\Image", [
-                "getRepoTags" => ["redis:2.8"]
+                'getRepoTags' => ['redis:2.8'],
             ]),
             m::mock("\Docker\API\Model\Image", [
-                "getRepoTags" => ["magedev-varnish4:latest"]
+                'getRepoTags' => ['magedev-varnish4:latest'],
             ]),
         ];
         $imageManager = m::mock(ImageManager::class);
-        $imageManager->shouldReceive("findAll")->andReturn($images);
+        $imageManager->shouldReceive('findAll')->andReturn($images);
         $image = m::mock(AbstractImage::class);
-        $image->shouldReceive("getBuildName")->andReturn("magedev-main");
+        $image->shouldReceive('getBuildName')->andReturn('magedev-main');
         $imageApi = new Image($imageManager, $image);
         self::assertFalse($imageApi->exists());
     }
@@ -67,33 +67,33 @@ class ImageTest extends \TeamNeusta\Magedev\Test\TestCase
     {
         $images = [
             m::mock("\Docker\API\Model\Image", [
-                "getRepoTags" => ["redis:2.8"]
+                'getRepoTags' => ['redis:2.8'],
             ]),
             m::mock("\Docker\API\Model\Image", [
-                "getRepoTags" => ["magedev-varnish4:latest"]
+                'getRepoTags' => ['magedev-varnish4:latest'],
             ]),
         ];
         $buildStream = m::mock("\Docker\Stream\BuildStram");
-        $buildStream->shouldReceive("onFrame");
-        $buildStream->shouldReceive("wait");
+        $buildStream->shouldReceive('onFrame');
+        $buildStream->shouldReceive('wait');
 
         $imageManager = m::mock(ImageManager::class);
-        $imageManager->shouldReceive("findAll")->andReturn($images);
-        $imageManager->shouldReceive("build")->with(m::any(), [
-            't' => "magedev-php7",
+        $imageManager->shouldReceive('findAll')->andReturn($images);
+        $imageManager->shouldReceive('build')->with(m::any(), [
+            't' => 'magedev-php7',
             'rm' => true,
-            'nocache' => false
+            'nocache' => false,
         ], m::any())->andReturn($buildStream);
 
         $config = m::mock(Config::class);
-        $config->shouldReceive("optionExists");
-        $config->shouldReceive("get")->with("env_vars")->andReturn([]);
+        $config->shouldReceive('optionExists');
+        $config->shouldReceive('get')->with('env_vars')->andReturn([]);
 
         $imageFactory = m::mock(ImageFactory::class);
         $fileHelper = m::mock(FileHelper::class);
         $contextBuilder = m::mock("Docker\Context\ContextBuilder[__destruct,add,run]");
-        $contextBuilder->shouldReceive("run");
-        $contextBuilder->shouldReceive("__destruct");
+        $contextBuilder->shouldReceive('run');
+        $contextBuilder->shouldReceive('__destruct');
 
         $imageApiFactory = m::mock("\TeamNeusta\Magedev\Docker\Api\ImageFactory");
         $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
@@ -114,26 +114,25 @@ class ImageTest extends \TeamNeusta\Magedev\Test\TestCase
     {
         $images = [
             m::mock("\Docker\API\Model\Image", [
-                "getRepoTags" => ["redis:2.8"]
+                'getRepoTags' => ['redis:2.8'],
             ]),
             m::mock("\Docker\API\Model\Image", [
-                "getRepoTags" => ["magedev-varnish4:latest"]
+                'getRepoTags' => ['magedev-varnish4:latest'],
             ]),
         ];
         $buildStream = m::mock("\Docker\Stream\BuildStram");
-        $buildStream->shouldReceive("onFrame");
-        $buildStream->shouldReceive("wait");
+        $buildStream->shouldReceive('onFrame');
+        $buildStream->shouldReceive('wait');
 
         $imageManager = m::mock(ImageManager::class);
-        $imageManager->shouldReceive("findAll")->andReturn($images);
-        $imageManager->shouldReceive("create")->with(m::any(), [
-            'fromImage' => 'nginx:latest'
+        $imageManager->shouldReceive('findAll')->andReturn($images);
+        $imageManager->shouldReceive('create')->with(m::any(), [
+            'fromImage' => 'nginx:latest',
         ], m::any())->andReturn($buildStream);
 
         $image = m::mock(AbstractImage::class);
-        $image->shouldReceive("getBuildName")->andReturn("nginx:latest");
+        $image->shouldReceive('getBuildName')->andReturn('nginx:latest');
         $imageApi = new Image($imageManager, $image);
         $imageApi->pull();
     }
-
 }

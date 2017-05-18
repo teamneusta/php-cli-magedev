@@ -11,14 +11,13 @@
 
 namespace TeamNeusta\Magedev\Test\Docker\Image;
 
-use \Mockery as m;
+use Mockery as m;
 use TeamNeusta\Magedev\Docker\Container\Repository\ElasticSearch;
 use TeamNeusta\Magedev\Runtime\Config;
 use TeamNeusta\Magedev\Docker\Image\Factory as ImageFactory;
-use TeamNeusta\Magedev\Runtime\Helper\FileHelper;
 
 /**
- * Class: ElasticSearchTest
+ * Class: ElasticSearchTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -30,7 +29,7 @@ class ElasticSearchTest extends \TeamNeusta\Magedev\Test\TestCase
         $imageFactory = m::mock(ImageFactory::class);
         $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
         $container = new ElasticSearch($config, $imageFactory, $nameBuilder);
-        self::assertSame("elasticsearch:1.7.5", $container->getImage());
+        self::assertSame('elasticsearch:1.7.5', $container->getImage());
     }
 
     public function testGetName()
@@ -39,6 +38,6 @@ class ElasticSearchTest extends \TeamNeusta\Magedev\Test\TestCase
         $imageFactory = m::mock(ImageFactory::class);
         $nameBuilder = m::mock("\TeamNeusta\Magedev\Docker\Helper\NameBuilder");
         $container = new ElasticSearch($config, $imageFactory, $nameBuilder);
-        self::assertSame("elasticsearch", $container->getName());
+        self::assertSame('elasticsearch', $container->getName());
     }
 }

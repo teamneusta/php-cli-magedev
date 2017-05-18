@@ -14,14 +14,13 @@ namespace TeamNeusta\Magedev\Services;
 use Symfony\Component\Console\Output\OutputInterface;
 use TeamNeusta\Magedev\Runtime\Config;
 use TeamNeusta\Magedev\Runtime\Helper\FileHelper;
-use TeamNeusta\Magedev\Services\ShellService;
 use TeamNeusta\Magedev\Docker\Manager as DockerManager;
 use TeamNeusta\Magedev\Docker\Network as NetworkManager;
 use TeamNeusta\Magedev\Docker\Container\Factory as ContainerFactory;
 use TeamNeusta\Magedev\Docker\Helper\NameBuilder;
 
 /**
- * Class DockerService
+ * Class DockerService.
  */
 class DockerService
 {
@@ -66,15 +65,15 @@ class DockerService
     protected $nameBuilder;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param Config $config
-     * @param ConsoleOutput $output
-     * @param Shell $shell
-     * @param FileHelper $fileHelper
-     * @param \TeamNeusta\Magedev\Docker\Manager $dockerManager
-     * @param \TeamNeusta\Magedev\Docker\Network $networkManager
-     * @param \TeamNeusta\Magedev\Docker\Container\Factory $containerFactory
+     * @param Config                                        $config
+     * @param ConsoleOutput                                 $output
+     * @param Shell                                         $shell
+     * @param FileHelper                                    $fileHelper
+     * @param \TeamNeusta\Magedev\Docker\Manager            $dockerManager
+     * @param \TeamNeusta\Magedev\Docker\Network            $networkManager
+     * @param \TeamNeusta\Magedev\Docker\Container\Factory  $containerFactory
      * @param \TeamNeusta\Magedev\Docker\Helper\NameBuilder $nameBuilder
      */
     public function __construct(
@@ -106,25 +105,25 @@ class DockerService
         $dockerPorts = [];
         $containers = [];
 
-        if (!$this->config->optionExists("docker")) {
-            throw new \Exception("no docker config found. check your magedev.json please");
+        if (!$this->config->optionExists('docker')) {
+            throw new \Exception('no docker config found. check your magedev.json please');
         }
 
-        $dockerConfig = $this->config->get("docker");
-        if (array_key_exists("links", $dockerConfig)) {
-            $dockerLinks = $dockerConfig["links"];
+        $dockerConfig = $this->config->get('docker');
+        if (array_key_exists('links', $dockerConfig)) {
+            $dockerLinks = $dockerConfig['links'];
         }
-        if (array_key_exists("ports", $dockerConfig)) {
-            $dockerPorts = $dockerConfig["ports"];
+        if (array_key_exists('ports', $dockerConfig)) {
+            $dockerPorts = $dockerConfig['ports'];
         }
-        if (array_key_exists("containers", $dockerConfig)) {
-            foreach ($dockerConfig["containers"] as $containerName) {
+        if (array_key_exists('containers', $dockerConfig)) {
+            foreach ($dockerConfig['containers'] as $containerName) {
                 $containers[] = $this->containerFactory->create($containerName);
             }
         }
 
         if (sizeof($containers) == 0) {
-            throw new \Exception("no containers found, please check your magedev.json");
+            throw new \Exception('no containers found, please check your magedev.json');
         }
 
         foreach ($containers as $container) {
@@ -154,7 +153,7 @@ class DockerService
                 foreach ($dockerLinks[$name] as $link) {
                     // format: "containerName:alias", whereas containerName
                     // is built dynamically out of projectname
-                    $container->addLink($this->nameBuilder->buildName($link) . ":" . $link);
+                    $container->addLink($this->nameBuilder->buildName($link).':'.$link);
                 }
             }
 
@@ -163,7 +162,7 @@ class DockerService
     }
 
     /**
-     * getManager
+     * getManager.
      */
     public function getManager()
     {
@@ -174,72 +173,72 @@ class DockerService
     protected function applyDockerSettingsToConfig()
     {
         /* $dockerConfig = new \TeamNeusta\Magedev\Docker\Config(); */
-        $this->config->set("project_name", basename(getcwd()));
-        $this->config->set("project_path", getcwd());
-        $this->config->set("home_path", $this->fileHelper->expandPath("~"));
-        $this->config->set("document_root", "/var/www/html/" . $this->config->get("source_folder"));
+        $this->config->set('project_name', basename(getcwd()));
+        $this->config->set('project_path', getcwd());
+        $this->config->set('home_path', $this->fileHelper->expandPath('~'));
+        $this->config->set('document_root', '/var/www/html/'.$this->config->get('source_folder'));
 
         // TODO: make this configurable?
-        $networkName = "magedev_default";
+        $networkName = 'magedev_default';
         // make sure this network exists
         if (!$this->networkManager->networkExists($networkName)) {
             $this->networkManager->createNetwork($networkName);
             if (!$this->networkManager->networkExists($networkName)) {
-                throw new \Exception("something went wrong while creating network " . $networkName);
+                throw new \Exception('something went wrong while creating network '.$networkName);
             }
         }
 
         $network = $this->networkManager->getNetworkByName($networkName);
         if (!$network->getId()) {
-            throw new \Exception("no id for network " . $network->getName() . " found.");
+            throw new \Exception('no id for network '.$network->getName().' found.');
         }
-        $this->config->set("network_id", $network->getId());
+        $this->config->set('network_id', $network->getId());
         $gateway = $this->networkManager->getGatewayForNetwork($network);
-        $this->config->set("gateway", $gateway);
+        $this->config->set('gateway', $gateway);
 
-        if (empty($this->config->get("gateway"))) {
-            throw new \Exception("no gateway ip found");
+        if (empty($this->config->get('gateway'))) {
+            throw new \Exception('no gateway ip found');
         }
     }
 
     protected function addEnv()
     {
         $envVars = [];
-        $envVars["USERID"] = getmyuid();
-        $envVars["MYSQL_ROOT"] = "root";
-        $envVars["MYSQL_ROOT_PASSWORD"] = "root";
-        $envVars["MYSQL_USER"] = "magento";
-        $envVars["MYSQL_PASSWORD"] = "magento";
-        $envVars["MYSQL_DATABASE"] = "magento";
+        $envVars['USERID'] = getmyuid();
+        $envVars['MYSQL_ROOT'] = 'root';
+        $envVars['MYSQL_ROOT_PASSWORD'] = 'root';
+        $envVars['MYSQL_USER'] = 'magento';
+        $envVars['MYSQL_PASSWORD'] = 'magento';
+        $envVars['MYSQL_DATABASE'] = 'magento';
 
-        if ($this->config->optionExists("proxy")) {
-            $proxy = $this->config->get("proxy");
-            if (array_key_exists("HTTP", $proxy)) {
-                $envVars["HTTP_PROXY"] = $proxy["HTTP"];
-                $envVars["http_proxy"] = $proxy["HTTP"];
+        if ($this->config->optionExists('proxy')) {
+            $proxy = $this->config->get('proxy');
+            if (array_key_exists('HTTP', $proxy)) {
+                $envVars['HTTP_PROXY'] = $proxy['HTTP'];
+                $envVars['http_proxy'] = $proxy['HTTP'];
             }
-            if (array_key_exists("HTTPS", $proxy)) {
-                $envVars["HTTPS_PROXY"] = $proxy["HTTPS"];
-                $envVars["https_proxy"] = $proxy["HTTPS"];
+            if (array_key_exists('HTTPS', $proxy)) {
+                $envVars['HTTPS_PROXY'] = $proxy['HTTPS'];
+                $envVars['https_proxy'] = $proxy['HTTPS'];
             }
-            $envVars["HTTPS_PROXY_REQUEST_FULLURI"] = "false";
-            $envVars["no_proxy"] = "'localhost,elasticsearch,httpd,mysql'";
+            $envVars['HTTPS_PROXY_REQUEST_FULLURI'] = 'false';
+            $envVars['no_proxy'] = "'localhost,elasticsearch,httpd,mysql'";
         }
-        $this->config->set("env_vars", $envVars);
+        $this->config->set('env_vars', $envVars);
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param string $cmd
+     * @param string   $cmd
      * @param string[] $options
      */
     public function execute($cmd, $options = [])
     {
         $this->initDocker();
 
-        $user = "www-data";
-        $containerName = "main";
+        $user = 'www-data';
+        $containerName = 'main';
 
         if (array_key_exists('user', $options)) {
             $user = $options['user'];
@@ -250,48 +249,53 @@ class DockerService
         }
 
         if ($this->output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
-            $this->output->writeln("exec " . $user . "@" . $containerName . ": " . $cmd);
+            $this->output->writeln('exec '.$user.'@'.$containerName.': '.$cmd);
         }
 
         // if execution is in main container use source folder as path
-        if ($containerName == "main") {
-            $wd = $this->config->get("source_folder");
-            $cmd = "cd ".$wd." && ".$cmd;
+        if ($containerName == 'main') {
+            $wd = $this->config->get('source_folder');
+            $cmd = 'cd '.$wd.' && '.$cmd;
         }
-        $cmd = "bash -c \"".addcslashes($cmd, '"')."\"";
+        $cmd = 'bash -c "'.addcslashes($cmd, '"').'"';
 
         $dockerManager = $this->getManager();
 
         $container = $dockerManager->findContainer($containerName);
 
         if (!$container) {
-            throw new \Exception("Sorry, container with name " . $containerName . " is not running");
+            throw new \Exception('Sorry, container with name '.$containerName.' is not running');
         }
 
         $containerName = $container->getBuildName();
 
         if (!$dockerManager->isRunning($containerName)) {
-            throw new \Exception("Cannot execute command. Expected to find container named ".$containerName);
+            throw new \Exception('Cannot execute command. Expected to find container named '.$containerName);
         }
 
-        $cmd = "docker exec --user=".$user." -it " . $containerName . " " . $cmd;
+        $cmd = 'docker exec --user='.$user.' -it '.$containerName.' '.$cmd;
 
         $interactive = true;
         if (array_key_exists('interactive', $options)) {
             $interactive = $options['interactive'];
         }
+
         return $this->shell->execute($cmd, $interactive);
     }
 
     /**
-     * getClassName
+     * getClassName.
      *
      * @param string $classname
+     *
      * @return string
      */
     private function getClassName($classname)
     {
-        if ($pos = strrpos($classname, '\\')) return substr($classname, $pos + 1);
+        if ($pos = strrpos($classname, '\\')) {
+            return substr($classname, $pos + 1);
+        }
+
         return $pos;
     }
 }

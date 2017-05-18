@@ -11,11 +11,11 @@
 
 namespace TeamNeusta\Magedev\Test\Commands\Db;
 
-use \Mockery as m;
+use Mockery as m;
 use TeamNeusta\Magedev\Commands\Db\CleanupCommand;
 
 /**
- * Class: CleanupCommandTest
+ * Class: CleanupCommandTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -23,7 +23,6 @@ class CleanupCommandTest extends \TeamNeusta\Magedev\Test\TestCase
 {
     public function setUp()
     {
-
     }
 
     public function testExecute()
@@ -32,20 +31,20 @@ class CleanupCommandTest extends \TeamNeusta\Magedev\Test\TestCase
         $output = m::mock('\Symfony\Component\Console\Output\ConsoleOutput[]', ['writeln']);
 
         $config = m::mock('\TeamNeusta\Magedev\Runtime\Config');
-        $config->shouldReceive('getMagentoVersion')->andReturn("2");
+        $config->shouldReceive('getMagentoVersion')->andReturn('2');
 
         $fileHelper = m::mock('\TeamNeusta\Magedev\Runtime\Helper\FileHelper');
-        $fileHelper->shouldReceive("findPath")
-            ->with("var/data/magento2/cleanup.sql")
-            ->andReturn("somePath");
-        $fileHelper->shouldReceive("deleteFile")->with("cleanup.sql");
+        $fileHelper->shouldReceive('findPath')
+            ->with('var/data/magento2/cleanup.sql')
+            ->andReturn('somePath');
+        $fileHelper->shouldReceive('deleteFile')->with('cleanup.sql');
 
         $shellService = m::mock('\TeamNeusta\Magedev\Services\ShellService');
-        $shellService->shouldReceive("execute")
-            ->with("cp somePath .");
+        $shellService->shouldReceive('execute')
+            ->with('cp somePath .');
 
         $dockerService = m::mock('\TeamNeusta\Magedev\Services\DockerService');
-        $dockerService->shouldReceive('execute')->with("mysql -f < cleanup.sql");
+        $dockerService->shouldReceive('execute')->with('mysql -f < cleanup.sql');
 
         $command = new CleanupCommand(
             $config,
@@ -56,4 +55,3 @@ class CleanupCommandTest extends \TeamNeusta\Magedev\Test\TestCase
         $command->execute($input, $output);
     }
 }
-

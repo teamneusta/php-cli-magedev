@@ -11,11 +11,8 @@
 
 namespace TeamNeusta\Magedev\Docker;
 
-use TeamNeusta\Magedev\Docker\Api\ContainerFactory;
-use TeamNeusta\Magedev\Docker\Api\ImageFactory;
-
 /**
- * Class Manager
+ * Class Manager.
  */
 class Manager
 {
@@ -40,7 +37,7 @@ class Manager
     protected $containers = [];
 
     /**
-     * __construct
+     * __construct.
      */
     public function __construct(
         \Symfony\Component\Console\Output\OutputInterface $output,
@@ -55,7 +52,7 @@ class Manager
     }
 
     /**
-     * addContainer
+     * addContainer.
      *
      * @param \TeamNeusta\Magedev\Docker\Container\AbstractContainer $container
      */
@@ -65,18 +62,18 @@ class Manager
     }
 
     /**
-     * startContainers
+     * startContainers.
      */
     public function startContainers()
     {
         foreach ($this->containers as $container) {
-            $this->output->writeln("<info>starting container " . $container->getBuildName() . "</info>");
+            $this->output->writeln('<info>starting container '.$container->getBuildName().'</info>');
             $this->containerApiFactory->create($container)->start();
         }
     }
 
     /**
-     * stopContainers
+     * stopContainers.
      */
     public function stopContainers()
     {
@@ -86,7 +83,7 @@ class Manager
     }
 
     /**
-     * rebuildContainers
+     * rebuildContainers.
      */
     public function rebuildContainers()
     {
@@ -97,12 +94,11 @@ class Manager
                 $this->imageApiFactory->create($container->getImage())->destroy();
             }
             $containerApi->build();
-
         }
     }
 
     /**
-     * destroyContainers
+     * destroyContainers.
      */
     public function destroyContainers()
     {
@@ -112,9 +108,10 @@ class Manager
     }
 
     /**
-     * findContainer
+     * findContainer.
      *
      * @param string $name
+     *
      * @return \TeamNeusta\Magedev\Docker\Container\AbstractContainer | null
      */
     public function findContainer($name)
@@ -124,18 +121,21 @@ class Manager
                 return $container;
             }
         }
-        return null;
+
+        return;
     }
 
     /**
-     * isRunning
+     * isRunning.
      *
      * @param string $name
+     *
      * @return bool
      */
     public function isRunning($name)
     {
-       $container = $this->findContainer($name);
-       return $this->containerApiFactory->create($container)->isRunning();
+        $container = $this->findContainer($name);
+
+        return $this->containerApiFactory->create($container)->isRunning();
     }
 }
