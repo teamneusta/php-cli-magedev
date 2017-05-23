@@ -71,5 +71,8 @@ class Main extends AbstractImage
 
         $this->addFile("var/Docker/vendor/mini_sendmail-1.3.9/mini_sendmail", "/usr/bin/mini_sendmail");
         $this->run("chmod +x /usr/bin/mini_sendmail");
+
+        // expose grunt port
+        $this->expose("35729");
     }
 }
