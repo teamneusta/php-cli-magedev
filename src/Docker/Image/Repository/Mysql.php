@@ -29,6 +29,9 @@ class Mysql extends AbstractImage
         $uid = getmyuid();
         $this->run("usermod -u " . $uid . " mysql");
 
+        // addresses permission error, cannot bind socket
+        $this->run("chmod -R 777 /var/run/mysqld/");
+
         $this->addFile("var/Docker/mysql/mysql.cnf", "/etc/mysql/conf.d/z99-docker.cnf");
         $this->addFile("var/Docker/mysql/my.cnf","/root/.my.cnf");
         $this->addFile("var/Docker/mysql/my.cnf","/var/www/.my.cnf");
