@@ -16,6 +16,19 @@ EOL
     magedev magento:install
     curl magento2.local
 
+### Install Sample Data
+
+    git clone https://github.com/magento/magento2-sample-data.git
+
+
+Switch to container with `magedev docker:cli:ssh` and install:
+
+    php magento2-sample-data/dev/tools/build-sample-data.php --ce-source=/var/www/html/
+    exit
+
+Upgrade database
+
+    magedev magento:up
 
 ## Magento1
 
