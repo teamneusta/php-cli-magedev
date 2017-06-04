@@ -33,6 +33,8 @@ class Mysql extends AbstractImage
         $this->run("chmod -R 777 /var/run/mysqld/");
 
         $this->addFile("var/Docker/mysql/mysql.cnf", "/etc/mysql/conf.d/z99-docker.cnf");
+        $this->run("chmod 644 /etc/mysql/conf.d/z99-docker.cnf");
+
         $this->addFile("var/Docker/mysql/my.cnf","/root/.my.cnf");
         $this->addFile("var/Docker/mysql/my.cnf","/var/www/.my.cnf");
     }

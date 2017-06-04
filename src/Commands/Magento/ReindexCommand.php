@@ -83,7 +83,7 @@ class ReindexCommand extends AbstractCommand
             }
 
             if ($magentoVersion == "2") {
-                $this->dockerService->execute("bin/magento indexer:reindex");
+                $this->dockerService->execute("php -dxdebug.max_nesting_level=18000 -dmemory_limit=1500M bin/magento indexer:reindex");
             }
         } catch (\Exception $e) {
             // command may fail e.g.:
