@@ -114,6 +114,7 @@ $c['commands'] = function($c) {
         new \TeamNeusta\Magedev\Commands\Magento\ReindexCommand($c['runtime.config'], $c['runtime.helper.magerunhelper'], $c['services.docker']),
         new \TeamNeusta\Magedev\Commands\Magento\SetBaseUrlCommand($c['runtime.config'], $c['services.docker']),
         new \TeamNeusta\Magedev\Commands\Magento\UpgradeCommand($c['runtime.config'], $c['runtime.helper.magerunhelper'], $c['services.docker']),
+        new \TeamNeusta\Magedev\Commands\Magento\ModuleVersionCommand($c['runtime.config'], $c['services.docker']),
 
         /* // Tests */
         new \TeamNeusta\Magedev\Commands\Tests\DebugCommand($c['runtime.config'], $c['services.docker']),
