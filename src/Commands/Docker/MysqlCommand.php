@@ -15,30 +15,30 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class: MysqlCommand
+ * Class: MysqlCommand.
  *
  * @see AbstractCommand
  */
 class MysqlCommand extends Base
 {
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("docker:cli:mysql");
-        $this->setDescription("drop a mysql shell");
+        $this->setName('docker:cli:mysql');
+        $this->setDescription('drop a mysql shell');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->dockerService->execute("mysql");
+        $this->dockerService->execute('mysql');
         parent::execute($input, $output);
     }
 }

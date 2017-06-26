@@ -11,11 +11,11 @@
 
 namespace TeamNeusta\Magedev\Test\Commands\Tests;
 
-use \Mockery as m;
+use Mockery as m;
 use TeamNeusta\Magedev\Commands\Tests\RunCommand;
 
 /**
- * Class: RunCommandTest
+ * Class: RunCommandTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -27,12 +27,12 @@ class RunCommandTest extends \TeamNeusta\Magedev\Test\TestCase
         $output = m::mock('\Symfony\Component\Console\Output\ConsoleOutput[]', ['writeln']);
 
         $config = m::mock('\TeamNeusta\Magedev\Runtime\Config');
-        $config->shouldReceive('optionExists')->with("phpunitxml_path")->andReturn(false);
+        $config->shouldReceive('optionExists')->with('phpunitxml_path')->andReturn(false);
 
         $dockerService = m::mock('\TeamNeusta\Magedev\Services\DockerService');
-        $dockerService->shouldReceive("execute")
+        $dockerService->shouldReceive('execute')
             ->with(
-                "vendor/bin/phpunit -c /var/www/html/phpunit.xml"
+                'vendor/bin/phpunit -c /var/www/html/phpunit.xml'
               );
         $command = new RunCommand(
             $config,
@@ -47,20 +47,18 @@ class RunCommandTest extends \TeamNeusta\Magedev\Test\TestCase
         $output = m::mock('\Symfony\Component\Console\Output\ConsoleOutput[]', ['writeln']);
 
         $config = m::mock('\TeamNeusta\Magedev\Runtime\Config');
-        $config->shouldReceive('optionExists')->with("phpunitxml_path")->andReturn(true);
-        $config->shouldReceive('get')->with("phpunitxml_path")->andReturn("Source/phpunit.xml");
-
+        $config->shouldReceive('optionExists')->with('phpunitxml_path')->andReturn(true);
+        $config->shouldReceive('get')->with('phpunitxml_path')->andReturn('Source/phpunit.xml');
 
         $dockerService = m::mock('\TeamNeusta\Magedev\Services\DockerService');
-        $dockerService->shouldReceive("execute")
+        $dockerService->shouldReceive('execute')
             ->with(
-                "vendor/bin/phpunit -c Source/phpunit.xml"
+                'vendor/bin/phpunit -c Source/phpunit.xml'
               );
         $command = new RunCommand(
             $config,
             $dockerService
         );
         $command->execute($input, $output);
-
     }
 }

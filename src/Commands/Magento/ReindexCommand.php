@@ -19,7 +19,7 @@ use TeamNeusta\Magedev\Runtime\Helper\MagerunHelper;
 use TeamNeusta\Magedev\Services\DockerService;
 
 /**
- * Class: ReindexCommand
+ * Class: ReindexCommand.
  *
  * @see AbstractCommand
  */
@@ -41,12 +41,12 @@ class ReindexCommand extends AbstractCommand
     protected $dockerService;
 
     /**
-     * __construct
+     * __construct.
      *
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @param \TeamNeusta\Magedev\Runtime\Config $config
-     * @param \TeamNeusta\Magedev\Runtime\Helper\MagerunHelper $magerunHelper
-     * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
+     * @param \TeamNeusta\Magedev\Runtime\Config                $config
+     * @param \TeamNeusta\Magedev\Runtime\Helper\MagerunHelper  $magerunHelper
+     * @param \TeamNeusta\Magedev\Services\DockerService        $dockerService
      */
     public function __construct(
         \TeamNeusta\Magedev\Runtime\Config $config,
@@ -60,26 +60,26 @@ class ReindexCommand extends AbstractCommand
     }
 
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("magento:reindex");
-        $this->setDescription("executes bin/magento indexer:reindex inside container");
+        $this->setName('magento:reindex');
+        $this->setDescription('executes bin/magento indexer:reindex inside container');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $magentoVersion = $this->config->getMagentoVersion() ;
+        $magentoVersion = $this->config->getMagentoVersion();
         try {
-            if ($magentoVersion == "1") {
-                $this->magerunHelper->magerunCommand("index:reindex:all");
+            if ($magentoVersion == '1') {
+                $this->magerunHelper->magerunCommand('index:reindex:all');
             }
 
             if ($magentoVersion == "2") {

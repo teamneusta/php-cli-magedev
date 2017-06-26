@@ -12,7 +12,7 @@
 namespace TeamNeusta\Magedev\Docker\Container;
 
 /**
- * Class: Collection
+ * Class: Collection.
  */
 class Collection
 {
@@ -22,9 +22,9 @@ class Collection
     protected $containers = [];
 
     /**
-     * add
+     * add.
      *
-     * @param string $name
+     * @param string          $name
      * @param DockerContainer $container
      */
     public function add($name, DockerContainer $container)
@@ -33,9 +33,10 @@ class Collection
     }
 
     /**
-     * find
+     * find.
      *
      * @param string $name
+     *
      * @return DockerContainer
      */
     public function find($name)
@@ -44,7 +45,7 @@ class Collection
     }
 
     /**
-     * eachContainer
+     * eachContainer.
      *
      * @param callable $callback
      */

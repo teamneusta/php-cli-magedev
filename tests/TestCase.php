@@ -10,10 +10,11 @@
  */
 
 namespace TeamNeusta\Magedev\Test;
-use \Mockery as m;
+
+use Mockery as m;
 
 /**
- * Class: StartCommandTest
+ * Class: StartCommandTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */

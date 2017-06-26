@@ -18,7 +18,7 @@ use TeamNeusta\Magedev\Runtime\Config;
 use TeamNeusta\Magedev\Services\ShellService;
 
 /**
- * Class: AddHostEntryCommand
+ * Class: AddHostEntryCommand.
  *
  * @see AbstractCommand
  */
@@ -40,11 +40,11 @@ class AddHostEntryCommand extends AbstractCommand
     protected $shellService;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Runtime\Config                $config
      * @param \Symfony\Component\Console\Output\OutputInterface $output
-     * @param \TeamNeusta\Magedev\Services\ShellService $shellService
+     * @param \TeamNeusta\Magedev\Services\ShellService         $shellService
      */
     public function __construct(
         \TeamNeusta\Magedev\Runtime\Config $config,
@@ -58,7 +58,7 @@ class AddHostEntryCommand extends AbstractCommand
     }
 
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
@@ -67,40 +67,39 @@ class AddHostEntryCommand extends AbstractCommand
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        if ($this->config->optionExists("domains")) {
-            $domains = $this->config->get("domains");
+        if ($this->config->optionExists('domains')) {
+            $domains = $this->config->get('domains');
             foreach ($domains as $domain => $scopeId) {
                 $this->addHostEntryIfRequired($domain);
             }
         } else {
-            $domain = $this->config->get("domain");
+            $domain = $this->config->get('domain');
             $this->addHostEntryIfRequired($domain);
         }
     }
 
-
     /**
-     * addHostEntryIfRequired
+     * addHostEntryIfRequired.
      *
      * @param string $domain
      */
     public function addHostEntryIfRequired($domain)
     {
-        $this->output->writeln("checking your /etc/hosts for presence of ".$domain);
+        $this->output->writeln('checking your /etc/hosts for presence of '.$domain);
 
         ob_start();
-        $res = system("grep \"".$domain."\" /etc/hosts");
+        $res = system('grep "'.$domain.'" /etc/hosts');
         ob_clean();
         ob_end_flush();
         if (!$res) {
-            $this->output->writeln("adding ".$domain." to your /etc/hosts");
+            $this->output->writeln('adding '.$domain.' to your /etc/hosts');
             $this->shellService->execute("sudo sh -c 'echo \"127.0.0.1 ".$domain."\" >> /etc/hosts'");
         }
     }

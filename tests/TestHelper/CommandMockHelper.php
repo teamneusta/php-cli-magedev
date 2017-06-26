@@ -19,7 +19,7 @@ use TeamNeusta\Magedev\Runtime\Helper\FileHelper;
 use TeamNeusta\Magedev\Docker\Manager as DockerManager;
 
 /**
- * Class: CommandMockHelper
+ * Class: CommandMockHelper.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -43,9 +43,9 @@ class CommandMockHelper extends \PHPUnit_Framework_TestCase
     {
         if ($magedevConfig == null) {
             $magedevConfig = [
-                "magento_version" => "2",
-                "source_folder" => "Source/",
-                "domain" => "test.domain.de"
+                'magento_version' => '2',
+                'source_folder' => 'Source/',
+                'domain' => 'test.domain.de',
             ];
         }
         $this->magedevConfig = $magedevConfig;
@@ -57,14 +57,14 @@ class CommandMockHelper extends \PHPUnit_Framework_TestCase
             $this->configMock = $this->getMockBuilder(Config::class)
                 ->disableOriginalConstructor()
                 ->setMethods([
-                    'loadConfiguration'
+                    'loadConfiguration',
                 ])
                 ->getMock();
             $this->configMock->method('loadConfiguration')->willReturn($this->magedevConfig);
             $this->configMock->load();
         }
-        return $this->configMock;
 
+        return $this->configMock;
     }
 
     public function getRuntime()
@@ -75,7 +75,7 @@ class CommandMockHelper extends \PHPUnit_Framework_TestCase
             $questionHelper = $this->getMockBuilder('Symfony\Component\Console\Helper\QuestionHelper')
                 ->disableOriginalConstructor()
                 ->setMethods([
-                    'getHelper'
+                    'getHelper',
                 ])
                 ->getMock();
             $this->runtimeMock = $this->getMockBuilder(Runtime::class)
@@ -84,24 +84,26 @@ class CommandMockHelper extends \PHPUnit_Framework_TestCase
                     'loadPlugins',
                     'getConfig',
                     'getDocker',
-                    'getHelper'
+                    'getHelper',
                 ])
                 ->getMock();
             $this->runtimeMock->method('getDocker')->willReturn($this->getDocker());
             $this->runtimeMock->method('getConfig')->willReturn($this->getConfig());
             $this->runtimeMock->method('getHelper')->willReturnCallback(
-                function($name) {
-                    if ($name == "FileHelper") {
+                function ($name) {
+                    if ($name == 'FileHelper') {
                         return $this->getFileHelper();
                     }
-                    $class = "\TeamNeusta\Magedev\Runtime\Helper\\" . $name;
+                    $class = "\TeamNeusta\Magedev\Runtime\Helper\\".$name;
                     if (!class_exists($class)) {
-                        throw new \Exception("Requested helper " . $name . " was not found");
+                        throw new \Exception('Requested helper '.$name.' was not found');
                     }
+
                     return new $class($this->runtimeMock);
                 }
             );
         }
+
         return $this->runtimeMock;
     }
 
@@ -111,13 +113,14 @@ class CommandMockHelper extends \PHPUnit_Framework_TestCase
             $output = $this->getMockForAbstractClass('Symfony\Component\Console\Output\ConsoleOutput');
             $this->shellMock = $this->getMockBuilder(Shell::class)
                 ->setConstructorArgs([
-                    $output
+                    $output,
                 ])
                 ->setMethods([
-                    'nativeExecute'
+                    'nativeExecute',
                 ])
                 ->getMock();
         }
+
         return $this->shellMock;
     }
 
@@ -127,25 +130,27 @@ class CommandMockHelper extends \PHPUnit_Framework_TestCase
             $this->fileHelperMock = $this->getMockBuilder(FileHelper::class)
                 ->disableOriginalConstructor()
                 ->setMethods([
-                    'fileExists'
+                    'fileExists',
                 ])
                 ->getMock();
         }
+
         return $this->fileHelperMock;
     }
 
     public function getContainerMock()
     {
-       $container = $this->getMockBuilder('\TeamNeusta\Magedev\Docker\Container\Repository\Main')
+        $container = $this->getMockBuilder('\TeamNeusta\Magedev\Docker\Container\Repository\Main')
            ->setConstructorArgs([
-              $this->getDocker()->getContext()
+              $this->getDocker()->getContext(),
            ])
            ->setMethods([
-               'isRunning'
+               'isRunning',
            ])
            ->getMock();
-       $container->method('isRunning')->willReturn(true);
-       return $container;
+        $container->method('isRunning')->willReturn(true);
+
+        return $container;
     }
 
     public function getDockerManager()
@@ -155,22 +160,22 @@ class CommandMockHelper extends \PHPUnit_Framework_TestCase
                 ->disableOriginalConstructor()
                 ->setMethods([
                     'getContainerManager',
-                    'getImageManager'
+                    'getImageManager',
                 ])
                 ->getMock();
             $this->dockerManagerMock = $this->getMockBuilder(DockerManager::class)
                 ->setConstructorArgs([
-                    $dockerApiMock
+                    $dockerApiMock,
                 ])
                 ->setMethods([
                     'startContainers',
                     'stopContainers',
-                    'rebuildContainers'
+                    'rebuildContainers',
                 ])
                 ->getMock();
-            $this->dockerManagerMock->containers()->add("main", $this->getContainerMock());
-
+            $this->dockerManagerMock->containers()->add('main', $this->getContainerMock());
         }
+
         return $this->dockerManagerMock;
     }
 
@@ -183,14 +188,15 @@ class CommandMockHelper extends \PHPUnit_Framework_TestCase
                     $this->getConfig(),
                     $output,
                     $this->getShell(),
-                    $this->getFileHelper()
+                    $this->getFileHelper(),
                 ])
                 ->setMethods([
-                    'getManager'
+                    'getManager',
                 ])
                 ->getMock();
             $this->dockerMock->method('getManager')->willReturn($this->getDockerManager());
         }
+
         return $this->dockerMock;
     }
 
@@ -198,10 +204,11 @@ class CommandMockHelper extends \PHPUnit_Framework_TestCase
     {
         $command = $this->getMockBuilder($class)
             ->setMethods([
-                'createRuntime'
+                'createRuntime',
             ])
             ->getMock();
         $command->method('createRuntime')->willReturn($this->getRuntime());
+
         return $command;
     }
 

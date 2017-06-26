@@ -18,7 +18,7 @@ use TeamNeusta\Magedev\Runtime\Config;
 use TeamNeusta\Magedev\Services\DockerService;
 
 /**
- * Class: RefreshCommand
+ * Class: RefreshCommand.
  *
  * @see AbstractCommand
  */
@@ -35,9 +35,9 @@ class RefreshCommand extends AbstractCommand
     protected $dockerService;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Runtime\Config         $config
      * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
      */
     public function __construct(
@@ -50,33 +50,33 @@ class RefreshCommand extends AbstractCommand
     }
 
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("magento:refresh");
-        $this->setDescription("deletes generated files var/generation, var/di ... only Magento2");
+        $this->setName('magento:refresh');
+        $this->setDescription('deletes generated files var/generation, var/di ... only Magento2');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $magentoVersion = $this->config->getMagentoVersion();
         // only required for magento2
-        if ($magentoVersion == "2") {
+        if ($magentoVersion == '2') {
             foreach ([
-                "rm -rf var/generation/*",
-                "rm -rf var/di/*",
-                "rm -rf var/cache/*",
-                "rm -rf var/view_preprocessed/*",
-                "rm -rf pub/static/_requirejs",
-                "rm -rf pub/static/adminhtml",
-                "rm -rf pub/static/frontend"
+                'rm -rf var/generation/*',
+                'rm -rf var/di/*',
+                'rm -rf var/cache/*',
+                'rm -rf var/view_preprocessed/*',
+                'rm -rf pub/static/_requirejs',
+                'rm -rf pub/static/adminhtml',
+                'rm -rf pub/static/frontend',
             ] as $cmd) {
                 $this->dockerService->execute($cmd);
             }

@@ -11,11 +11,11 @@
 
 namespace TeamNeusta\Magedev\Test\Commands\Db;
 
-use \Mockery as m;
+use Mockery as m;
 use TeamNeusta\Magedev\Commands\Db\DumpCommand;
 
 /**
- * Class: DumpCommandTest
+ * Class: DumpCommandTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -26,9 +26,8 @@ class DumpCommandTest extends \TeamNeusta\Magedev\Test\TestCase
         $input = m::mock('\Symfony\Component\Console\Input\InputInterface');
         $output = m::mock('\Symfony\Component\Console\Output\ConsoleOutput[]', ['writeln']);
         $dockerService = m::mock('\TeamNeusta\Magedev\Services\DockerService');
-        $dockerService->shouldReceive('execute')->with("mysqldump magento > dump.sql");
+        $dockerService->shouldReceive('execute')->with('mysqldump magento > dump.sql');
         $command = new DumpCommand($dockerService);
         $command->execute($input, $output);
     }
 }
-

@@ -14,14 +14,14 @@ namespace TeamNeusta\Magedev\Docker\Container\Repository;
 use TeamNeusta\Magedev\Docker\Container\AbstractContainer;
 
 /**
- * Class: Mailcatcher
+ * Class: Mailcatcher.
  *
  * @see AbstractContainer
  */
 class Varnish extends AbstractContainer
 {
     /**
-     * getName
+     * getName.
      */
     public function getName()
     {
@@ -29,10 +29,10 @@ class Varnish extends AbstractContainer
     }
 
     /**
-     * getImage
+     * getImage.
      */
     public function getImage()
     {
-        return new \TeamNeusta\Magedev\Docker\Image\Repository\Varnish($this->context);
+        return $this->imageFactory->create('Varnish');
     }
 }

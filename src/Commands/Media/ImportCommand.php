@@ -18,7 +18,7 @@ use TeamNeusta\Magedev\Runtime\Config;
 use TeamNeusta\Magedev\Services\ShellService;
 
 /**
- * Class: ImportCommand
+ * Class: ImportCommand.
  *
  * @see AbstractCommand
  */
@@ -35,9 +35,9 @@ class ImportCommand extends AbstractCommand
     protected $shellService;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Runtime\Config        $config
      * @param \TeamNeusta\Magedev\Services\ShellService $shellService
      */
     public function __construct(
@@ -50,7 +50,7 @@ class ImportCommand extends AbstractCommand
     }
 
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
@@ -59,9 +59,9 @@ class ImportCommand extends AbstractCommand
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
@@ -69,54 +69,55 @@ class ImportCommand extends AbstractCommand
         $magentoVersion = $this->config->getMagentoVersion();
 
         if ($this->config->optionExists('media_archive')) {
-            $mediaArchive = $this->config->get("media_archive");
+            $mediaArchive = $this->config->get('media_archive');
 
-            $possibleExtensions = ["tar", "tar.gz", "zip"];
+            $possibleExtensions = ['tar', 'tar.gz', 'zip'];
 
             $extension = $this->fileExtension($mediaArchive, $possibleExtensions);
 
-            $destinationPath = ".";
+            $destinationPath = '.';
 
-            if ($magentoVersion == "2") {
-                $destinationPath = "pub";
+            if ($magentoVersion == '2') {
+                $destinationPath = 'pub';
             }
 
             // escape whitespaces for command
-            $mediaArchive = str_replace(" ", "\\ ", $mediaArchive);
+            $mediaArchive = str_replace(' ', '\\ ', $mediaArchive);
 
             // TODO: remove v argument if output is not verbose
-            if ($extension == "tar") {
-                $cmd = "tar -xvf ".$mediaArchive." -C ".$destinationPath;
+            if ($extension == 'tar') {
+                $cmd = 'tar -xvf '.$mediaArchive.' -C '.$destinationPath;
             }
 
-            if ($extension == "tar.gz") {
-                $cmd = "tar -xvzf ".$mediaArchive." -C ".$destinationPath;
+            if ($extension == 'tar.gz') {
+                $cmd = 'tar -xvzf '.$mediaArchive.' -C '.$destinationPath;
             }
 
-            if ($extension == "zip") {
-                $cmd = "unzip ".$mediaArchive." -d ".$destinationPath;
+            if ($extension == 'zip') {
+                $cmd = 'unzip '.$mediaArchive.' -d '.$destinationPath;
             }
 
             if (empty($cmd)) {
-                throw new \Exception("unkown archive extension for ".$mediaArchive);
+                throw new \Exception('unkown archive extension for '.$mediaArchive);
             }
 
             $this->shellService
-                ->wd($this->config->get("source_folder"))
+                ->wd($this->config->get('source_folder'))
                 ->bash($cmd);
         }
     }
 
     /**
-     * fileExtension
+     * fileExtension.
      *
-     * @param string $path
+     * @param string   $path
      * @param string[] $extensions
      */
     public function fileExtension($path, $extensions = [])
     {
         $output_array = [];
-        preg_match("/^.*\.(".implode('|', $extensions).")$/", $path, $output_array);
+        preg_match("/^.*\.(".implode('|', $extensions).')$/', $path, $output_array);
+
         return end($output_array);
     }
 }

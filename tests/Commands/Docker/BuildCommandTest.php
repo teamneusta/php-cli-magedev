@@ -11,11 +11,11 @@
 
 namespace TeamNeusta\Magedev\Test\Commands\Docker;
 
-use \Mockery as m;
+use Mockery as m;
 use TeamNeusta\Magedev\Commands\Docker\BuildCommand;
 
 /**
- * Class: BuildCommandTest
+ * Class: BuildCommandTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -31,7 +31,7 @@ class BuildCommandTest extends \TeamNeusta\Magedev\Test\TestCase
         $dockerService = m::mock(
             '\TeamNeusta\Magedev\Services\DockerService',
             [
-                'getManager' => $dockerManager
+                'getManager' => $dockerManager,
             ]
         );
         $command = new BuildCommand($dockerService);

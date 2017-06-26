@@ -20,7 +20,7 @@ use TeamNeusta\Magedev\Services\ShellService;
 use TeamNeusta\Magedev\Services\DockerService;
 
 /**
- * Class: CleanupCommand
+ * Class: CleanupCommand.
  *
  * @see AbstractCommand
  */
@@ -47,12 +47,12 @@ class CleanupCommand extends AbstractCommand
     protected $dockerService;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Runtime\Config            $config
      * @param \TeamNeusta\Magedev\Runtime\Helper\FileHelper $fileHelper
-     * @param \TeamNeusta\Magedev\Services\ShellService $shellService
-     * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
+     * @param \TeamNeusta\Magedev\Services\ShellService     $shellService
+     * @param \TeamNeusta\Magedev\Services\DockerService    $dockerService
      */
     public function __construct(
         \TeamNeusta\Magedev\Runtime\Config $config,
@@ -68,33 +68,33 @@ class CleanupCommand extends AbstractCommand
     }
 
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("db:cleanup");
-        $this->setDescription("clean db, remove customers, orders and so on");
+        $this->setName('db:cleanup');
+        $this->setDescription('clean db, remove customers, orders and so on');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $script = "cleanup.sql";
+        $script = 'cleanup.sql';
 
-        if ($this->config->getMagentoVersion() == "1") {
-            $scriptPath = $this->fileHelper->findPath("var/data/magento1/".$script);
+        if ($this->config->getMagentoVersion() == '1') {
+            $scriptPath = $this->fileHelper->findPath('var/data/magento1/'.$script);
         }
-        if ($this->config->getMagentoVersion() == "2") {
-            $scriptPath = $this->fileHelper->findPath("var/data/magento2/".$script);
+        if ($this->config->getMagentoVersion() == '2') {
+            $scriptPath = $this->fileHelper->findPath('var/data/magento2/'.$script);
         }
 
-        $this->shellService->execute("cp ".$scriptPath." .");
-        $this->dockerService->execute("mysql -f < ".basename($script));
+        $this->shellService->execute('cp '.$scriptPath.' .');
+        $this->dockerService->execute('mysql -f < '.basename($script));
         $this->fileHelper->deleteFile($script);
 
         parent::execute($input, $output);

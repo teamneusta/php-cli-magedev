@@ -15,30 +15,30 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class: StartCommand
+ * Class: StartCommand.
  *
  * @see AbstractCommand
  */
 class StartCommand extends Base
 {
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("docker:start");
-        $this->setDescription("start docker container");
+        $this->setName('docker:start');
+        $this->setDescription('start docker container');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->dockerService->getManager()->startContainers();
         parent::execute($input, $output);
-     }
+    }
 }

@@ -16,7 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use TeamNeusta\Magedev\Commands\AbstractCommand;
 
 /**
- * Class: ProjectCommand
+ * Class: ProjectCommand.
  *
  * @see AbstractCommand
  */
@@ -28,7 +28,7 @@ class ProjectCommand extends AbstractCommand
     protected $output;
 
     /**
-     * __construct
+     * __construct.
      *
      * @param \TeamNeusta\Magedev\Runtime\Config $config
      */
@@ -40,18 +40,18 @@ class ProjectCommand extends AbstractCommand
     }
 
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("init:project");
-        $this->setDescription("setup project");
+        $this->setName('init:project');
+        $this->setDescription('setup project');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
@@ -74,11 +74,11 @@ class ProjectCommand extends AbstractCommand
         $this->getApplication()->find('magento:reindex')->execute($input, $output);
         $this->getApplication()->find('init:add-host-entry')->execute($input, $output);
 
-        $output->writeln("project installed");
+        $output->writeln('project installed');
 
-        if ($this->config->optionExists("domain")) {
-            $domain = $this->config->get("domain");
-            $output->writeln("visit: http://".$domain);
+        if ($this->config->optionExists('domain')) {
+            $domain = $this->config->get('domain');
+            $output->writeln('visit: http://'.$domain);
         }
     }
 }

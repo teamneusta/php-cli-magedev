@@ -11,11 +11,11 @@
 
 namespace TeamNeusta\Magedev\Test\Commands\Magento;
 
-use \Mockery as m;
+use Mockery as m;
 use TeamNeusta\Magedev\Commands\Magento\InstallMagerunCommand;
 
 /**
- * Class: InstallMagerunCommandTest
+ * Class: InstallMagerunCommandTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -27,15 +27,15 @@ class InstallMagerunCommandTest extends \PHPUnit_Framework_TestCase
         $output = m::mock('\Symfony\Component\Console\Output\ConsoleOutput[]', ['writeln']);
 
         $config = m::mock('\TeamNeusta\Magedev\Runtime\Config', [
-            'getMagentoVersion' => 2
+            'getMagentoVersion' => 2,
         ]);
-        $config->shouldReceive('get')->with('source_folder')->andReturn("Source");
+        $config->shouldReceive('get')->with('source_folder')->andReturn('Source');
 
         $shellService = m::mock('\TeamNeusta\Magedev\Services\ShellService');
-        $shellService->shouldReceive("wd")->with("Source")->andReturnSelf();
-        $shellService->shouldReceive("bash")->with("curl -O https://files.magerun.net/n98-magerun2.phar");
-        $shellService->shouldReceive("bash")->with("mv n98-magerun2.phar bin/magerun");
-        $shellService->shouldReceive("bash")->with("chmod +x bin/magerun");
+        $shellService->shouldReceive('wd')->with('Source')->andReturnSelf();
+        $shellService->shouldReceive('bash')->with('curl -O https://files.magerun.net/n98-magerun2.phar');
+        $shellService->shouldReceive('bash')->with('mv n98-magerun2.phar bin/magerun');
+        $shellService->shouldReceive('bash')->with('chmod +x bin/magerun');
 
         $command = new InstallMagerunCommand($config, $shellService);
         $command->execute($input, $output);
@@ -47,18 +47,17 @@ class InstallMagerunCommandTest extends \PHPUnit_Framework_TestCase
         $output = m::mock('\Symfony\Component\Console\Output\ConsoleOutput[]', ['writeln']);
 
         $config = m::mock('\TeamNeusta\Magedev\Runtime\Config', [
-            'getMagentoVersion' => 1
+            'getMagentoVersion' => 1,
         ]);
-        $config->shouldReceive('get')->with('source_folder')->andReturn("Source");
+        $config->shouldReceive('get')->with('source_folder')->andReturn('Source');
 
         $shellService = m::mock('\TeamNeusta\Magedev\Services\ShellService');
-        $shellService->shouldReceive("wd")->with("Source")->andReturnSelf();
-        $shellService->shouldReceive("bash")->with("curl -O https://files.magerun.net/n98-magerun.phar");
-        $shellService->shouldReceive("bash")->with("mv n98-magerun.phar shell/magerun");
-        $shellService->shouldReceive("bash")->with("chmod +x shell/magerun");
+        $shellService->shouldReceive('wd')->with('Source')->andReturnSelf();
+        $shellService->shouldReceive('bash')->with('curl -O https://files.magerun.net/n98-magerun.phar');
+        $shellService->shouldReceive('bash')->with('mv n98-magerun.phar shell/magerun');
+        $shellService->shouldReceive('bash')->with('chmod +x shell/magerun');
 
         $command = new InstallMagerunCommand($config, $shellService);
         $command->execute($input, $output);
     }
-
 }

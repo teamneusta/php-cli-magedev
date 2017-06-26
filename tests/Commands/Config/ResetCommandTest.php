@@ -11,11 +11,11 @@
 
 namespace TeamNeusta\Magedev\Test\Commands\Db;
 
-use \Mockery as m;
+use Mockery as m;
 use TeamNeusta\Magedev\Commands\Config\ResetCommand;
 
 /**
- * Class: ResetCommandTest
+ * Class: ResetCommandTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -23,7 +23,6 @@ class ResetCommandTest extends \TeamNeusta\Magedev\Test\TestCase
 {
     public function setUp()
     {
-
     }
 
     public function testImportNonExistingValue()
@@ -32,26 +31,26 @@ class ResetCommandTest extends \TeamNeusta\Magedev\Test\TestCase
         $output = m::mock('\Symfony\Component\Console\Output\ConsoleOutput[]', ['writeln']);
 
         $config = m::mock('\TeamNeusta\Magedev\Runtime\Config');
-        $config->shouldReceive('getMagentoVersion')->andReturn("2");
+        $config->shouldReceive('getMagentoVersion')->andReturn('2');
 
         $fileHelper = m::mock('\TeamNeusta\Magedev\Runtime\Helper\FileHelper');
-        $fileHelper->shouldReceive("findPath")
-            ->with("var/data/magento2/config.yml")
-            ->andReturn("/home/user/magedev/var/data/magento2/config.yml");
-        $fileHelper->shouldReceive("fileExists")
-            ->with("/home/user/magedev/var/data/magento2/config.yml")
+        $fileHelper->shouldReceive('findPath')
+            ->with('var/data/magento2/config.yml')
+            ->andReturn('/home/user/magedev/var/data/magento2/config.yml');
+        $fileHelper->shouldReceive('fileExists')
+            ->with('/home/user/magedev/var/data/magento2/config.yml')
             ->andReturn(true);
-        $fileHelper->shouldReceive("read")
-            ->with("/home/user/magedev/var/data/magento2/config.yml")
-            ->andReturn("design/head/default_title: \"Installed by Magedev\"");
+        $fileHelper->shouldReceive('read')
+            ->with('/home/user/magedev/var/data/magento2/config.yml')
+            ->andReturn('design/head/default_title: "Installed by Magedev"');
 
         $dockerService = m::mock('\TeamNeusta\Magedev\Services\DockerService');
-        $dockerService->shouldReceive("execute")
+        $dockerService->shouldReceive('execute')
             ->with(
                 "mysql --execute \"select * from core_config_data where path = 'design/head/default_title';\"",
                 ['interactive' => false]
               );
-        $dockerService->shouldReceive("execute")
+        $dockerService->shouldReceive('execute')
             ->with(
                 "mysql --execute \"INSERT core_config_data (scope, scope_id, path, value) VALUES ('default', 0, 'design/head/default_title', Installed by Magedev);\"",
                 ['interactive' => false]
@@ -70,27 +69,27 @@ class ResetCommandTest extends \TeamNeusta\Magedev\Test\TestCase
         $output = m::mock('\Symfony\Component\Console\Output\ConsoleOutput[]', ['writeln']);
 
         $config = m::mock('\TeamNeusta\Magedev\Runtime\Config');
-        $config->shouldReceive('getMagentoVersion')->andReturn("2");
+        $config->shouldReceive('getMagentoVersion')->andReturn('2');
 
         $fileHelper = m::mock('\TeamNeusta\Magedev\Runtime\Helper\FileHelper');
-        $fileHelper->shouldReceive("findPath")
-            ->with("var/data/magento2/config.yml")
-            ->andReturn("/home/user/magedev/var/data/magento2/config.yml");
-        $fileHelper->shouldReceive("fileExists")
-            ->with("/home/user/magedev/var/data/magento2/config.yml")
+        $fileHelper->shouldReceive('findPath')
+            ->with('var/data/magento2/config.yml')
+            ->andReturn('/home/user/magedev/var/data/magento2/config.yml');
+        $fileHelper->shouldReceive('fileExists')
+            ->with('/home/user/magedev/var/data/magento2/config.yml')
             ->andReturn(true);
-        $fileHelper->shouldReceive("read")
-            ->with("/home/user/magedev/var/data/magento2/config.yml")
-            ->andReturn("design/head/default_title: \"Installed by Magedev\"");
+        $fileHelper->shouldReceive('read')
+            ->with('/home/user/magedev/var/data/magento2/config.yml')
+            ->andReturn('design/head/default_title: "Installed by Magedev"');
 
         $dockerService = m::mock('\TeamNeusta\Magedev\Services\DockerService');
-        $dockerService->shouldReceive("execute")
+        $dockerService->shouldReceive('execute')
             ->with(
                 "mysql --execute \"select * from core_config_data where path = 'design/head/default_title';\"",
                 ['interactive' => false]
             )
-            ->andReturn("someValueForExistence");
-        $dockerService->shouldReceive("execute")
+            ->andReturn('someValueForExistence');
+        $dockerService->shouldReceive('execute')
             ->with(
                 "mysql --execute \"UPDATE core_config_data SET value='Installed by Magedev' WHERE path='design/head/default_title'\"",
                 ['interactive' => false]
@@ -108,9 +107,9 @@ class ResetCommandTest extends \TeamNeusta\Magedev\Test\TestCase
         $input = m::mock('\Symfony\Component\Console\Input\InputInterface');
         $output = m::mock('\Symfony\Component\Console\Output\ConsoleOutput[]', ['writeln']);
         $config = m::mock('\TeamNeusta\Magedev\Runtime\Config');
-        $config->shouldReceive('getMagentoVersion')->andReturn("1");
+        $config->shouldReceive('getMagentoVersion')->andReturn('1');
         $fileHelper = m::mock('\TeamNeusta\Magedev\Runtime\Helper\FileHelper');
-        $fileHelper->shouldReceive('findPath')->with("var/data/magento1/config.yml");
+        $fileHelper->shouldReceive('findPath')->with('var/data/magento1/config.yml');
         $fileHelper->shouldReceive('fileExists');
         $dockerService = m::mock('\TeamNeusta\Magedev\Services\DockerService');
         $command = new ResetCommand(

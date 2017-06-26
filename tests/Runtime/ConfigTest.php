@@ -11,11 +11,11 @@
 
 namespace TeamNeusta\Magedev\Test\Runtime;
 
-use \Mockery as m;
+use Mockery as m;
 use TeamNeusta\Magedev\Runtime\Config;
 
 /**
- * Class: ConfigTest
+ * Class: ConfigTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -30,10 +30,10 @@ class ConfigTest extends \TeamNeusta\Magedev\Test\TestCase
         $config = new Config($input, $fileHelper);
         try {
             $config->getMagentoVersion();
-            $this->fail("Excepted load of config would fail");
+            $this->fail('Excepted load of config would fail');
         } catch (\Exception $e) {
-            $projectConfigFile = getcwd() . "/magedev.json";
-            $this->assertEquals("it seems this is not a magento project I can handle: ".$projectConfigFile." file was not found",$e->getMessage());
+            $projectConfigFile = getcwd().'/magedev.json';
+            $this->assertEquals('it seems this is not a magento project I can handle: '.$projectConfigFile.' file was not found', $e->getMessage());
         }
     }
 
@@ -47,9 +47,9 @@ class ConfigTest extends \TeamNeusta\Magedev\Test\TestCase
         $fileHelper = m::mock(
             '\TeamNeusta\Magedev\Runtime\Helper\FileHelper',
             [
-                "findPath" => "/home/user/path/magedev.json",
-                "fileExists" => true,
-                "read" => $fileContent
+                'findPath' => '/home/user/path/magedev.json',
+                'fileExists' => true,
+                'read' => $fileContent,
             ]
         )->makePartial();
         $config = new Config($input, $fileHelper);
@@ -66,9 +66,9 @@ class ConfigTest extends \TeamNeusta\Magedev\Test\TestCase
         $fileHelper = m::mock(
             '\TeamNeusta\Magedev\Runtime\Helper\FileHelper',
             [
-                "findPath" => "/home/user/path/magedev.json",
-                "fileExists" => true,
-                "read" => $fileContent
+                'findPath' => '/home/user/path/magedev.json',
+                'fileExists' => true,
+                'read' => $fileContent,
             ]
         )->makePartial();
         $config = new Config($input, $fileHelper);
@@ -86,20 +86,17 @@ class ConfigTest extends \TeamNeusta\Magedev\Test\TestCase
         $fileHelper = m::mock(
             '\TeamNeusta\Magedev\Runtime\Helper\FileHelper',
             [
-                "findPath" => "/home/user/path/magedev.json",
-                "fileExists" => true,
-                "read" => $fileContent
+                'findPath' => '/home/user/path/magedev.json',
+                'fileExists' => true,
+                'read' => $fileContent,
             ]
         )->makePartial();
         $config = new Config($input, $fileHelper);
         try {
             $config->getMagentoVersion();
-            $this->fail("Magento version 100 should fail here");
+            $this->fail('Magento version 100 should fail here');
         } catch (\Exception $e) {
-            $this->assertEquals("supplied magento version 100 not available",$e->getMessage());
-
-
+            $this->assertEquals('supplied magento version 100 not available', $e->getMessage());
         }
     }
-
 }

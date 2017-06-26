@@ -20,7 +20,7 @@ use TeamNeusta\Magedev\Services\DockerService;
 use TeamNeusta\Magedev\Services\ShellService;
 
 /**
- * Class: ImportCommand
+ * Class: ImportCommand.
  *
  * @see AbstractCommand
  */
@@ -42,10 +42,10 @@ class ImportCommand extends AbstractCommand
     protected $dockerService;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config $config
-     * @param \TeamNeusta\Magedev\Services\ShellService $shellService
+     * @param \TeamNeusta\Magedev\Runtime\Config         $config
+     * @param \TeamNeusta\Magedev\Services\ShellService  $shellService
      * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
      */
     public function __construct(
@@ -60,36 +60,35 @@ class ImportCommand extends AbstractCommand
     }
 
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("db:import");
-        $this->setDescription("import db");
+        $this->setName('db:import');
+        $this->setDescription('import db');
         $this->addArgument('dump_file', InputArgument::OPTIONAL, 'path to sql dump');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         if ($this->config->optionExists('dump_file')) {
             $dumpFile = $this->config->get('dump_file');
-            $sourceFolder = $this->config->get("source_folder");
+            $sourceFolder = $this->config->get('source_folder');
 
             // escape whitespaces for command
-            $dumpFile = str_replace(" ", "\\ ", $dumpFile);
+            $dumpFile = str_replace(' ', '\\ ', $dumpFile);
 
-            if (!file_exists(getcwd() . $dumpFile)) {
+            if (!file_exists(getcwd().$dumpFile)) {
                 // copy it to project folder
-                $this->shellService->execute("cp ".$dumpFile." " . $sourceFolder);
-                $this->dockerService->execute("mysql < ".basename($dumpFile));
+                $this->shellService->execute('cp '.$dumpFile.' '.$sourceFolder);
+                $this->dockerService->execute('mysql < '.basename($dumpFile));
             }
-
         }
         parent::execute($input, $output);
     }

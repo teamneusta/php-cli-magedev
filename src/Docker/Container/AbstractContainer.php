@@ -14,27 +14,36 @@ namespace TeamNeusta\Magedev\Docker\Container;
 use Docker\API\Model\ContainerConfig;
 use Docker\API\Model\EndpointSettings;
 use Docker\API\Model\HostConfig;
-use Docker\API\Model\NetworkCreateConfig;
 use Docker\API\Model\NetworkingConfig;
 use Docker\API\Model\PortBinding;
 
 /**
- * Class: AbstractContainer
+ * Class: AbstractContainer.
  *
  * @see DockerContainer
  * @abstract
  */
-abstract class AbstractContainer extends DockerContainer
+abstract class AbstractContainer
 {
     /**
-     * @var \Docker\API\Model\HostConfig
+     * @var \TeamNeusta\Magedev\Runtime\Config
      */
-    protected $hostConfig;
+    protected $config;
 
     /**
-     * @var Docker\API\Model\EndpointSettings
+     * @var \TeamNeusta\Magedev\Docker\Image\Factory
      */
-    protected $endpointSettings;
+    protected $imageFactory;
+
+    /**
+     * @var \TeamNeusta\Magedev\Docker\Helper\NameBuilder
+     */
+    protected $nameBuilder;
+
+    /**
+     * @var string[]
+     */
+    protected $binds;
 
     /**
      * @var \ArrayObject
@@ -42,64 +51,83 @@ abstract class AbstractContainer extends DockerContainer
     protected $mapPorts;
 
     /**
-     * @var Array
+     * @var array
      */
     protected $links = [];
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Docker\Context $context
+     * @param \TeamNeusta\Magedev\Runtime\Config            $config
+     * @param \TeamNeusta\Magedev\Docker\Image\Factory      $imageFactory
+     * @param \TeamNeusta\Magedev\Docker\Helper\NameBuilder $nameBuilder
      */
     public function __construct(
-        \TeamNeusta\Magedev\Docker\Context $context
+        \TeamNeusta\Magedev\Runtime\Config $config,
+        \TeamNeusta\Magedev\Docker\Image\Factory $imageFactory,
+        \TeamNeusta\Magedev\Docker\Helper\NameBuilder $nameBuilder
     ) {
-        parent::__construct($context);
-        $this->hostConfig = new HostConfig();
-        $this->endpointSettings = new EndpointSettings();
+        $this->config = $config;
+        $this->imageFactory = $imageFactory;
+        $this->nameBuilder = $nameBuilder;
         $this->mapPorts = new \ArrayObject();
+        $this->binds = [];
+        $this->links = [];
     }
 
     /**
-     * getName
+     * getName.
+     *
      * @return containerName
      */
-    public abstract function getName();
+    abstract public function getName();
 
     /**
-     * getBuildName
+     * getImage.
+     *
+     * @return TeamNeusta\Magedev\Docker\Container | string
+     */
+    abstract public function getImage();
+
+    /**
+     * getBuildName.
+     *
      * @return project specifc container name
      */
     public function getBuildName()
     {
-        return $this->context->buildName(
+        return $this->nameBuilder->buildName(
              $this->getName()
         );
     }
 
     /**
-     * getConfig
+     * getConfig.
+     *
      * @return \Docker\API\Model\ContainerConfig
      */
     public function getConfig()
     {
         $config = new ContainerConfig();
-        $this->endpointSettings->setLinks($this->links);
-        $this->endpointSettings->setNetworkID($this->context->getConfig()->getNetworkId());
+        $endpointSettings = new EndpointSettings();
+        $endpointSettings->setLinks($this->links);
+        $endpointSettings->setNetworkID($this->config->get('network_id'));
 
         // TODO: make this configurable?
-        $networkName = "magedev_default";
+        $networkName = 'magedev_default';
 
         $networkingConfig = new NetworkingConfig();
-        $networkingConfig->setEndpointsConfig(new \ArrayObject([$networkName => $this->endpointSettings]));
+        $networkingConfig->setEndpointsConfig(new \ArrayObject([$networkName => $endpointSettings]));
 
         $config->setNetworkingConfig($networkingConfig);
-        $this->hostConfig->setPortBindings($this->mapPorts);
-        $config->setHostConfig($this->hostConfig);
+        $hostConfig = new HostConfig();
+        $hostConfig->setBinds($this->binds);
+        $hostConfig->setPortBindings($this->mapPorts);
+        $config->setHostConfig($hostConfig);
 
         $env = [];
-        foreach ($this->context->getEnvVars() as $key => $value) {
-            $env[] = $key . "=" . $value;
+        foreach ($this->config->get('env_vars') as $key => $value) {
+            $env[] = $key.'='.$value;
         }
 
         $config->setEnv($env);
@@ -108,7 +136,7 @@ abstract class AbstractContainer extends DockerContainer
     }
 
     /**
-     * addLink
+     * addLink.
      *
      * @param string $link
      */
@@ -118,7 +146,7 @@ abstract class AbstractContainer extends DockerContainer
     }
 
     /**
-     * forwardPort
+     * forwardPort.
      *
      * @param string $srcPort
      * @param string $dstPort
@@ -126,18 +154,18 @@ abstract class AbstractContainer extends DockerContainer
     public function forwardPort($srcPort, $dstPort)
     {
         $hostPortBinding = new PortBinding();
-        $hostPortBinding->setHostPort((string)$dstPort);
+        $hostPortBinding->setHostPort((string) $dstPort);
         $hostPortBinding->setHostIp('0.0.0.0');
-        $this->mapPorts[$srcPort . '/tcp'] = [$hostPortBinding];
+        $this->mapPorts[$srcPort.'/tcp'] = [$hostPortBinding];
     }
 
     /**
-     * setBinds
+     * setBinds.
      *
      * @param string[] $binds
      */
     public function setBinds($binds = [])
     {
-        $this->hostConfig->setBinds($binds);
+        $this->binds = $binds;
     }
 }

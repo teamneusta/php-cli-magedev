@@ -11,11 +11,11 @@
 
 namespace TeamNeusta\Magedev\Test\Commands\Docker;
 
-use \Mockery as m;
+use Mockery as m;
 use TeamNeusta\Magedev\Commands\Docker\SshCommand;
 
 /**
- * Class: SshCommandTest
+ * Class: SshCommandTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -27,7 +27,7 @@ class SshCommandTest extends \TeamNeusta\Magedev\Test\TestCase
         $output = m::mock('\Symfony\Component\Console\Output\ConsoleOutput[]', ['writeln']);
 
         $dockerService = m::mock('\TeamNeusta\Magedev\Services\DockerService');
-        $dockerService->shouldReceive("execute")->with("bash");
+        $dockerService->shouldReceive('execute')->with('bash');
         $command = new SshCommand($dockerService);
         $command->execute($input, $output);
     }

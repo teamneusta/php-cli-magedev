@@ -11,11 +11,11 @@
 
 namespace TeamNeusta\Magedev\Test\Commands\Magento;
 
-use \Mockery as m;
+use Mockery as m;
 use TeamNeusta\Magedev\Commands\Magento\CacheCleanCommand;
 
 /**
- * Class: CacheCleanCommandTest
+ * Class: CacheCleanCommandTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -30,12 +30,12 @@ class CacheCleanCommandTest extends \TeamNeusta\Magedev\Test\TestCase
         $command->shouldReceive('execute');
 
         $config = m::mock('\TeamNeusta\Magedev\Runtime\Config');
-        $config->shouldReceive('getMagentoVersion')->andReturn("2");
+        $config->shouldReceive('getMagentoVersion')->andReturn('2');
 
         $magerunHelper = m::mock('\TeamNeusta\Magedev\Runtime\Helper\MagerunHelper');
 
         $dockerService = m::mock('\TeamNeusta\Magedev\Services\DockerService');
-        $dockerService->shouldReceive('execute')->with("bin/magento cache:clean");
+        $dockerService->shouldReceive('execute')->with('bin/magento cache:clean');
 
         $command = new CacheCleanCommand($config, $magerunHelper, $dockerService);
         $command->execute($input, $output);
@@ -50,7 +50,7 @@ class CacheCleanCommandTest extends \TeamNeusta\Magedev\Test\TestCase
         $command->shouldReceive('execute');
 
         $config = m::mock('\TeamNeusta\Magedev\Runtime\Config');
-        $config->shouldReceive('getMagentoVersion')->andReturn("1");
+        $config->shouldReceive('getMagentoVersion')->andReturn('1');
 
         $magerunHelper = m::mock('\TeamNeusta\Magedev\Runtime\Helper\MagerunHelper');
         $magerunHelper->shouldReceive('magerunCommand')->with('cache:clean');
@@ -59,6 +59,5 @@ class CacheCleanCommandTest extends \TeamNeusta\Magedev\Test\TestCase
 
         $command = new CacheCleanCommand($config, $magerunHelper, $dockerService);
         $command->execute($input, $output);
-
     }
 }

@@ -11,111 +11,131 @@
 
 namespace TeamNeusta\Magedev\Docker;
 
-use Docker\API\Model\BuildInfo;
-use Docker\API\Model\Event;
-use Docker\API\Model\ExecConfig;
-use Docker\API\Model\ProcessConfig;
-use Docker\Docker;
-use Docker\Manager\ImageManager;
-use Docker\Manager\MiscManager;
-use TeamNeusta\Magedev\Docker\Container\Collection as ContainerCollection;
-
 /**
- * Class Manager
+ * Class Manager.
  */
 class Manager
 {
     /**
-     * @var \Docker\Docker
+     * @var \Symfony\Component\Console\Output\OutputInterface
      */
-    protected $docker;
+    protected $output;
 
     /**
-     * @var \Docker\Manager\ContainerManager
+     * @var \TeamNeusta\Magedev\Docker\Api\ContainerFactory
      */
-    protected $containerManager;
+    protected $containerApiFactory;
 
     /**
-     * @var \Docker\Manager\ImageManager
+     * @var \TeamNeusta\Magedev\Docker\Api\ImageFactory
      */
-    protected $imageManager;
+    protected $imageApiFactory;
 
     /**
-     * @var \TeamNeusta\Magedev\Docker\Container\Collection
+     * @var array
      */
-    protected $containerCollection;
+    protected $containers = [];
 
     /**
-     * __construct
+     * __construct.
      */
-    public function __construct(Docker $docker = null)
-    {
-        if (!$this->docker) {
-            $this->docker = new Docker();
-        }
-        $this->containerCollection = new ContainerCollection($this);
-        $this->containerManager = $this->docker->getContainerManager();
-        $this->imageManager = $this->docker->getImageManager();
+    public function __construct(
+        \Symfony\Component\Console\Output\OutputInterface $output,
+        \TeamNeusta\Magedev\Docker\Api\ContainerFactory $containerApiFactory,
+        \TeamNeusta\Magedev\Docker\Api\ImageFactory $imageApiFactory
+
+    ) {
+        $this->output = $output;
+        $this->containerApiFactory = $containerApiFactory;
+        $this->imageApiFactory = $imageApiFactory;
+        $this->containers = [];
     }
 
     /**
-     * containers
-     * @return \TeamNeusta\Magedev\Docker\Container\Collection
+     * addContainer.
+     *
+     * @param \TeamNeusta\Magedev\Docker\Container\AbstractContainer $container
      */
-    public function containers()
+    public function addContainer(\TeamNeusta\Magedev\Docker\Container\AbstractContainer $container)
     {
-        return $this->containerCollection;
+        $this->containers[] = $container;
     }
 
     /**
-     * startContainers
+     * startContainers.
      */
     public function startContainers()
     {
-        $this->containerCollection->eachContainer(
-            function ($container) {
-                $container->start();
-            }
-        );
+        foreach ($this->containers as $container) {
+            $this->output->writeln('<info>starting container '.$container->getBuildName().'</info>');
+            $this->containerApiFactory->create($container)->start();
+        }
     }
 
     /**
-     * stopContainers
+     * stopContainers.
      */
     public function stopContainers()
     {
-        $this->containerCollection->eachContainer(
-            function ($container) {
-                $container->stop();
-            }
-        );
+        foreach ($this->containers as $container) {
+            $this->containerApiFactory->create($container)->stop();
+        }
     }
 
     /**
-     * rebuildContainers
+     * rebuildContainers.
      */
     public function rebuildContainers()
     {
-        $this->containerCollection->eachContainer(
-            function ($container) {
-                $container->destroy();
-                if ($container->getImage() instanceof \Neusta\Magedev\Docker\Image\DockerImage) {
-                    $container->getImage()->destroy();
-                }
-                $container->build();
+        foreach ($this->containers as $container) {
+            $containerApi = $this->containerApiFactory->create($container);
+            $containerApi->destroy();
+            if ($container->getImage() instanceof \TeamNeusta\Magedev\Docker\Image\AbstractImage) {
+                $this->imageApiFactory->create($container->getImage())->destroy();
             }
-        );
+            $containerApi->build();
+        }
     }
 
     /**
-     * destroyContainers
+     * destroyContainers.
      */
     public function destroyContainers()
     {
-        $this->containerCollection->eachContainer(
-            function ($container) {
-                $container->destroy();
+        foreach ($this->containers as $container) {
+            $this->containerApiFactory->create($container)->destroy();
+        }
+    }
+
+    /**
+     * findContainer.
+     *
+     * @param string $name
+     *
+     * @return \TeamNeusta\Magedev\Docker\Container\AbstractContainer | null
+     */
+    public function findContainer($name)
+    {
+        foreach ($this->containers as $container) {
+            if ($container->getName() == $name || $container->getBuildName() == $name) {
+                return $container;
             }
-        );
+        }
+
+        return;
+    }
+
+    /**
+     * isRunning.
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function isRunning($name)
+    {
+        $container = $this->findContainer($name);
+
+        return $this->containerApiFactory->create($container)->isRunning();
     }
 }

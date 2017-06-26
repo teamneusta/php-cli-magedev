@@ -18,7 +18,7 @@ use TeamNeusta\Magedev\Runtime\Config;
 use TeamNeusta\Magedev\Services\DockerService;
 
 /**
- * Class: PermissionsCommand
+ * Class: PermissionsCommand.
  *
  * @see AbstractCommand
  */
@@ -35,9 +35,9 @@ class PermissionsCommand extends AbstractCommand
     protected $dockerService;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Runtime\Config         $config
      * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
      */
     public function __construct(
@@ -50,52 +50,52 @@ class PermissionsCommand extends AbstractCommand
     }
 
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("init:permissions");
-        $this->setDescription("set file and folder permissions for magento");
+        $this->setName('init:permissions');
+        $this->setDescription('set file and folder permissions for magento');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $sourceFolder = $this->config->get("source_folder");
+        $sourceFolder = $this->config->get('source_folder');
 
         // use current folder, if it is the current one
         if (empty($sourceFolder)) {
-            $sourceFolder = ".";
+            $sourceFolder = '.';
         }
 
         $commands = [
-            "chown -R www-data:users /var/www/html",
-            "chown -R www-data:users /var/www/.composer",
-            "chown -R www-data:users /var/www/.ssh",
-            "chown -R www-data:users /var/www/modules",
-            "chown -R www-data:users /var/www/composer-cache",
+            'chown -R www-data:users /var/www/html',
+            'chown -R www-data:users /var/www/.composer',
+            'chown -R www-data:users /var/www/.ssh',
+            'chown -R www-data:users /var/www/modules',
+            'chown -R www-data:users /var/www/composer-cache',
             // TODO: more fine grained permissions
-            "cd /var/www/html && chmod -R 775 ".$sourceFolder
+            'cd /var/www/html && chmod -R 775 '.$sourceFolder,
         ];
 
         foreach ($commands as $cmd) {
             $this->dockerService->execute(
                 $cmd,
                 [
-                  'user' => 'root'
+                  'user' => 'root',
                 ]
             );
         }
         $this->dockerService->execute(
-            "usermod -u ".getmyuid()." mysql",
+            'usermod -u '.getmyuid().' mysql',
             [
                 'user' => 'root',
-                'container' => 'mysql'
+                'container' => 'mysql',
             ]
         );
     }

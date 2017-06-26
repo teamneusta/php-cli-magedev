@@ -14,12 +14,24 @@ namespace TeamNeusta\Magedev\Docker\Image\Repository;
 use TeamNeusta\Magedev\Docker\Image\AbstractImage;
 
 /**
- * Class Mysql
+ * Class Mysql.
  */
 class Mysql extends AbstractImage
 {
     /**
-     * configure
+     * getBuildName.
+     *
+     * @return string
+     */
+    public function getBuildName()
+    {
+        return $this->nameBuilder->buildName(
+             $this->getName()
+        );
+    }
+
+    /**
+     * configure.
      */
     public function configure()
     {
@@ -27,7 +39,7 @@ class Mysql extends AbstractImage
         $this->from('mysql:5.6');
 
         $uid = getmyuid();
-        $this->run("usermod -u " . $uid . " mysql");
+        $this->run('usermod -u '.$uid.' mysql');
 
         // addresses permission error, cannot bind socket
         $this->run("chmod -R 777 /var/run/mysqld/");

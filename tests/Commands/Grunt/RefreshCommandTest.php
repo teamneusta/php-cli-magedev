@@ -11,11 +11,11 @@
 
 namespace TeamNeusta\Magedev\Test\Commands\Grunt;
 
-use \Mockery as m;
+use Mockery as m;
 use TeamNeusta\Magedev\Commands\Grunt\RefreshCommand;
 
 /**
- * Class: RefreshCommandTest
+ * Class: RefreshCommandTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -27,10 +27,10 @@ class RefreshCommandTest extends \TeamNeusta\Magedev\Test\TestCase
         $output = m::mock('\Symfony\Component\Console\Output\ConsoleOutput[]', ['writeln']);
 
         $config = m::mock('\TeamNeusta\Magedev\Runtime\Config');
-        $config->shouldReceive('getMagentoVersion')->andReturn("2");
+        $config->shouldReceive('getMagentoVersion')->andReturn('2');
 
         $dockerService = m::mock('\TeamNeusta\Magedev\Services\DockerService');
-        $dockerService->shouldReceive("execute")->with("/usr/local/bin/grunt refresh");
+        $dockerService->shouldReceive('execute')->with('/usr/local/bin/grunt refresh');
         $command = new RefreshCommand(
             $config,
             $dockerService

@@ -14,14 +14,14 @@ namespace TeamNeusta\Magedev\Docker\Container\Repository;
 use TeamNeusta\Magedev\Docker\Container\AbstractContainer;
 
 /**
- * Class: Main
+ * Class: Main.
  *
  * @see AbstractContainer
  */
 class Main extends AbstractContainer
 {
     /**
-     * getName
+     * getName.
      */
     public function getName()
     {
@@ -29,40 +29,33 @@ class Main extends AbstractContainer
     }
 
     /**
-     * getImage
+     * getImage.
      */
     public function getImage()
     {
-        return new \TeamNeusta\Magedev\Docker\Image\Repository\Main($this->context);
+        return $this->imageFactory->create('Main');
     }
 
     /**
-     * getBuildName
-     */
-    public function getBuildName()
-    {
-        // name for this image is project dependend
-        return $this->context->buildName(
-            $this->getName()
-        );
-    }
-
-    /**
-     * getConfig
+     * getConfig.
      */
     public function getConfig()
     {
-        $homePath    = $this->context->getConfig()->getHomePath();
-        $projectPath = $this->context->getConfig()->getProjectPath();
+        $homePath = $this->config->get('home_path');
+        $projectPath = $this->config->get('project_path');
+
+        /* $homePath    = $this->context->getConfig()->getHomePath(); */
+        /* $projectPath = $this->context->getConfig()->getProjectPath(); */
 
         // TODO: make this configurable ?
         $this->setBinds([
-            $projectPath  . ':/var/www/html:rw',
-            $homePath     . '/.composer:/var/www/.composer:rw', // TODO: check for existence?
-            $homePath     . '/.ssh:/var/www/.ssh:rw'
+            $projectPath.':/var/www/html:rw',
+            $homePath.'/.composer:/var/www/.composer:rw', // TODO: check for existence?
+            $homePath.'/.ssh:/var/www/.ssh:rw',
         ]);
 
         $config = parent::getConfig();
+
         return $config;
     }
 }

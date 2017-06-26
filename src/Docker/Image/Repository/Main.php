@@ -14,43 +14,75 @@ namespace TeamNeusta\Magedev\Docker\Image\Repository;
 use TeamNeusta\Magedev\Docker\Image\AbstractImage;
 
 /**
- * Class Main
+ * Class Main.
  */
 class Main extends AbstractImage
 {
     /**
-     * configure
+     * getBuildName.
+     *
+     * @return string
+     */
+    public function getBuildName()
+    {
+        return $this->nameBuilder->buildName(
+             $this->getName()
+        );
+    }
+
+    /**
+     * configure.
      */
     public function configure()
     {
-        $this->name("main");
+        $this->name('main');
+
+        $magentoVersion = $this->config->getMagentoVersion();
+
+        $buildStrategy = 'build';
+        $dockerConfig = $this->config->get('docker');
+        if (array_key_exists('build_strategy', $dockerConfig)) {
+            $buildStrategy = $dockerConfig['build_strategy'];
+        }
 
         // PHP Image is selected based on magento version
-        $magentoVersion = $this->context->getConfig()->getMagentoVersion();
-
-        if ($this->context->getConfig()->getMagentoVersion() == "2") {
-            $this->from(new \TeamNeusta\Magedev\Docker\Image\Repository\Php7($this->context));
+        if ($magentoVersion == '2') {
+            if ($buildStrategy == 'pull') {
+                $this->from('bleers/magedev-php7:1.0');
+            }
+            if ($buildStrategy == 'build') {
+                $this->from($this->imageFactory->create('Php7'));
+            }
         }
 
-        if ($this->context->getConfig()->getMagentoVersion() == "1") {
-            $this->from(new \TeamNeusta\Magedev\Docker\Image\Repository\Php5($this->context));
+        if ($magentoVersion == '1') {
+            if ($buildStrategy == 'pull') {
+                $this->from('bleers/magedev-php5:1.0');
+            }
+            if ($buildStrategy == 'build') {
+                $this->from($this->imageFactory->create('Php5'));
+            }
         }
+
+        $uid = getmyuid();
+        $this->run("usermod -u " . $uid . " www-data");
 
         // TODO: have something like a simple template engine to replace vars
         // like DOCUMENT_ROOT AND $GATEWAY ?
 
-        $documentRoot = $this->context->getConfig()->getDocumentRootPath();
-        $vhostConfig = $this->context->getFileHelper()->read("var/Docker/main/000-default.conf");
-        $vhostConfig = str_replace("\$DOCUMENT_ROOT", $documentRoot, $vhostConfig);
+        $documentRoot = $this->config->get('document_root');
+        $vhostConfig = $this->fileHelper->read('var/Docker/main/000-default.conf');
+        $vhostConfig = str_replace('$DOCUMENT_ROOT', $documentRoot, $vhostConfig);
 
-        $this->add("/etc/apache2/sites-available/000-default.conf", $vhostConfig);
-        $this->add("/etc/apache2/sites-enabled/000-default.conf", $vhostConfig);
+        $this->add('/etc/apache2/sites-available/000-default.conf', $vhostConfig);
+        $this->add('/etc/apache2/sites-enabled/000-default.conf', $vhostConfig);
 
         // $GATEWAY
-        $gatewayIp = $this->context->getConfig()->getGateway();
+        $gatewayIp = $this->config->get('gateway');
         if (empty($gatewayIp)) {
-            throw new \Exception("no gateway ip found");
+            throw new \Exception('no gateway ip found');
         }
+
         $phpIni = $this->context->getFileHelper()->read("var/Docker/main/php.ini");
         $phpIni = str_replace("\$GATEWAY", $gatewayIp, $phpIni);
         $this->add("/usr/local/etc/php/php.ini", $phpIni);
