@@ -170,9 +170,19 @@ class DockerService
         return $this->dockerManager;
     }
 
+    /**
+     * getConfig
+     * @return \TeamNeusta\Magedev\Runtime\Config
+     *
+     */
+    public function getConfig()
+    {
+        $this->initDocker();
+        return $this->config;
+    }
+
     protected function applyDockerSettingsToConfig()
     {
-        /* $dockerConfig = new \TeamNeusta\Magedev\Docker\Config(); */
         $this->config->set('project_name', basename(getcwd()));
         $this->config->set('project_path', getcwd());
         $this->config->set('home_path', $this->fileHelper->expandPath('~'));

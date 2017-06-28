@@ -83,7 +83,7 @@ class Main extends AbstractImage
             throw new \Exception('no gateway ip found');
         }
 
-        $phpIni = $this->context->getFileHelper()->read("var/Docker/main/php.ini");
+        $phpIni = $this->fileHelper->read("var/Docker/main/php.ini");
         $phpIni = str_replace("\$GATEWAY", $gatewayIp, $phpIni);
         $this->add("/usr/local/etc/php/php.ini", $phpIni);
         $this->run("chmod 775 /usr/local/etc/php/php.ini"); // for www-data to read it
