@@ -120,6 +120,11 @@ class DockerService
             foreach ($dockerConfig['containers'] as $containerName) {
                 $containers[] = $this->containerFactory->create($containerName);
             }
+
+            foreach ($dockerConfig['containers'] as $containerName) {
+                $containerClass = "\\TeamNeusta\\Magedev\\Docker\\Container\\Repository\\" . $containerName;
+                $containers[] = new $containerClass($context);
+            }
         }
 
         if (sizeof($containers) == 0) {

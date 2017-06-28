@@ -9,8 +9,13 @@
  *
  * @license https://opensource.org/licenses/mit-license MIT License
  */
-require __DIR__ . '/../vendor/autoload.php';
-$container = require(__DIR__ . '/../src/Runtime/Container.php');
+$loader = require realpath(__DIR__ . '/../vendor/autoload.php');
 
+$src = getcwd() . "/.magedev/Docker";
+$loader->addPsr4('TeamNeusta\\Magedev\\Docker\\Container\\Repository\\', $src);
+$loader->register();
+$loader->setUseIncludePath(true);
+
+$container = require(__DIR__ . '/../src/Runtime/Container.php');
 $application = $container['application'];
 $application->run($container['console.input'], $container['console.output']);
