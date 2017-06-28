@@ -25,6 +25,7 @@
     },
     "autoload": {
         "psr-4" : {
+            "TeamNeusta\\Magedev\\Docker\\" : "src/Docker/",
             "TeamNeusta\\Magedev\\" : "src/",
             "TeamNeusta\\Magedev\\Test\\" : "tests/"
         }

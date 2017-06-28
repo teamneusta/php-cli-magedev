@@ -11,8 +11,10 @@
  */
 $loader = require realpath(__DIR__ . '/../vendor/autoload.php');
 
-$src = getcwd() . "/.magedev/Docker";
-$loader->addPsr4('TeamNeusta\\Magedev\\Docker\\Container\\Repository\\', $src);
+$src = getcwd() . "/.magedev/Docker/";
+$loader->setPsr4('TeamNeusta\\Magedev\\Docker\\', $src);
+$loader->addPsr4('TeamNeusta\\Magedev\\Docker\\', $src, true);
+
 $loader->register();
 $loader->setUseIncludePath(true);
 
