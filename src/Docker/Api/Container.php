@@ -74,7 +74,7 @@ class Container
             } catch (\Http\Client\Common\Exception\ServerErrorException $e) {
                 // TODO error handling
                 // grap logs from journalctl -u docker.service
-                echo 'failed to start '.$this->getBuildName().' with '.$e->getMessage()."\n";
+                echo 'failed to start '.$this->container->getBuildName().' with '.$e->getMessage()."\n";
             }
         }
     }

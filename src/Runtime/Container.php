@@ -60,7 +60,8 @@ $c['docker.api.container.factory'] = function ($c) {
 };
 $c['docker.api.image.factory'] = function ($c) {
     return new \TeamNeusta\Magedev\Docker\Api\ImageFactory(
-        $c['lib.docker.imageManager']
+        $c['lib.docker.imageManager'],
+        $c['console.output']
     );
 };
 

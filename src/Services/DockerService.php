@@ -65,6 +65,11 @@ class DockerService
     protected $nameBuilder;
 
     /**
+     * @var bool
+     */
+    protected $dockerInited = false;
+
+    /**
      * __construct.
      *
      * @param Config                                        $config
@@ -98,6 +103,11 @@ class DockerService
 
     protected function initDocker()
     {
+        if ($this->dockerInited) {
+            return;
+        }
+        $this->dockerInited = true;
+
         $this->applyDockerSettingsToConfig();
         $this->addEnv();
 

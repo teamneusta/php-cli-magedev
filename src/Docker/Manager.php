@@ -103,7 +103,12 @@ class Manager
     public function destroyContainers()
     {
         foreach ($this->containers as $container) {
+            $image = $container->getImage();
             $this->containerApiFactory->create($container)->destroy();
+            if ($image instanceof \TeamNeusta\Magedev\Docker\Image\AbstractImage) {
+                $image->configure();
+                $this->imageApiFactory->create($image)->destroy();
+            }
         }
     }
 
