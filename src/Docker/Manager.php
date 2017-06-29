@@ -70,6 +70,11 @@ class Manager
             $this->output->writeln('<info>starting container '.$container->getBuildName().'</info>');
             $this->containerApiFactory->create($container)->start();
         }
+        foreach ($this->containers as $container) {
+            if (!$this->isRunning($container->getBuildName())) {
+                $this->output->writeln("<fg=red>Container " . $container->getBuildName() . " failed to start...</>");
+            }
+        }
     }
 
     /**

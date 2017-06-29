@@ -127,7 +127,7 @@ class DockerService
             $dockerPorts = $dockerConfig['ports'];
         }
         if (array_key_exists('containers', $dockerConfig)) {
-            foreach ($dockerConfig['containers'] as $containerName) {
+            foreach (array_unique($dockerConfig['containers']) as $containerName) {
                 $containers[] = $this->containerFactory->create($containerName);
             }
         }
@@ -163,7 +163,9 @@ class DockerService
                 foreach ($dockerLinks[$name] as $link) {
                     // format: "containerName:alias", whereas containerName
                     // is built dynamically out of projectname
-                    $container->addLink($this->nameBuilder->buildName($link).':'.$link);
+                    $link = $this->nameBuilder->buildName($link).':'.$link;
+                    $this->debugOut("Link containers: " . $link);
+                    $container->addLink($link);
                 }
             }
 
@@ -301,6 +303,13 @@ class DockerService
         }
 
         return $this->shell->execute($cmd, $interactive);
+    }
+
+    public function debugOut($str)
+    {
+        if ($this->output->isVerbose()) {
+            $this->output->writeln($str);
+        }
     }
 
     /**
