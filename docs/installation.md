@@ -34,7 +34,7 @@ For adding autocomplete, add this line to your `.bashrc` or `.zshrc`:
 
 For using the latest dev version in this repository, first clone it and create a symlink for the executable `bin/magedev`:
 
-    git clone https://github.com/teamneusta/php-cli-magedev.git && cd php-cli-magedev
+    git clone https://github.com/teamneusta/php-cli-magedev.git && cd php-cli-magedev && git checkout develop
     composer install --no-dev
     ln -s $(pwd)/bin/magedev ~/bin/magedev
     magedev
