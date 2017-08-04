@@ -63,10 +63,11 @@ class StopServices
         $this->output->writeln('let me check if you have local services like apache or mysql running...');
 
         $apacheRunning = $this->isProcessRunning('apache2');
+        $nginxRunning = $this->isProcessRunning("nginx");
         $mysqlRunning = $this->isProcessRunning('mysqld');
         $redisRunning = $this->isProcessRunning('redis-server');
 
-        if ($apacheRunning || $mysqlRunning || $redisRunning) {
+        if ($apacheRunning || $mysqlRunning || $redisRunning || $nginxRunning) {
             $question = new ConfirmationQuestion('you have a local apache/mysql running. Should I stop it for you? [y]', false);
 
             if (!$this->questionHelper->ask($this->input, $this->output, $question)) {
@@ -75,6 +76,9 @@ class StopServices
 
             if ($apacheRunning) {
                 $this->shellService->execute('sudo service apache2 stop');
+            }
+            if ($nginxRunning) {
+                $this->shellService->execute("sudo service nginx stop");
             }
             if ($mysqlRunning) {
                 $this->shellService->execute('sudo service mysql stop');
