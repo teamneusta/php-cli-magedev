@@ -11,11 +11,10 @@
 
 namespace TeamNeusta\Magedev\Test\Commands\Init;
 
-use \Mockery as m;
-use TeamNeusta\Magedev\Commands\Init\ProjectCommand;
+use Mockery as m;
 
 /**
- * Class: ProjectCommandTest
+ * Class: ProjectCommandTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -49,8 +48,8 @@ class ProjectCommandTest extends \TeamNeusta\Magedev\Test\TestCase
         $application->shouldReceive('find')->with('init:add-host-entry')->andReturn($command);
 
         $config = m::mock('\TeamNeusta\Magedev\Runtime\Config');
-        $config->shouldReceive('optionExists')->with("domain")->andReturn(true);
-        $config->shouldReceive('get')->with("domain")->andReturn("magento2.local");
+        $config->shouldReceive('optionExists')->with('domain')->andReturn(true);
+        $config->shouldReceive('get')->with('domain')->andReturn('magento2.local');
 
         $command = m::mock("\TeamNeusta\Magedev\Commands\Init\ProjectCommand[getName,getApplication]", [$config])->makePartial();
         $command->shouldReceive('setName');

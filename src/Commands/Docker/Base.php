@@ -11,13 +11,11 @@
 
 namespace TeamNeusta\Magedev\Commands\Docker;
 
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use TeamNeusta\Magedev\Commands\AbstractCommand;
 use TeamNeusta\Magedev\Services\DockerService;
 
 /**
- * Class: Base
+ * Class: Base.
  *
  * @see AbstractCommand
  */
@@ -29,7 +27,7 @@ class Base extends AbstractCommand
     protected $dockerService;
 
     /**
-     * __construct
+     * __construct.
      *
      * @param DockerService $dockerService
      */

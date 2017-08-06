@@ -19,7 +19,7 @@ use TeamNeusta\Magedev\Runtime\Helper\MagerunHelper;
 use TeamNeusta\Magedev\Services\DockerService;
 
 /**
- * Class: DefaultAdminUserCommand
+ * Class: DefaultAdminUserCommand.
  *
  * @see AbstractCommand
  */
@@ -41,11 +41,11 @@ class DefaultAdminUserCommand extends AbstractCommand
     protected $dockerService;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Runtime\Config               $config
      * @param \TeamNeusta\Magedev\Runtime\Helper\MagerunHelper $magerunHelper
-     * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
+     * @param \TeamNeusta\Magedev\Services\DockerService       $dockerService
      */
     public function __construct(
         \TeamNeusta\Magedev\Runtime\Config $config,
@@ -59,39 +59,39 @@ class DefaultAdminUserCommand extends AbstractCommand
     }
 
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("magento:admin:default");
-        $this->setDescription("updates admin user to default credentials admin/admin123");
+        $this->setName('magento:admin:default');
+        $this->setDescription('updates admin user to default credentials admin/admin123');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $magentoVersion = $this->config->getMagentoVersion();
-        $userSettings = $this->config->get("users");
-        $adminUser = $userSettings["admin"];
+        $userSettings = $this->config->get('users');
+        $adminUser = $userSettings['admin'];
 
-        if (!$this->userExists("admin")) {
-            if ($magentoVersion == "1") {
-                $this->magerunHelper->magerunCommand("admin:user:create ".$adminUser["user"]." ".$adminUser["email"]." ".$adminUser["password"]." ".$adminUser["firstname"]." ".$adminUser["lastname"]);
+        if (!$this->userExists('admin')) {
+            if ($magentoVersion == '1') {
+                $this->magerunHelper->magerunCommand('admin:user:create '.$adminUser['user'].' '.$adminUser['email'].' '.$adminUser['password'].' '.$adminUser['firstname'].' '.$adminUser['lastname']);
             } else {
-                $this->magerunHelper->magerunCommand("admin:user:create --admin-user=".$adminUser["user"]." --admin-email=".$adminUser["email"]." --admin-password=".$adminUser["password"]." --admin-firstname=".$adminUser["firstname"]." --admin-lastname=".$adminUser["lastname"]);
+                $this->magerunHelper->magerunCommand('admin:user:create --admin-user='.$adminUser['user'].' --admin-email='.$adminUser['email'].' --admin-password='.$adminUser['password'].' --admin-firstname='.$adminUser['firstname'].' --admin-lastname='.$adminUser['lastname']);
             }
         }
 
-        $this->magerunHelper->magerunCommand("admin:user:change-password admin admin123");
+        $this->magerunHelper->magerunCommand('admin:user:change-password admin admin123');
     }
 
     /**
-     * userExists
+     * userExists.
      *
      * check if a given user is an existing magento backend user
      *
@@ -102,10 +102,10 @@ class DefaultAdminUserCommand extends AbstractCommand
         $result = $this->dockerService->execute(
             "mysql --execute \"select * from admin_user where username = '".$username."';\"",
             [
-                'interactive' => false
+                'interactive' => false,
             ]
         );
 
-        return $result != "";
+        return $result != '';
     }
 }

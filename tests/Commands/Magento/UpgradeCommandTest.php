@@ -11,11 +11,10 @@
 
 namespace TeamNeusta\Magedev\Test\Commands\Magento;
 
-use \Mockery as m;
-use TeamNeusta\Magedev\Commands\Magento\UpgradeCommand;
+use Mockery as m;
 
 /**
- * Class: UpgradeCommandTest
+ * Class: UpgradeCommandTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -35,12 +34,12 @@ class UpgradeCommandTest extends \TeamNeusta\Magedev\Test\TestCase
         $application->shouldReceive('find')->with('init:permissions')->andReturn($command);
 
         $config = m::mock('\TeamNeusta\Magedev\Runtime\Config');
-        $config->shouldReceive('getMagentoVersion')->andReturn("2");
+        $config->shouldReceive('getMagentoVersion')->andReturn('2');
 
         $magerunHelper = m::mock('\TeamNeusta\Magedev\Runtime\Helper\MagerunHelper');
 
         $dockerService = m::mock('\TeamNeusta\Magedev\Services\DockerService');
-        $dockerService->shouldReceive('execute')->with("bin/magento setup:upgrade");
+        $dockerService->shouldReceive('execute')->with('bin/magento setup:upgrade');
 
         $command = m::mock(
             "\TeamNeusta\Magedev\Commands\Magento\UpgradeCommand[getName,getApplication]",
@@ -66,10 +65,10 @@ class UpgradeCommandTest extends \TeamNeusta\Magedev\Test\TestCase
         $application->shouldReceive('find')->with('init:permissions')->andReturn($command);
 
         $config = m::mock('\TeamNeusta\Magedev\Runtime\Config');
-        $config->shouldReceive('getMagentoVersion')->andReturn("1");
+        $config->shouldReceive('getMagentoVersion')->andReturn('1');
 
         $magerunHelper = m::mock('\TeamNeusta\Magedev\Runtime\Helper\MagerunHelper');
-        $magerunHelper->shouldReceive('magerunCommand')->with("sys:setup:run");
+        $magerunHelper->shouldReceive('magerunCommand')->with('sys:setup:run');
 
         $dockerService = m::mock('\TeamNeusta\Magedev\Services\DockerService');
 
@@ -81,7 +80,5 @@ class UpgradeCommandTest extends \TeamNeusta\Magedev\Test\TestCase
         $command->shouldReceive('getApplication')->andReturn($application);
 
         $command->execute($input, $output);
-
     }
 }
-

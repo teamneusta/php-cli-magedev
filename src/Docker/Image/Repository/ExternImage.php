@@ -9,17 +9,16 @@
  * @license https://opensource.org/licenses/mit-license MIT License
  */
 
-namespace TeamNeusta\Magedev\Docker\Image;
+namespace TeamNeusta\Magedev\Docker\Image\Repository;
 
-use Docker\Context\ContextBuilder;
-use Docker\Docker;
+use TeamNeusta\Magedev\Docker\Image\AbstractImage;
 
 /**
- * Class: ExternImage
+ * Class: ExternImage.
  *
  * @see DockerImage
  */
-class ExternImage extends DockerImage
+class ExternImage extends AbstractImage
 {
     /**
      * @var string
@@ -27,18 +26,20 @@ class ExternImage extends DockerImage
     protected $buildName;
 
     /**
-     * setBuildName
+     * setBuildName.
      *
      * @param string $buildName
      */
     public function setBuildName($buildName)
     {
         $this->buildName = $buildName;
+
         return $this;
     }
 
     /**
-     * getBuildName
+     * getBuildName.
+     *
      * @return string
      */
     public function getBuildName()
@@ -47,7 +48,7 @@ class ExternImage extends DockerImage
     }
 
     /**
-     * configure
+     * configure.
      */
     public function configure()
     {

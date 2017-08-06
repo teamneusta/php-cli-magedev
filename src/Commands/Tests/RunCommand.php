@@ -18,7 +18,7 @@ use TeamNeusta\Magedev\Runtime\Config;
 use TeamNeusta\Magedev\Services\DockerService;
 
 /**
- * Class: RunCommand
+ * Class: RunCommand.
  *
  * @see AbstractCommand
  */
@@ -35,9 +35,9 @@ class RunCommand extends AbstractCommand
     protected $dockerService;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Runtime\Config         $config
      * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
      */
     public function __construct(
@@ -50,28 +50,28 @@ class RunCommand extends AbstractCommand
     }
 
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("tests:run");
-        $this->setDescription("runs tests");
+        $this->setName('tests:run');
+        $this->setDescription('runs tests');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $phpunitConfig = "/var/www/html/phpunit.xml";
-        if ($this->config->optionExists("phpunitxml_path")) {
-            $phpunitConfig = $this->config->get("phpunitxml_path");
+        $phpunitConfig = '/var/www/html/phpunit.xml';
+        if ($this->config->optionExists('phpunitxml_path')) {
+            $phpunitConfig = $this->config->get('phpunitxml_path');
         }
         $this->dockerService->execute(
-            "vendor/bin/phpunit -c " . $phpunitConfig
+            'vendor/bin/phpunit -c '.$phpunitConfig
         );
     }
 }

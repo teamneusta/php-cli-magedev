@@ -51,5 +51,11 @@ long_query_time     = 1
 ## - prevent swapping here -
 
 max_connections    = 20
-max_allowed_packet = 64M
 
+#################################################
+# fixes Error while sending QUERY packet for
+# indexer:reindex catalogsearch_fulltext see #6181
+wait_timeout=18000
+connect_timeout=18000
+delayed_insert_timeout=18000
+max_allowed_packet = 512M

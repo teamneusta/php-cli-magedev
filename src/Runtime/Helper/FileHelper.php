@@ -12,49 +12,53 @@
 namespace TeamNeusta\Magedev\Runtime\Helper;
 
 /**
- * Class FileHelper
+ * Class FileHelper.
  */
 class FileHelper
 {
     /**
-     * findPath
+     * findPath.
      *
      * @param string $relativePath
+     *
      * @return string
      */
     public function findPath($relativePath)
     {
         $searchLocations = [
-            getcwd() . '/.magedev/',
+            getcwd().'/.magedev/',
             '~/.magedev/',
-            __DIR__.'/../../../'];
+            __DIR__.'/../../../', ];
 
         foreach ($searchLocations as $basePath) {
-            $fullPath = $this->expandPath($basePath . $relativePath);
+            $fullPath = $this->expandPath($basePath.$relativePath);
             if (file_exists($fullPath) || is_dir($fullPath)) {
                 return $fullPath;
             }
         }
 
-        throw new \Exception("File " . $relativePath . " could not be resolved. Searched in " . print_r($searchLocations, true));
+        throw new \Exception('File '.$relativePath.' could not be resolved. Searched in '.print_r($searchLocations, true));
     }
 
     /**
-     * expandPath
+     * expandPath.
      *
      * file_exist cannot handle short paths like ~ for home folders
      *
      * @param string $path
+     *
      * @return string
      */
-    public function expandPath($path) {
-        return str_replace("~", getenv("HOME"), $path);
+    public function expandPath($path)
+    {
+        return str_replace('~', getenv('HOME'), $path);
     }
 
     /**
-     * read
+     * read.
      *
      * @param string $relativePath
+     *
      * @return string
      */
     public function read($relativePath)
@@ -71,13 +75,14 @@ class FileHelper
             return file_get_contents($relativePath);
         }
         /* Phar::mount('etc/quicklog.ini', 'phar://' . __FILE__ . '/etc/default_quicklog.ini'); */
-        throw new \Exception("File ".$relativePath . " could not be found");
+        throw new \Exception('File '.$relativePath.' could not be found');
     }
 
     /**
-     * fileExists
+     * fileExists.
      *
      * @param string $path
+     *
      * @return bool
      */
     public function fileExists($path)
@@ -86,7 +91,7 @@ class FileHelper
     }
 
     /**
-     * deleteFile
+     * deleteFile.
      *
      * @param string $path
      */

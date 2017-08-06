@@ -16,7 +16,7 @@ use TeamNeusta\Magedev\Docker\Container\AbstractContainer;
 class Mailcatcher extends AbstractContainer
 {
     /**
-     * getName
+     * getName.
      */
     public function getName()
     {
@@ -24,7 +24,7 @@ class Mailcatcher extends AbstractContainer
     }
 
     /**
-     * getImage
+     * getImage.
      */
     public function getImage()
     {

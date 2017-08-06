@@ -19,7 +19,7 @@ use TeamNeusta\Magedev\Runtime\Helper\MagerunHelper;
 use TeamNeusta\Magedev\Services\DockerService;
 
 /**
- * Class: UpgradeCommand
+ * Class: UpgradeCommand.
  *
  * @see AbstractCommand
  */
@@ -41,11 +41,11 @@ class UpgradeCommand extends AbstractCommand
     protected $dockerService;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Runtime\Config               $config
      * @param \TeamNeusta\Magedev\Runtime\Helper\MagerunHelper $magerunHelper
-     * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
+     * @param \TeamNeusta\Magedev\Services\DockerService       $dockerService
      */
     public function __construct(
         \TeamNeusta\Magedev\Runtime\Config $config,
@@ -59,28 +59,28 @@ class UpgradeCommand extends AbstractCommand
     }
 
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("magento:upgrade");
-        $this->setDescription("executes bin/magento setup:upgrade inside container");
+        $this->setName('magento:upgrade');
+        $this->setDescription('executes bin/magento setup:upgrade inside container');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $magentoVersion = $this->config->getMagentoVersion();
-        if ($magentoVersion == "1") {
-            $this->magerunHelper->magerunCommand("sys:setup:run");
+        if ($magentoVersion == '1') {
+            $this->magerunHelper->magerunCommand('sys:setup:run');
         }
-        if ($magentoVersion == "2") {
-            $this->dockerService->execute("bin/magento setup:upgrade");
+        if ($magentoVersion == '2') {
+            $this->dockerService->execute('bin/magento setup:upgrade');
         }
         $this->getApplication()->find('magento:cache:clean')->execute($input, $output);
         $this->getApplication()->find('magento:refresh')->execute($input, $output);

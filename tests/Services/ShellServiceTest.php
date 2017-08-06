@@ -11,12 +11,12 @@
 
 namespace TeamNeusta\Magedev\Test\Services;
 
-use \Mockery as m;
+use Mockery as m;
 use Symfony\Component\Console\Output\OutputInterface;
 use TeamNeusta\Magedev\Services\ShellService;
 
 /**
- * Class: ShellServiceTest
+ * Class: ShellServiceTest.
  *
  * @see \PHPUnit_Framework_TestCase
  */
@@ -28,13 +28,13 @@ class ShellServiceTest extends \TeamNeusta\Magedev\Test\TestCase
         $output->shouldReceive('getVerbosity')->andReturn(OutputInterface::VERBOSITY_VERBOSE);
         $output->shouldReceive('writeln')->with('execute: pwd')->times(1);
         $service = new ShellService($output);
-        $service->execute("pwd");
+        $service->execute('pwd');
     }
 
     public function testBashUsesWorkingDirectory()
     {
         $service = m::mock('\TeamNeusta\Magedev\Services\ShellService')->makePartial();
-        $service->shouldReceive("execute")->with("cd Source && bin/magento");
-        $service->wd("Source")->bash("bin/magento");
+        $service->shouldReceive('execute')->with('cd Source && bin/magento');
+        $service->wd('Source')->bash('bin/magento');
     }
 }

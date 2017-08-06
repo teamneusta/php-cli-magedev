@@ -18,7 +18,7 @@ use TeamNeusta\Magedev\Runtime\Config;
 use TeamNeusta\Magedev\Services\DockerService;
 
 /**
- * Class: KillCommand
+ * Class: KillCommand.
  *
  * @see AbstractCommand
  */
@@ -35,9 +35,9 @@ class KillCommand extends AbstractCommand
     protected $dockerService;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Runtime\Config         $config
      * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
      */
     public function __construct(
@@ -50,18 +50,18 @@ class KillCommand extends AbstractCommand
     }
 
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("grunt:kill");
-        $this->setDescription("kills grunt inside container");
+        $this->setName('grunt:kill');
+        $this->setDescription('kills grunt inside container');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
@@ -70,11 +70,11 @@ class KillCommand extends AbstractCommand
         // register shutdown, because Ctrl+C is not forwarded
         // to the container, the process will remain active
         // as a workaround use grunt:kill
-        if ($magentoVersion == "2") {
+        if ($magentoVersion == '2') {
             // this doesn work, because it is
             // interpreted on the host:
             // ->execute("kill $(pidof grunt)");
-            $this->dockerService->execute("pkill -SIGKILL grunt");
+            $this->dockerService->execute('pkill -SIGKILL grunt');
         }
     }
 }

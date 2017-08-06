@@ -9,98 +9,94 @@
  * @license https://opensource.org/licenses/mit-license MIT License
  */
 
-namespace TeamNeusta\Magedev\Docker\Image;
+namespace TeamNeusta\Magedev\Docker\Api;
 
 use Docker\API\Model\BuildInfo;
 use Docker\API\Model\CreateImageInfo;
 use Docker\Context\ContextBuilder;
-use Docker\Docker;
 use Docker\Manager\ImageManager;
 
 /**
- * Class DockerImage
+ * Class Image.
  */
-abstract class DockerImage
+class Image
 {
     /**
-     * @var \TeamNeusta\Magedev\Docker\Context
+     * @var \Docker\Manager\ImageManager
      */
-    protected $context;
+    protected $imageManager;
 
     /**
-     * @var \Docker\Context\ContextBuilder
+     * @var \TeamNeusta\Magedev\Docker\Image\AbstractImage
      */
-    protected $contextBuilder;
+    protected $image;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Docker\Context $context
+     * @param \Docker\Manager\ImageManager                   $imageManager
+     * @param \TeamNeusta\Magedev\Docker\Image\AbstractImage $image
      */
     public function __construct(
-        \TeamNeusta\Magedev\Docker\Context $context
+        \Docker\Manager\ImageManager $imageManager,
+        \TeamNeusta\Magedev\Docker\Image\AbstractImage $image
     ) {
-        $this->context = $context;
-        $this->contextBuilder = new ContextBuilder();
+        $this->imageManager = $imageManager;
+        $this->image = $image;
     }
 
     /**
-     * getBuildName
-     * @return string
-     */
-    public abstract function getBuildName();
-
-    /**
-     * configure
-     */
-    public abstract function configure();
-
-    /**
-     * exists
+     * exists.
+     *
      * @return bool
      */
     public function exists()
     {
-        $images = $this->context->getImageManager()->findAll();
+        $images = $this->imageManager->findAll();
         foreach ($images as $image) {
+            if (!$image->getRepoTags()) {
+                continue;
+            }
             foreach ($image->getRepoTags() as $tags) {
-                $nameParts = explode(":", $tags);
+                $nameParts = explode(':', $tags);
                 $name = $nameParts[0];
                 $version = $nameParts[1];
-                if ($name === $this->getBuildName()) {
+                if ($name === $this->image->getBuildName()) {
                     return true;
                 }
             }
         }
+
         return false;
     }
 
     /**
-     * build
+     * build.
      */
     public function build()
     {
-        $name = $this->getBuildName();
+        $this->image->configure();
+        $name = $this->image->getBuildName();
         if (!$this->exists()) {
-            $contextBuilder = $context = $this->getContextBuilder();
-            foreach ($this->context->getEnvVars() as $key => $value) {
-                $contextBuilder->env($key, $value);
-            }
-            $this->configure();
+            $contextBuilder = $this->image->getContextBuilder();
+            // TODO: move this somewhere else
+            /* foreach ($this->context->getEnvVars() as $key => $value) { */
+            /*     $contextBuilder->env($key, $value); */
+            /* } */
             $context = $contextBuilder->getContext();
-            $buildStream = $this->context->getImageManager()->build($context->read(), [
-                't' => $this->getBuildName(),
+            $buildStream = $this->imageManager->build($context->read(), [
+                't' => $this->image->getBuildName(),
                 'rm' => true,
-                'nocache' => false
+                'nocache' => false,
             ], ImageManager::FETCH_STREAM);
 
             $buildStream->onFrame(function (BuildInfo $buildInfo) {
                 $status = $buildInfo->getStream();
                 $progress = $buildInfo->getProgress();
-                if ($status != "") {
-                    echo $status . "\n";
-                } elseif ($progress != "") {
-                    echo $progress . "\n";
+                if ($status != '') {
+                    echo $status."\n";
+                } elseif ($progress != '') {
+                    echo $progress."\n";
                 }
             });
             $buildStream->wait();
@@ -108,27 +104,27 @@ abstract class DockerImage
     }
 
     /**
-     * pull
+     * pull.
      */
     public function pull()
     {
-        $name = $this->getBuildName();
+        $name = $this->image->getBuildName();
         if (!$this->exists()) {
-            $buildStream = $this->context->getImageManager()->create(
+            $buildStream = $this->imageManager->create(
                 null,
                 [
-                  'fromImage' => $name
+                  'fromImage' => $name,
                 ],
                 ImageManager::FETCH_STREAM);
             $buildStream->onFrame(function (CreateImageInfo $info) {
-                echo $info->getProgress() . "\n";
+                echo $info->getProgress()."\n";
             });
             $buildStream->wait();
         }
     }
 
     /**
-     * destroy
+     * destroy.
      */
     public function destroy()
     {
@@ -136,7 +132,8 @@ abstract class DockerImage
     }
 
     /**
-     * getContextBuilder
+     * getContextBuilder.
+     *
      * @return \Docker\Context\ContextBuilder
      */
     public function getContextBuilder()

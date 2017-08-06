@@ -15,25 +15,25 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class: BuildCommand
+ * Class: BuildCommand.
  *
  * @see AbstractCommand
  */
 class BuildCommand extends Base
 {
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("docker:build");
-        $this->setDescription("build docker container");
+        $this->setName('docker:build');
+        $this->setDescription('build docker container');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)

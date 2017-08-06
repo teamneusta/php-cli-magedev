@@ -15,7 +15,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use TeamNeusta\Magedev\Runtime\Helper\FileHelper;
 
 /**
- * Class Config
+ * Class Config.
  */
 class Config
 {
@@ -30,19 +30,19 @@ class Config
     protected $fileHelper;
 
     /**
-     * @var Array
+     * @var array
      */
     protected $configData;
 
     /**
-     * isLoaded
+     * isLoaded.
      *
      * @var bool
      */
     protected $isLoaded;
 
     /**
-     * __construct
+     * __construct.
      *
      * @param Runtime $runtime
      */
@@ -52,65 +52,70 @@ class Config
     ) {
         $this->input = $input;
         $this->fileHelper = $fileHelper;
+        $this->configData = [];
     }
 
     /**
-     * load
+     * load.
      */
     public function load()
     {
         $this->configData = $this->loadConfiguration();
+        $this->isLoaded = true;
     }
 
     /**
-     * loadConfiguration
+     * loadConfiguration.
      *
      * @param FileHelper $fileHelper
      */
     protected function loadConfiguration()
     {
-        $projectConfigFile = getcwd() . "/magedev.json";
-        $defaultConfigFile = $this->fileHelper->findPath("var/config/magedev.json");
+        $projectConfigFile = getcwd().'/magedev.json';
+        $defaultConfigFile = $this->fileHelper->findPath('var/config/magedev.json');
 
         if ($this->fileHelper->fileExists($projectConfigFile)) {
             $projectConfig = $this->loadConfigFile($projectConfigFile);
             $defaultConfig = $this->loadConfigFile($defaultConfigFile);
             $homeConfig = [];
 
-            $homeConfigFile = $this->fileHelper->expandPath("~") . "/.magedev.json";
+            $homeConfigFile = $this->fileHelper->expandPath('~').'/.magedev.json';
             if ($this->fileHelper->fileExists($homeConfigFile)) {
                 $homeConfig = $this->loadConfigFile($homeConfigFile);
             }
+
             return array_merge(array_merge($defaultConfig, $homeConfig), $projectConfig);
         } else {
-            throw new \Exception("it seems this is not a magento project I can handle: ".$projectConfigFile." file was not found");
+            throw new \Exception('it seems this is not a magento project I can handle: '.$projectConfigFile.' file was not found');
         }
     }
 
     /**
-     * loadConfigFile
+     * loadConfigFile.
      *
      * @param string $path
      */
     protected function loadConfigFile($path)
     {
         if (!$this->fileHelper->fileExists($path)) {
-            throw new \Exception("File " . $path . " not found");
+            throw new \Exception('File '.$path.' not found');
         }
         $data = json_decode($this->fileHelper->read($path), true);
         if (json_last_error()) {
-            throw new \Exception("Parse error in " . $path . ": ".json_last_error_msg());
+            throw new \Exception('Parse error in '.$path.': '.json_last_error_msg());
         }
         if (!is_array($data)) {
-            throw new \Exception("Parse error in " . $path . ": ".json_last_error_msg());
+            throw new \Exception('Parse error in '.$path.': '.json_last_error_msg());
         }
+
         return $data;
     }
 
     /**
-     * get
+     * get.
      *
      * @param string $key
+     *
      * @return string
      */
     public function get($key)
@@ -133,40 +138,48 @@ class Config
         }
 
         if (!isset($this->configData[$key])) {
-            throw new \Exception($key." not found in config");
+            throw new \Exception($key.' not found in config');
         }
         $value = $this->configData[$key];
 
         return $value;
     }
 
+    public function set($key, $value)
+    {
+        $this->configData[$key] = $value;
+    }
+
     /**
-     * optionExists
+     * optionExists.
      *
      * @param string $key
+     *
      * @return bool
      */
     public function optionExists($key)
     {
         try {
             $value = $this->get($key);
-            return $value != "";
+
+            return $value != '';
         } catch (\Exception $e) {
             return false;
         }
     }
 
     /**
-     * getMagentoVersion
+     * getMagentoVersion.
      *
      * @return string
      */
     public function getMagentoVersion()
     {
-        $version = $this->get("magento_version");
-        if (!in_array($version, ["1", "2"])) {
-            throw new \Exception("supplied magento version ".$version." not available");
+        $version = $this->get('magento_version');
+        if (!in_array($version, ['1', '2'])) {
+            throw new \Exception('supplied magento version '.$version.' not available');
         }
+
         return $version;
     }
 }

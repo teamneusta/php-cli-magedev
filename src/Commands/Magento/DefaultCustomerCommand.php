@@ -19,7 +19,7 @@ use TeamNeusta\Magedev\Runtime\Helper\MagerunHelper;
 use TeamNeusta\Magedev\Services\DockerService;
 
 /**
- * Class: DefaultCustomerCommand
+ * Class: DefaultCustomerCommand.
  *
  * @see AbstractCommand
  */
@@ -41,11 +41,11 @@ class DefaultCustomerCommand extends AbstractCommand
     protected $dockerService;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Runtime\Config               $config
      * @param \TeamNeusta\Magedev\Runtime\Helper\MagerunHelper $magerunHelper
-     * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
+     * @param \TeamNeusta\Magedev\Services\DockerService       $dockerService
      */
     public function __construct(
         \TeamNeusta\Magedev\Runtime\Config $config,
@@ -59,38 +59,38 @@ class DefaultCustomerCommand extends AbstractCommand
     }
 
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("magento:customer:default");
-        $this->setDescription("creates a default customer magento@neusta.de/magento@neusta.de");
+        $this->setName('magento:customer:default');
+        $this->setDescription('creates a default customer magento@neusta.de/magento@neusta.de');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $magentoVersion = $this->config->getMagentoVersion();
-        $userSettings = $this->config->get("users");
-        $customer = $userSettings["customer"];
+        $userSettings = $this->config->get('users');
+        $customer = $userSettings['customer'];
 
-        if (!$this->customerExists($customer["email"])) {
-            $this->magerunHelper->magerunCommand("customer:create ".$customer["email"]." ".$customer["password"]." ".$customer["firstname"]." ".$customer["lastname"]." default");
+        if (!$this->customerExists($customer['email'])) {
+            $this->magerunHelper->magerunCommand('customer:create '.$customer['email'].' '.$customer['password'].' '.$customer['firstname'].' '.$customer['lastname'].' default');
         } else {
             // change pw only works for magento1 for now
-            if ($magentoVersion == "1") {
-                $this->magerunHelper->magerunCommand("customer:change-password ".$customer["email"]." ".$customer["password"]." default");
+            if ($magentoVersion == '1') {
+                $this->magerunHelper->magerunCommand('customer:change-password '.$customer['email'].' '.$customer['password'].' default');
             }
         }
     }
 
     /**
-     * customerExists
+     * customerExists.
      *
      * check if a given customer exists
      *
@@ -101,10 +101,10 @@ class DefaultCustomerCommand extends AbstractCommand
         $result = $this->dockerService->execute(
             "mysql --execute \"select * from customer_entity where email = '".$email."';\"",
             [
-                'interactive' => false
+                'interactive' => false,
             ]
         );
 
-        return $result != "";
+        return $result != '';
     }
 }

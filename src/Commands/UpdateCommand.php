@@ -18,8 +18,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class: UpdateCommand
+ * Class: UpdateCommand.
+ *
  * @codeCoverageIgnore
+ *
  * @see Command
  */
 class UpdateCommand extends Command
@@ -27,7 +29,7 @@ class UpdateCommand extends Command
     const MANIFEST_FILE = 'https://teamneusta.github.io/php-cli-magedev/manifest.json';
 
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
@@ -39,9 +41,9 @@ class UpdateCommand extends Command
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     protected function execute(InputInterface $input, OutputInterface $output)

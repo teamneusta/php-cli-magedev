@@ -16,25 +16,25 @@ use Symfony\Component\Console\Output\OutputInterface;
 use TeamNeusta\Magedev\Commands\AbstractCommand;
 
 /**
- * Class: RestartCommand
+ * Class: RestartCommand.
  *
  * @see AbstractCommand
  */
 class RestartCommand extends AbstractCommand
 {
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("docker:restart");
-        $this->setDescription("restart docker container");
+        $this->setName('docker:restart');
+        $this->setDescription('restart docker container');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)

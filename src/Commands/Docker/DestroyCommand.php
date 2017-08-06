@@ -15,25 +15,25 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Class: DestroyCommand
+ * Class: DestroyCommand.
  *
  * @see AbstractCommand
  */
 class DestroyCommand extends Base
 {
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("docker:destroy");
-        $this->setDescription("destroy all containers");
+        $this->setName('docker:destroy');
+        $this->setDescription('destroy all containers');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)

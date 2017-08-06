@@ -14,14 +14,14 @@ namespace TeamNeusta\Magedev\Docker\Container\Repository;
 use TeamNeusta\Magedev\Docker\Container\AbstractContainer;
 
 /**
- * Class: Redis
+ * Class: Redis.
  *
  * @see AbstractContainer
  */
 class Redis extends AbstractContainer
 {
     /**
-     * getName
+     * getName.
      */
     public function getName()
     {
@@ -29,7 +29,7 @@ class Redis extends AbstractContainer
     }
 
     /**
-     * getImage
+     * getImage.
      */
     public function getImage()
     {

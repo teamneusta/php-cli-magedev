@@ -16,7 +16,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 use TeamNeusta\Magedev\Runtime\Helper\FileHelper;
 
 /**
- * Class MountSharefolder
+ * Class MountSharefolder.
  */
 class MountSharefolder
 {
@@ -51,7 +51,7 @@ class MountSharefolder
     protected $questionHelper;
 
     /**
-     * __construct
+     * __construct.
      *
      * @param \Pimple\Container $c
      */
@@ -69,7 +69,7 @@ class MountSharefolder
     }
 
     /**
-     * checkShareFolder
+     * checkShareFolder.
      */
     public function checkShareFolder()
     {
@@ -81,7 +81,7 @@ class MountSharefolder
     }
 
     /**
-     * checkPath
+     * checkPath.
      *
      * @param string $path
      */
@@ -95,27 +95,29 @@ class MountSharefolder
     }
 
     /**
-     * fileInShareFolderPath
+     * fileInShareFolderPath.
+     *
      * @return bool
      */
     public function isFileInShareFolderPath($path)
     {
-        $shareFolderPrefix = "~/smb/share/";
+        $shareFolderPrefix = '~/smb/share/';
+
         return substr($path, 0, strlen($shareFolderPrefix)) === $shareFolderPrefix;
     }
 
     /**
-     * tryMount
+     * tryMount.
      */
     public function tryMount($path)
     {
-        $question = new ConfirmationQuestion("File ".$path." could not found, but it seems the path is inside shared folder, should I try to mount it? [y]", false);
+        $question = new ConfirmationQuestion('File '.$path.' could not found, but it seems the path is inside shared folder, should I try to mount it? [y]', false);
         if ($this->questionHelper->ask($this->input, $this->output, $question)) {
-            $mountScript = "/etc/smbmount";
+            $mountScript = '/etc/smbmount';
             if (!file_exists($mountScript)) {
-                throw new \Exception("Mountscript ".$mountScript." not found");
+                throw new \Exception('Mountscript '.$mountScript.' not found');
             }
-            $this->shellService->execute("sudo /etc/smbmount");
+            $this->shellService->execute('sudo /etc/smbmount');
         }
     }
 }

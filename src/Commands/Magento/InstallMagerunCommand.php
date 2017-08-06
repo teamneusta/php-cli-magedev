@@ -18,7 +18,7 @@ use TeamNeusta\Magedev\Runtime\Config;
 use TeamNeusta\Magedev\Services\ShellService;
 
 /**
- * Class: InstallMagerunCommand
+ * Class: InstallMagerunCommand.
  *
  * @see AbstractCommand
  */
@@ -34,11 +34,10 @@ class InstallMagerunCommand extends AbstractCommand
      */
     protected $shellService;
 
-
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Runtime\Config        $config
      * @param \TeamNeusta\Magedev\Services\ShellService $shellService
      */
     public function __construct(
@@ -51,18 +50,18 @@ class InstallMagerunCommand extends AbstractCommand
     }
 
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("magento:install-magerun");
-        $this->setDescription("installs current magerun into bin/magerun or shell/magerun");
+        $this->setName('magento:install-magerun');
+        $this->setDescription('installs current magerun into bin/magerun or shell/magerun');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
@@ -70,15 +69,15 @@ class InstallMagerunCommand extends AbstractCommand
         $magentoRoot = $this->config->get('source_folder');
         $magentoVersion = $this->config->getMagentoVersion();
 
-        if ($magentoVersion == "1") {
-            $this->shellService->wd($magentoRoot)->bash("curl -O https://files.magerun.net/n98-magerun.phar");
-            $this->shellService->wd($magentoRoot)->bash("mv n98-magerun.phar shell/magerun");
-            $this->shellService->wd($magentoRoot)->bash("chmod +x shell/magerun");
+        if ($magentoVersion == '1') {
+            $this->shellService->wd($magentoRoot)->bash('curl -O https://files.magerun.net/n98-magerun.phar');
+            $this->shellService->wd($magentoRoot)->bash('mv n98-magerun.phar shell/magerun');
+            $this->shellService->wd($magentoRoot)->bash('chmod +x shell/magerun');
         }
-        if ($magentoVersion == "2") {
-            $this->shellService->wd($magentoRoot)->bash("curl -O https://files.magerun.net/n98-magerun2.phar");
-            $this->shellService->wd($magentoRoot)->bash("mv n98-magerun2.phar bin/magerun");
-            $this->shellService->wd($magentoRoot)->bash("chmod +x bin/magerun");
+        if ($magentoVersion == '2') {
+            $this->shellService->wd($magentoRoot)->bash('curl -O https://files.magerun.net/n98-magerun2.phar');
+            $this->shellService->wd($magentoRoot)->bash('mv n98-magerun2.phar bin/magerun');
+            $this->shellService->wd($magentoRoot)->bash('chmod +x bin/magerun');
         }
     }
 }

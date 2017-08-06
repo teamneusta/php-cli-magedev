@@ -8,15 +8,8 @@ backend default {
     .port = "80";
 }
 
-acl purge {
-
-}
-
 sub vcl_recv {
     if (req.method == "PURGE") {
-        if (client.ip !~ purge) {
-            return (synth(405, "Method not allowed"));
-        }
         if (!req.http.X-Magento-Tags-Pattern) {
             return (synth(400, "X-Magento-Tags-Pattern header required"));
         }

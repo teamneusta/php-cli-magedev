@@ -18,7 +18,7 @@ use TeamNeusta\Magedev\Runtime\Config;
 use TeamNeusta\Magedev\Services\DockerService;
 
 /**
- * Class: InstallCommand
+ * Class: InstallCommand.
  *
  * @see AbstractCommand
  */
@@ -35,9 +35,9 @@ class InstallCommand extends AbstractCommand
     protected $dockerService;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Runtime\Config         $config
      * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
      */
     public function __construct(
@@ -50,18 +50,18 @@ class InstallCommand extends AbstractCommand
     }
 
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
-        $this->setName("magento:install");
-        $this->setDescription("executes bin/magento setup:install inside container");
+        $this->setName('magento:install');
+        $this->setDescription('executes bin/magento setup:install inside container');
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
@@ -69,15 +69,15 @@ class InstallCommand extends AbstractCommand
         $magentoVersion = $this->config->getMagentoVersion();
 
         // install only used for magento2
-        if ($magentoVersion == "2") {
-            $domain = $this->config->get("domain");
+        if ($magentoVersion == '2') {
+            $domain = $this->config->get('domain');
 
             $this->getApplication()->find('init:composer')->execute($input, $output);
             $this->getApplication()->find('init:npm')->execute($input, $output);
             $this->getApplication()->find('init:permissions')->execute($input, $output);
 
             $this->dockerService->execute(
-                "bin/magento setup:install --db-host=mysql --db-name=magento --db-user=magento --db-password=magento --admin-user=admin --admin-password=admin123 --admin-email=admin@localhost.de --admin-firstname=admin --admin-lastname=admin --backend-frontname=admin --base-url=http://".$domain."/"
+                'bin/magento setup:install --db-host=mysql --db-name=magento --db-user=magento --db-password=magento --admin-user=admin --admin-password=admin123 --admin-email=admin@localhost.de --admin-firstname=admin --admin-lastname=admin --backend-frontname=admin --base-url=http://'.$domain.'/'
             );
 
             $this->getApplication()->find('init:permissions')->execute($input, $output);

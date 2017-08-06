@@ -12,11 +12,10 @@
 namespace TeamNeusta\Magedev\Runtime\Helper;
 
 use TeamNeusta\Magedev\Runtime\Config;
-use TeamNeusta\Magedev\Runtime\Helper\FileHelper;
 use TeamNeusta\Magedev\Services\DockerService;
 
 /**
- * Class MagerunHelper
+ * Class MagerunHelper.
  */
 class MagerunHelper
 {
@@ -36,11 +35,11 @@ class MagerunHelper
     protected $dockerService;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Runtime\Config            $config
      * @param \TeamNeusta\Magedev\Runtime\Helper\FileHelper $fileHelper
-     * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
+     * @param \TeamNeusta\Magedev\Services\DockerService    $dockerService
      */
     public function __construct(
         \TeamNeusta\Magedev\Runtime\Config $config,
@@ -53,32 +52,33 @@ class MagerunHelper
     }
 
     /**
-     * isMagerunInstalled
+     * isMagerunInstalled.
+     *
      * @return bool
      */
     public function isMagerunInstalled()
     {
-        $sourceFolder = $this->config->get("source_folder");
-        if ($this->config->getMagentoVersion() == "1") {
-            return $this->fileHelper->fileExists($sourceFolder . "shell/magerun");
+        $sourceFolder = $this->config->get('source_folder');
+        if ($this->config->getMagentoVersion() == '1') {
+            return $this->fileHelper->fileExists($sourceFolder.'shell/magerun');
         }
-        if ($this->config->getMagentoVersion() == "2") {
-            return $this->fileHelper->fileExists($sourceFolder . "bin/magerun");
+        if ($this->config->getMagentoVersion() == '2') {
+            return $this->fileHelper->fileExists($sourceFolder.'bin/magerun');
         }
     }
 
     /**
-     * abortIfMagerunNotInstalled
+     * abortIfMagerunNotInstalled.
      */
     public function abortIfMagerunNotInstalled()
     {
         if (!$this->isMagerunInstalled()) {
-            throw new \Exception("sorry, magerun is not installed use magento:install-magerun first");
+            throw new \Exception('sorry, magerun is not installed use magento:install-magerun first');
         }
     }
 
     /**
-     * magerunCommand
+     * magerunCommand.
      *
      * @param string $magerunCommand
      */
@@ -87,12 +87,11 @@ class MagerunHelper
         $this->abortIfMagerunNotInstalled();
         $magentoVersion = $this->config->getMagentoVersion();
 
-        if ($magentoVersion == "1") {
-            $cmd = "shell/magerun ".$magerunCommand;
-
+        if ($magentoVersion == '1') {
+            $cmd = 'shell/magerun '.$magerunCommand;
         }
-        if ($magentoVersion == "2") {
-            $cmd = "bin/magerun ".$magerunCommand;
+        if ($magentoVersion == '2') {
+            $cmd = 'bin/magerun '.$magerunCommand;
         }
         $this->dockerService->execute($cmd);
     }

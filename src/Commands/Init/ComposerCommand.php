@@ -18,7 +18,7 @@ use TeamNeusta\Magedev\Runtime\Config;
 use TeamNeusta\Magedev\Services\DockerService;
 
 /**
- * Class: ComposerCommand
+ * Class: ComposerCommand.
  *
  * @see AbstractCommand
  */
@@ -35,9 +35,9 @@ class ComposerCommand extends AbstractCommand
     protected $dockerService;
 
     /**
-     * __construct
+     * __construct.
      *
-     * @param \TeamNeusta\Magedev\Runtime\Config $config
+     * @param \TeamNeusta\Magedev\Runtime\Config         $config
      * @param \TeamNeusta\Magedev\Services\DockerService $dockerService
      */
     public function __construct(
@@ -50,7 +50,7 @@ class ComposerCommand extends AbstractCommand
     }
 
     /**
-     * configure
+     * configure.
      */
     protected function configure()
     {
@@ -59,17 +59,17 @@ class ComposerCommand extends AbstractCommand
     }
 
     /**
-     * execute
+     * execute.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $magentoVersion = $this->config->getMagentoVersion();
         // composer only used for magento2
-        if ($magentoVersion == "2") {
-            $this->dockerService->execute("/usr/bin/loadssh.sh && composer install");
+        if ($magentoVersion == '2') {
+            $this->dockerService->execute('/usr/bin/loadssh.sh && composer install');
         }
     }
 }

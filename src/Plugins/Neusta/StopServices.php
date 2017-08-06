@@ -14,7 +14,7 @@ namespace TeamNeusta\Magedev\Plugins\Neusta;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
- * Class StopServices
+ * Class StopServices.
  */
 class StopServices
 {
@@ -38,16 +38,16 @@ class StopServices
      */
     protected $questionHelper;
 
-
     /**
-     * __construct
+     * __construct.
      *
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
-     * @param ShellService $shellService
-     * @param QuestionHelper $questionHelper
+     * @param ShellService    $shellService
+     * @param QuestionHelper  $questionHelper
      */
-    public function __construct(\Pimple\Container $c) {
+    public function __construct(\Pimple\Container $c)
+    {
         $this->input = $c['console.input'];
         $this->output = $c['console.output'];
         $this->shellService = $c['services.shell'];
@@ -56,45 +56,51 @@ class StopServices
     }
 
     /**
-     * stopServices
+     * stopServices.
      */
     public function stopServices()
     {
-        $this->output->writeln("let me check if you have local services like apache or mysql running...");
+        $this->output->writeln('let me check if you have local services like apache or mysql running...');
 
-        $apacheRunning = $this->isProcessRunning("apache2");
-        $mysqlRunning = $this->isProcessRunning("mysqld");
-        $redisRunning = $this->isProcessRunning("redis-server");
+        $apacheRunning = $this->isProcessRunning('apache2');
+        $nginxRunning = $this->isProcessRunning("nginx");
+        $mysqlRunning = $this->isProcessRunning('mysqld');
+        $redisRunning = $this->isProcessRunning('redis-server');
 
-        if ($apacheRunning || $mysqlRunning || $redisRunning) {
-            $question = new ConfirmationQuestion("you have a local apache/mysql running. Should I stop it for you? [y]", false);
+        if ($apacheRunning || $mysqlRunning || $redisRunning || $nginxRunning) {
+            $question = new ConfirmationQuestion('you have a local apache/mysql running. Should I stop it for you? [y]', false);
 
             if (!$this->questionHelper->ask($this->input, $this->output, $question)) {
-                throw new \Exception("could not proceed");
+                throw new \Exception('could not proceed');
             }
 
             if ($apacheRunning) {
-                $this->shellService->execute("sudo service apache2 stop");
+                $this->shellService->execute('sudo service apache2 stop');
+            }
+            if ($nginxRunning) {
+                $this->shellService->execute("sudo service nginx stop");
             }
             if ($mysqlRunning) {
-                $this->shellService->execute("sudo service mysql stop");
+                $this->shellService->execute('sudo service mysql stop');
             }
             if ($redisRunning) {
-                $this->shellService->execute("sudo service redis-server stop");
+                $this->shellService->execute('sudo service redis-server stop');
             }
         }
     }
 
     /**
-     * isProcessRunning
+     * isProcessRunning.
      *
      * @param string $processName
+     *
      * @return bool
      */
     public function isProcessRunning($processName)
     {
         $pid = [];
-        exec("sudo pidof -c ".$processName, $pid);
+        exec('sudo pidof -c '.$processName, $pid);
+
         return !empty($pid);
     }
 }
