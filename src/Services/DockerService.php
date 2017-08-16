@@ -109,7 +109,6 @@ class DockerService
         $this->dockerInited = true;
 
         $this->applyDockerSettingsToConfig();
-        $this->addEnv();
 
         $dockerLinks = [];
         $dockerPorts = [];
@@ -171,6 +170,7 @@ class DockerService
 
             $this->dockerManager->addContainer($container);
         }
+        $this->addEnv($containers);
     }
 
     /**
@@ -223,8 +223,11 @@ class DockerService
         }
     }
 
-    protected function addEnv()
+    protected function addEnv($containers)
     {
+        $containerNames = array_map(function($container) {
+            return $container->getName();
+        }, $containers);
         $envVars = [];
         $envVars['USERID'] = getmyuid();
         $envVars['MYSQL_ROOT'] = 'root';
@@ -244,7 +247,9 @@ class DockerService
                 $envVars['https_proxy'] = $proxy['HTTPS'];
             }
             $envVars['HTTPS_PROXY_REQUEST_FULLURI'] = 'false';
-            $envVars['no_proxy'] = "'localhost,elasticsearch,httpd,mysql'";
+            $noProxyHosts = $containerNames;
+            $noProxyHosts[] = 'localhost';
+            $envVars['no_proxy'] = "'" . implode(",", $noProxyHosts) . "'";
         }
         $this->config->set('env_vars', $envVars);
     }
