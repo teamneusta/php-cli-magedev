@@ -130,7 +130,7 @@ class DockerService
             // extract name for container out of classname
             // e.g. elasticsearch, main, mysql ...
             $name = strtolower($this->getClassName(get_class($container)));
-            if (array_key_exists($name, $dockerPorts)) {
+            if (array_key_exists($name, $dockerPorts) && $dockerConfig['bind_ports'] !== 'no') {
                 /* may look like: */
                 /* $portMaps = [ */
                 /*     "main" => [ */
