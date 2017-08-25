@@ -81,8 +81,8 @@ class CommandCommand extends AbstractCommand
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $command = $this->input->getArgument(self::ARGUMENT_MAGENTO_COMMAND);
-        $arguments = $this->input->getArgument(self::ARGUMENT_MAGENTO_COMMAND_ARGS);
+        $command = $input->getArgument(self::ARGUMENT_MAGENTO_COMMAND);
+        $arguments = $input->getArgument(self::ARGUMENT_MAGENTO_COMMAND_ARGS);
 
         $shellCommand = sprintf(
             'bin/magento %s %s',

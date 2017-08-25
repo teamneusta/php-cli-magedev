@@ -38,6 +38,7 @@ class DestroyCommand extends Base
      */
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->getApplication()->find('docker:stop')->execute($input, $output);
         $this->dockerService->getManager()->destroyContainers();
         parent::execute($input, $output);
     }

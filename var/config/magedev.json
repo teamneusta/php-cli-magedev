@@ -8,13 +8,13 @@
       "password": "admin123",
       "firstname": "admin",
       "lastname": "admin"
-     },
-     "customer": {
-        "email": "test@example.com",
-        "password": "test3@example.com",
-        "firstname": "Test",
-        "lastname": "Test"
-     }
+    },
+    "customer": {
+      "email": "test@example.com",
+      "password": "test3@example.com",
+      "firstname": "Test",
+      "lastname": "Test"
+    }
   },
   "xdebug": {
     "idekey": "vim"
@@ -22,7 +22,14 @@
   "docker": {
     "bind_ports": "yes",
     "build_strategy": "pull",
-    "containers": ["ElasticSearch", "Mailcatcher", "Main", "Mysql", "Redis", "Varnish"],
+    "containers": [
+      "ElasticSearch",
+      "Mailcatcher",
+      "Main",
+      "Mysql",
+      "Redis",
+      "Varnish"
+    ],
     "links": {
       "main": ["mysql", "redis", "elasticsearch"]
     },
