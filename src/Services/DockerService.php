@@ -139,7 +139,7 @@ class DockerService
             // extract name for container out of classname
             // e.g. elasticsearch, main, mysql ...
             $name = strtolower($this->getClassName(get_class($container)));
-            if (array_key_exists($name, $dockerPorts) && $dockerConfig['bind_ports'] !== 'no') {
+            if (array_key_exists($name, $dockerPorts)) {
                 /* may look like: */
                 /* $portMaps = [ */
                 /*     "main" => [ */
@@ -195,7 +195,7 @@ class DockerService
 
     protected function applyDockerSettingsToConfig()
     {
-        $this->config->set('project_name', basename(getcwd()));
+        $this->config->set('project_name',$this->config->get('project_name') ? $this->config->get('project_name') : basename(getcwd()));
         $this->config->set('project_path', getcwd());
         $this->config->set('home_path', $this->fileHelper->expandPath('~'));
         $this->config->set('document_root', '/var/www/html/'.$this->config->get('source_folder'));
