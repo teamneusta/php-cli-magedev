@@ -74,6 +74,11 @@ class PermissionsCommand extends AbstractCommand
         }
 
         $commands = [
+            'mkdir -p /var/www/html',
+            'mkdir -p /var/www/.composer',
+            'mkdir -p /var/www/.ssh',
+            'mkdir -p /var/www/modules',
+            'mkdir -p /var/www/composer-cache',
             'chown -R www-data:users /var/www/html',
             'chown -R www-data:users /var/www/.composer',
             'chown -R www-data:users /var/www/.ssh',
