@@ -195,7 +195,10 @@ class DockerService
 
     protected function applyDockerSettingsToConfig()
     {
-        $this->config->set('project_name',$this->config->get('project_name') ? $this->config->get('project_name') : basename(getcwd()));
+        if (!$this->config->optionExists('project_name')) {
+            // fallback to directory name as project name
+            $this->config->set('project_name', basename(getcwd()));
+        }
         $this->config->set('project_path', getcwd());
         $this->config->set('home_path', $this->fileHelper->expandPath('~'));
         $this->config->set('document_root', '/var/www/html/'.$this->config->get('source_folder'));
