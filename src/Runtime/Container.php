@@ -159,7 +159,7 @@ $c['commands'] = function ($c) {
         new \TeamNeusta\Magedev\Commands\Init\ProjectCommand($c['runtime.config'], $c['console.output']),
 
         /* // Magento */
-        new \TeamNeusta\Magedev\Commands\Magento\AlignConfigCommand($c['runtime.config']),
+        new \TeamNeusta\Magedev\Commands\Magento\AlignConfigCommand($c['runtime.config'], $c['services.docker']),
         new \TeamNeusta\Magedev\Commands\Magento\CacheCleanCommand($c['runtime.config'], $c['runtime.helper.magerunhelper'], $c['services.docker']),
         new \TeamNeusta\Magedev\Commands\Magento\CommandCommand($c['runtime.config'], $c['services.docker']),
         new \TeamNeusta\Magedev\Commands\Magento\DefaultAdminUserCommand($c['runtime.config'], $c['runtime.helper.magerunhelper'], $c['services.docker']),

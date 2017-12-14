@@ -29,14 +29,21 @@ class AlignConfigCommand extends AbstractCommand
     protected $config;
 
     /**
+     * @var \TeamNeusta\Magedev\Services\DockerService
+     */
+    protected $dockerService;
+
+    /**
      * __construct.
      *
      * @param \TeamNeusta\Magedev\Runtime\Config $config
      */
     public function __construct(
-        \TeamNeusta\Magedev\Runtime\Config $config
+        \TeamNeusta\Magedev\Runtime\Config $config,
+        \TeamNeusta\Magedev\Services\DockerService $dockerService
     ) {
         $this->config = $config;
+        $this->dockerService = $dockerService;
         parent::__construct();
     }
 
@@ -66,7 +73,9 @@ class AlignConfigCommand extends AbstractCommand
 
         if ($magentoVersion == '2') {
             $this->updateMagento2Credentials($wd, 'magento', 'magento', 'magento', 'mysql');
+            $this->removeCustomAdminUrlPath();
         }
+        $this->getApplication()->find('magento:cache:clean')->execute($input, $output);
     }
 
     /**
@@ -136,5 +145,14 @@ class AlignConfigCommand extends AbstractCommand
 
         $content = "<?php\nreturn ".var_export($data, true).";\n";
         file_put_contents($envFile, $content);
+    }
+
+    /**
+     * removeCustomAdminUrlPath
+     */
+    public function removeCustomAdminUrlPath()
+    {
+        $cmd = "mysql --execute=\"delete from core_config_data where (path='admin/url/use_custom_path' OR path='admin/url/custom_path');\"";
+        $this->dockerService->execute($cmd);
     }
 }
