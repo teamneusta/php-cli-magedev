@@ -145,9 +145,11 @@ class Config
         return $value;
     }
 
-    public function set($key, $value)
+    public function set($key, $value, $replace = true)
     {
-        $this->configData[$key] = $value;
+        if ($replace === true || isset($this->configData[$key]) === false) {
+            $this->configData[$key] = $value;
+        }
     }
 
     /**
