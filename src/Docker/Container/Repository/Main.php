@@ -44,15 +44,19 @@ class Main extends AbstractContainer
         $homePath = $this->config->get('home_path');
         $projectPath = $this->config->get('project_path');
 
-        /* $homePath    = $this->context->getConfig()->getHomePath(); */
-        /* $projectPath = $this->context->getConfig()->getProjectPath(); */
-
-        // TODO: make this configurable ?
-        $this->setBinds([
+        $binds = [
             $projectPath.':/var/www/html:rw',
             $homePath.'/.composer:/var/www/.composer:rw', // TODO: check for existence?
             $homePath.'/.ssh:/var/www/.ssh:rw',
-        ]);
+        ];
+
+        if ($this->config->optionExists('modules_path')) {
+            $modulesPath = $this->config->get('modules_path');
+            $binds[] = $modulesPath . ':' . $modulesPath;
+        }
+
+        // TODO: make this configurable ?
+        $this->setBinds($binds);
 
         $config = parent::getConfig();
 

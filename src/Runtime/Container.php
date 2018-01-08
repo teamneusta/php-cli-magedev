@@ -60,7 +60,8 @@ $c['docker.api.container.factory'] = function ($c) {
 };
 $c['docker.api.image.factory'] = function ($c) {
     return new \TeamNeusta\Magedev\Docker\Api\ImageFactory(
-        $c['lib.docker.imageManager']
+        $c['lib.docker.imageManager'],
+        $c['console.output']
     );
 };
 
@@ -158,7 +159,7 @@ $c['commands'] = function ($c) {
         new \TeamNeusta\Magedev\Commands\Init\ProjectCommand($c['runtime.config'], $c['console.output']),
 
         /* // Magento */
-        new \TeamNeusta\Magedev\Commands\Magento\AlignConfigCommand($c['runtime.config']),
+        new \TeamNeusta\Magedev\Commands\Magento\AlignConfigCommand($c['runtime.config'], $c['services.docker']),
         new \TeamNeusta\Magedev\Commands\Magento\CacheCleanCommand($c['runtime.config'], $c['runtime.helper.magerunhelper'], $c['services.docker']),
         new \TeamNeusta\Magedev\Commands\Magento\CommandCommand($c['runtime.config'], $c['services.docker']),
         new \TeamNeusta\Magedev\Commands\Magento\DefaultAdminUserCommand($c['runtime.config'], $c['runtime.helper.magerunhelper'], $c['services.docker']),

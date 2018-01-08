@@ -32,17 +32,25 @@ class Image
     protected $image;
 
     /**
+     * @var \Symfony\Component\Console\Output\OutputInterface
+     */
+    protected $output;
+
+    /**
      * __construct.
      *
-     * @param \Docker\Manager\ImageManager                   $imageManager
-     * @param \TeamNeusta\Magedev\Docker\Image\AbstractImage $image
+     * @param \Docker\Manager\ImageManager                      $imageManager
+     * @param \TeamNeusta\Magedev\Docker\Image\AbstractImage    $image
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
      */
     public function __construct(
         \Docker\Manager\ImageManager $imageManager,
-        \TeamNeusta\Magedev\Docker\Image\AbstractImage $image
+        \TeamNeusta\Magedev\Docker\Image\AbstractImage $image,
+        \Symfony\Component\Console\Output\OutputInterface $output
     ) {
         $this->imageManager = $imageManager;
         $this->image = $image;
+        $this->output = $output;
     }
 
     /**
@@ -79,15 +87,15 @@ class Image
         $name = $this->image->getBuildName();
         if (!$this->exists()) {
             $contextBuilder = $this->image->getContextBuilder();
-            // TODO: move this somewhere else
-            /* foreach ($this->context->getEnvVars() as $key => $value) { */
-            /*     $contextBuilder->env($key, $value); */
-            /* } */
             $context = $contextBuilder->getContext();
+
+            $buildName = $this->image->getBuildName();
+            $this->output->writeln("<fg=green>Building image " . $buildName . "...</>");
+
             $buildStream = $this->imageManager->build($context->read(), [
-                't' => $this->image->getBuildName(),
+                't' => $buildName,
                 'rm' => true,
-                'nocache' => false,
+                'nocache' => true,
             ], ImageManager::FETCH_STREAM);
 
             $buildStream->onFrame(function (BuildInfo $buildInfo) {
@@ -110,6 +118,7 @@ class Image
     {
         $name = $this->image->getBuildName();
         if (!$this->exists()) {
+            $this->output->writeln("<fg=green>Pulling image " . $name . "...</>");
             $buildStream = $this->imageManager->create(
                 null,
                 [
@@ -128,7 +137,11 @@ class Image
      */
     public function destroy()
     {
-        // TODO
+        if ($this->exists()) {
+            $name = $this->image->getBuildName();
+            $this->output->writeln("<fg=red>Deleting image " . $name . "...</>");
+            $this->imageManager->remove($name);
+        }
     }
 
     /**

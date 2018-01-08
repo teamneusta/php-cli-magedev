@@ -48,7 +48,15 @@ class Main extends AbstractImage
         // PHP Image is selected based on magento version
         if ($magentoVersion == '2') {
             if ($buildStrategy == 'pull') {
-                $this->from('bleers/magedev-php7:1.0');
+                $phpVersion = null;
+                if ($this->config->optionExists('php_version')) {
+                    $phpVersion = $this->config->get('php_version');
+                }
+                if(!empty($phpVersion)){
+                    $this->from('bleers/magedev-php'.$phpVersion.':1.0');
+                }else{
+                    $this->from('bleers/magedev-php7:1.0');
+                }
             }
             if ($buildStrategy == 'build') {
                 $this->from($this->imageFactory->create('Php7'));

@@ -11,6 +11,8 @@
 
 namespace TeamNeusta\Magedev\Docker\Api;
 
+use Symfony\Component\Console\Output\OutputInterface;
+
 /**
  * Class ImageFactory.
  */
@@ -22,15 +24,23 @@ class ImageFactory
     protected $imageManager;
 
     /**
+     * @var \Symfony\Component\Console\Output\OutputInterface
+     */
+    protected $output;
+
+    /**
      * __construct.
      *
-     * @param \Docker\Manager\ImageManager                   $imageManager
-     * @param \TeamNeusta\Magedev\Docker\Image\AbstractImage $image
+     * @param \Docker\Manager\ImageManager                      $imageManager
+     * @param \TeamNeusta\Magedev\Docker\Image\AbstractImage    $image
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
      */
     public function __construct(
-        \Docker\Manager\ImageManager $imageManager
+        \Docker\Manager\ImageManager $imageManager,
+        \Symfony\Component\Console\Output\OutputInterface $output
     ) {
         $this->imageManager = $imageManager;
+        $this->output = $output;
     }
 
     /**
@@ -40,6 +50,6 @@ class ImageFactory
      */
     public function create(\TeamNeusta\Magedev\Docker\Image\AbstractImage $image)
     {
-        return new Image($this->imageManager, $image);
+        return new Image($this->imageManager, $image, $this->output);
     }
 }

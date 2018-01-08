@@ -91,6 +91,7 @@ class SetBaseUrlCommand extends AbstractCommand
                 throw new \Exception('could not determine base_url');
             }
             $this->updateBaseUrl($baseUrl);
+            $this->deleteBaseLinkUrls();
         }
         $this->getApplication()->find('magento:cache:clean')->execute($input, $output);
     }
@@ -104,6 +105,15 @@ class SetBaseUrlCommand extends AbstractCommand
     public function updateBaseUrl($baseUrl, $scopeId = 0)
     {
         $cmd = "mysql --execute=\"update core_config_data set value='".$baseUrl."' where (path='web/unsecure/base_url' OR path='web/secure/base_url') AND scope_id=".$scopeId.';"';
+        $this->dockerService->execute($cmd);
+    }
+
+    /**
+     * deleteBaseLinkUrls
+     */
+    public function deleteBaseLinkUrls()
+    {
+        $cmd = "mysql --execute=\"delete from core_config_data where (path='web/unsecure/base_link_url' OR path='web/secure/base_link_url');\"";
         $this->dockerService->execute($cmd);
     }
 }

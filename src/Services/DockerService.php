@@ -65,6 +65,11 @@ class DockerService
     protected $nameBuilder;
 
     /**
+     * @var bool
+     */
+    protected $dockerInited = false;
+
+    /**
      * __construct.
      *
      * @param Config                                        $config
@@ -98,8 +103,12 @@ class DockerService
 
     protected function initDocker()
     {
+        if ($this->dockerInited) {
+            return;
+        }
+        $this->dockerInited = true;
+
         $this->applyDockerSettingsToConfig();
-        $this->addEnv();
 
         $dockerLinks = [];
         $dockerPorts = [];
@@ -117,7 +126,7 @@ class DockerService
             $dockerPorts = $dockerConfig['ports'];
         }
         if (array_key_exists('containers', $dockerConfig)) {
-            foreach ($dockerConfig['containers'] as $containerName) {
+            foreach (array_unique($dockerConfig['containers']) as $containerName) {
                 $containers[] = $this->containerFactory->create($containerName);
             }
         }
@@ -153,12 +162,15 @@ class DockerService
                 foreach ($dockerLinks[$name] as $link) {
                     // format: "containerName:alias", whereas containerName
                     // is built dynamically out of projectname
-                    $container->addLink($this->nameBuilder->buildName($link).':'.$link);
+                    $link = $this->nameBuilder->buildName($link).':'.$link;
+                    $this->debugOut("Link containers: " . $link);
+                    $container->addLink($link);
                 }
             }
 
             $this->dockerManager->addContainer($container);
         }
+        $this->addEnv($containers);
     }
 
     /**
@@ -183,7 +195,10 @@ class DockerService
 
     protected function applyDockerSettingsToConfig()
     {
-        $this->config->set('project_name', basename(getcwd()), false);
+        if (!$this->config->optionExists('project_name')) {
+            // fallback to directory name as project name
+            $this->config->set('project_name', basename(getcwd()));
+        }
         $this->config->set('project_path', getcwd());
         $this->config->set('home_path', $this->fileHelper->expandPath('~'));
         $this->config->set('document_root', '/var/www/html/'.$this->config->get('source_folder'));
@@ -211,8 +226,11 @@ class DockerService
         }
     }
 
-    protected function addEnv()
+    protected function addEnv($containers)
     {
+        $containerNames = array_map(function($container) {
+            return $container->getName();
+        }, $containers);
         $envVars = [];
         $envVars['USERID'] = getmyuid();
         $envVars['MYSQL_ROOT'] = 'root';
@@ -232,7 +250,9 @@ class DockerService
                 $envVars['https_proxy'] = $proxy['HTTPS'];
             }
             $envVars['HTTPS_PROXY_REQUEST_FULLURI'] = 'false';
-            $envVars['no_proxy'] = "'localhost,elasticsearch,httpd,mysql'";
+            $noProxyHosts = $containerNames;
+            $noProxyHosts[] = 'localhost';
+            $envVars['no_proxy'] = "'" . implode(",", $noProxyHosts) . "'";
         }
         $this->config->set('env_vars', $envVars);
     }
@@ -291,6 +311,13 @@ class DockerService
         }
 
         return $this->shell->execute($cmd, $interactive);
+    }
+
+    public function debugOut($str)
+    {
+        if ($this->output->isVerbose()) {
+            $this->output->writeln($str);
+        }
     }
 
     /**

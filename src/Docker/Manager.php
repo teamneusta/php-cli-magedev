@@ -70,6 +70,11 @@ class Manager
             $this->output->writeln('<info>starting container '.$container->getBuildName().'</info>');
             $this->containerApiFactory->create($container)->start();
         }
+        foreach ($this->containers as $container) {
+            if (!$this->isRunning($container->getBuildName())) {
+                $this->output->writeln("<fg=red>Container " . $container->getBuildName() . " failed to start...</>");
+            }
+        }
     }
 
     /**
@@ -103,7 +108,12 @@ class Manager
     public function destroyContainers()
     {
         foreach ($this->containers as $container) {
+            $image = $container->getImage();
             $this->containerApiFactory->create($container)->destroy();
+            if ($image instanceof \TeamNeusta\Magedev\Docker\Image\AbstractImage) {
+                $image->configure();
+                $this->imageApiFactory->create($image)->destroy();
+            }
         }
     }
 

@@ -43,6 +43,6 @@ class NameBuilder
             $projectName = '-'.$projectName;
         }
 
-        return 'magedev'.$projectName.'-'.$name;
+        return strtolower('magedev'.$projectName.'-'.$name);
     }
 }
